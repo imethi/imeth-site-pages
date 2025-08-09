@@ -43,16 +43,13 @@ const affiliations = [
 /* ---------- Two-line infinite carousel (opposite directions) ---------- */
 
 const MarqueeRow = ({ items, direction = 'left', speedSeconds = 28 }) => {
-  const anim =
-    direction === 'left'
-      ? `animate-[marquee_${speedSeconds}s_linear_infinite]`
-      : `animate-[marqueeReverse_${speedSeconds}s_linear_infinite]`
+  const anim = direction === 'left' ? 'animate-marquee' : 'animate-marquee-reverse'
 
   return (
     <div className="overflow-hidden">
       <div
         className={`inline-flex items-center whitespace-nowrap gap-12 will-change-transform ${anim}`}
-        style={{ width: 'max-content' }}
+        style={{ width: 'max-content', animationDuration: `${speedSeconds}s` }}
       >
         {[...items, ...items].map((it, idx) => (
           <a
