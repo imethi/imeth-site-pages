@@ -129,39 +129,55 @@ function ContactPage() {
 }
 
 function PublicationsPage() {
-  const pubs = [
-    {
-      title: "President’s Advisory Committee – McMaster University",
-      venue: "McMaster University",
-      year: "2024",
-      url: "https://provost.mcmaster.ca/presidents-advisory-committee/",
-      tags: ["Advisory", "University"]
-    },
-    // Add more entries here…
-  ]
+  // Put your logo PNG/SVG files in: public/pub-logos/
+  // List the filenames you’ve added below (no links; pictures only).
+  const logos = [
+    "guardian.png",
+    "time.png",
+    "stat.png",
+    "bmj.png",
+    "hill.png",
+    "newscientist.png",
+    "npr.png",
+    "natgeo.png",
+    "mittr.png",
+    "wired.png",
+  ];
+
+  const sources = logos.map((file) => `${BASE}pub-logos/${file}`);
+
   return (
-    <section className="max-w-4xl mx-auto px-6 md:px-8 py-14">
-      <h1 className="text-3xl font-semibold text-emerald-950 dark:text-emerald-100">Publications & Features</h1>
+    <section className="max-w-6xl mx-auto px-6 md:px-8 py-14">
+      <h1 className="text-3xl font-semibold text-emerald-950 dark:text-emerald-100">
+        Writing Published In
+      </h1>
       <p className="mt-2 text-emerald-900/80 dark:text-emerald-300/80">
-        Selected publications, op-eds, institutional features, and committee work.
+        A selection of outlets featuring my work.
       </p>
 
-      <div className="mt-8 grid gap-4">
-        {pubs.map((p, i) => (
-          <a key={i} href={p.url} target="_blank" rel="noopener noreferrer"
-             className="rounded-2xl bg-white/80 dark:bg-emerald-900/40 ring-1 ring-black/5 dark:ring-white/10 px-5 py-4 hover:ring-black/10 transition">
-            <div className="text-emerald-950 dark:text-emerald-50 font-medium">{p.title}</div>
-            <div className="text-sm text-emerald-900/70 dark:text-emerald-300/70">{p.venue} • {p.year}</div>
-            <div className="mt-2 flex flex-wrap gap-2">
-              {p.tags?.map(t => (
-                <span key={t} className="text-xs px-2 py-1 rounded-full ring-1 ring-emerald-700/20 text-emerald-900/80 dark:text-emerald-200">{t}</span>
-              ))}
-            </div>
-          </a>
+      {/* Pure image grid — pictures only */}
+      <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        {sources.map((src, i) => (
+          <div
+            key={src}
+            className={`rounded-2xl ${brand.card} ring-1 ring-black/5 dark:ring-white/10 px-4 py-3 grid place-items-center logo-tile`}
+            style={{ animationDuration: `${9 + (i % 5)}s`, animationDelay: `${(i % 5) * 0.2}s` }}
+          >
+            <img
+              src={src}
+              alt=""
+              className="h-10 md:h-12 w-auto object-contain"
+              onError={(e) => { e.currentTarget.style.opacity = 0.25; }}
+            />
+          </div>
         ))}
       </div>
+
+      <div className="mt-6 text-[11px] text-emerald-900/60 dark:text-emerald-300/60">
+        Logos are for identification only and belong to their respective owners.
+      </div>
     </section>
-  )
+  );
 }
 
 /* ================= Main App ================= */
