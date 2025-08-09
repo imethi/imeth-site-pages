@@ -50,3 +50,24 @@
   width: auto;
   object-fit: contain;
 }
+
+/* Publications — floating logo wall */
+@keyframes floatY {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
+
+.logo-tile {
+  filter: grayscale(100%);
+  opacity: 0.8;
+  transition: transform .2s ease, filter .2s ease, opacity .2s ease, box-shadow .2s ease;
+  animation: floatY 10s ease-in-out infinite;
+  will-change: transform;
+}
+
+.logo-tile:hover {
+  filter: none;
+  opacity: 1;
+  transform: translateY(-2px) scale(1.03);
+}
