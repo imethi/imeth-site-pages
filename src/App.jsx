@@ -7,7 +7,7 @@ import Typewriter from 'typewriter-effect'
 const BASE = import.meta.env.BASE_URL
 
 // Public headshot path (place your file at public/images/imeth-profile.png after upload)
-const HEADSHOT_PATH = `${BASE}images/imeth-profile.png`
+const HEADSHOT_PATH = `${BASE}images/imeth-profile1.png`
 
 // Inline fallback so preview never breaks if the image is missing
 const FALLBACK_HEADSHOT = (() => {
