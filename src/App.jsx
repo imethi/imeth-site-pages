@@ -145,7 +145,7 @@ export default function App() {
           </div>
 
           {/* Infinite Logos Carousel */}
-          <div className="pt-4"><Carousel items={affiliations} /></div>
+          <div className="pt-4"><TwolineCarousel items={affiliations} /</div>
         </div>
       </section>
 
