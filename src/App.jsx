@@ -38,33 +38,33 @@ const affiliations = [
 ].map(i => ({ ...i, safeLogo: i.logo, placeholder: logoFallback(i.org) }))
 
 // Carousel row component
-const CarouselRow = ({ items, speed, reverse }) => (
+const CarouselRow = ({ items, speed }) => (
   <div className="overflow-hidden">
-    <div
-      className={`flex gap-10 whitespace-nowrap ${
-        reverse ? 'animate-[marqueeReverse_28s_linear_infinite]' : 'animate-[marquee_28s_linear_infinite]'
-      } ${speed}`}
-    >
+    <div className={`flex gap-16 whitespace-nowrap items-center ${speed}`}>
       {items.map((it, idx) => (
         <a
           key={idx}
           href={it.link || '#'}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2"
+          className="flex items-center gap-3"
         >
           <img
-            src={it.safeLogo}
-            onError={(e) => { e.currentTarget.src = it.placeholder; e.currentTarget.onerror = null; }}
-            className="text-emerald-900/80 text-sm"
+            src={it.safelogo}
+            onError={(e) => e.currentTarget.src = it.placeholder}
+            alt={it.org}
+            className="h-10 object-contain"
           />
-          <div className="font-semibold text-emerald-950 leading-none">{it.org}</div>
-          <div className="text-xs leading-tight">{it.role}</div>
+          <div className="text-emerald-900/80 text-sm leading-none">
+            <div className="font-semibold">{it.org}</div>
+            <div className="text-xs">{it.role}</div>
+          </div>
         </a>
       ))}
     </div>
   </div>
 );
+
 
 // Two-row carousel wrapper
 const Carousel = ({ items }) => {
