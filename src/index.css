@@ -3,7 +3,12 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
+}
+
+/* Default site background and text */
+body {
+  @apply bg-gray-900 text-gray-100;
 }
 
 /* Smooth continuous scroll (leftward) */
