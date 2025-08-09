@@ -1,6 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Mail, Github, Linkedin, FileDown } from 'lucide-react'
+import { Mail, Github, Linkedin, FileDown, ExternalLink } from 'lucide-react'
 import Typewriter from 'typewriter-effect'
 
 // ---------- Base paths ----------
@@ -128,22 +128,39 @@ function ContactPage() {
   )
 }
 
-function PublicationsPage() {
-  // Put your logo PNG/SVG files in: public/pub-logos/
-  // List the filenames you’ve added below (no links; pictures only).
-  const logos = [
-    "guardian.png",
-    "time.png",
-    "stat.png",
-    "bmj.png",
-    "hill.png",
-    "newscientist.png",
-    "npr.png",
-    "natgeo.png",
-    "mittr.png",
-    "wired.png",
-  ];
+function ScholarIcon({ className = "w-4 h-4" }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <path fill="currentColor"
+        d="M12 3L2 9l10 6 10-6-10-6Zm0 8.5L5.2 9 12 5.5 18.8 9 12 11.5Zm-7 3.2V15l7 4 7-4v-.3L12 16.7 5 14.7Z" />
+    </svg>
+  );
+}
 
+function OrcidIcon({ className = "w-4 h-4" }) {
+  // ORCID green
+  return (
+    <svg viewBox="0 0 256 256" className={className} aria-hidden="true">
+      <circle cx="128" cy="128" r="128" fill="#A6CE39" />
+      <rect x="92" y="76" width="20" height="104" rx="3" fill="white" />
+      <path fill="white" d="M150 76c-29 0-52 23-52 52s23 52 52 52 52-23 52-52-23-52-52-52zm0 20c18 0 32 14 32 32s-14 32-32 32-32-14-32-32 14-32 32-32z"/>
+    </svg>
+  );
+}
+
+function PublicationsPage() {
+  // 🔗 Replace these with your real profiles
+  const LINKS = {
+    scholar: "https://scholar.google.com/citations?user=YOUR_ID",
+    orcid: "https://orcid.org/0000-0000-0000-0000",
+    linkedin: "https://www.linkedin.com/in/imeth-illamperuma/details/publications/",
+  };
+
+  // Your logo files (pictures only)
+  const logos = [
+    "guardian.png","time.png","stat.png","bmj.png","hill.png",
+    "newscientist.png","npr.png","natgeo.png","mittr.png","wired.png",
+  ];
   const sources = logos.map((file) => `${BASE}pub-logos/${file}`);
 
   return (
@@ -155,7 +172,45 @@ function PublicationsPage() {
         A selection of outlets featuring my work.
       </p>
 
-      {/* Pure image grid — pictures only */}
+      {/* --- Aesthetic links bar --- */}
+      <div className={`mt-6 rounded-2xl ${brand.card} ring-1 ring-black/5 dark:ring-white/10 p-4`}>
+        <div className="flex flex-wrap items-center gap-3">
+          <a
+            href={LINKS.scholar}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm"
+          >
+            <ScholarIcon className="w-4 h-4" />
+            <span>Google Scholar</span>
+            <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition" />
+          </a>
+
+          <a
+            href={LINKS.orcid}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm"
+          >
+            <OrcidIcon className="w-4 h-4" />
+            <span>ORCID iD</span>
+            <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition" />
+          </a>
+
+          <a
+            href={LINKS.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm"
+          >
+            <Linkedin className="w-4 h-4" />
+            <span>LinkedIn Publications</span>
+            <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition" />
+          </a>
+        </div>
+      </div>
+
+      {/* --- Pure image grid (pictures only) --- */}
       <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {sources.map((src, i) => (
           <div
