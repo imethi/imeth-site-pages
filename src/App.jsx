@@ -23,7 +23,10 @@ const brand = { bg: 'bg-emerald-50', text: 'text-emerald-950', accentBg: 'bg-eme
 const Pill  = ({ children }) => (<span className="inline-flex items-center rounded-full border border-emerald-700/20 px-3 py-1 text-xs text-emerald-900/80">{children}</span>)
 const Card  = ({ children }) => (<div className={`rounded-2xl ${brand.card} shadow-sm ring-1 ring-black/5 p-6`}>{children}</div>)
 
-const logoFallback = (text) => `data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 200'><rect width='600' height='200' fill='#ecfdf5'/><text x='50%' y='50%' text-anchor='middle' font-family='system-ui,Segoe UI,Roboto,Helvetica,Arial' font-size='28' fill='#065f46'>${text}</text></svg>`)}`
+const logoFallback = (text) =>
+  `data:image/svg+xml;utf8,${encodeURIComponent(
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 200'><rect width='600' height='200' fill='#ecfdf5'/><text x='50%' y='50%' text-anchor='middle' font-family='system-ui,Segoe UI,Roboto,Helvetica,Arial' font-size='28' fill='#065f46'>${text}</text></svg>`
+  )}`
 
 // Carousel data — update logos by placing PNG/SVG files under public/logos
 const affiliations = [
@@ -37,66 +40,70 @@ const affiliations = [
   { org: 'LMC Healthcare', role: 'Medical Office Administrator (Intern)', logo: `${BASE}logos/lmc.png`, link: 'https://www.lmc.ca/' },
 ].map(i => ({ ...i, safeLogo: i.logo, placeholder: logoFallback(i.org) }))
 
-// One thin row that scrolls infinitely in a chosen direction
-const MarqueeRow = ({ items, direction = "left", speedSeconds = 28 }) => { /* ... */ };
-    direction === "left"
+/* ---------- Two-line infinite carousel (opposite directions) ---------- */
+
+const MarqueeRow = ({ items, direction = 'left', speedSeconds = 28 }) => {
+  const anim =
+    direction === 'left'
       ? `animate-[marquee_${speedSeconds}s_linear_infinite]`
-      : `animate-[marqueeReverse_${speedSeconds}s_linear_infinite]`;
+      : `animate-[marqueeReverse_${speedSeconds}s_linear_infinite]`
 
   return (
     <div className="overflow-hidden">
       <div
         className={`inline-flex items-center whitespace-nowrap gap-12 will-change-transform ${anim}`}
-        style={{ width: "max-content" }}
+        style={{ width: 'max-content' }}
       >
         {[...items, ...items].map((it, idx) => (
           <a
             key={`${it.org}-${idx}`}
-            href={it.link || "#"}
+            href={it.link || '#'}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-3 pr-2"
             title={`${it.role} — ${it.org}`}
           >
             <img
-              src={it.safeLogo}                 // ✅ correct casing
+              src={it.safeLogo}
               onError={(e) => {
-                e.currentTarget.src = it.placeholder;
-                e.currentTarget.onerror = null;
+                e.currentTarget.src = it.placeholder
+                e.currentTarget.onerror = null
               }}
               alt={it.org}
-              className="h-8 w-auto object-contain"  // thin row like your example
+              className="h-8 w-auto object-contain"
             />
             <div className="leading-tight">
-              <div className="text-sm font-semibold text-emerald-950">
-                {it.org}
-              </div>
-              <div className="text-[11px] text-emerald-900/75">
-                {it.role}
-              </div>
+              <div className="text-sm font-semibold text-emerald-950">{it.org}</div>
+              <div className="text-[11px] text-emerald-900/75">{it.role}</div>
             </div>
           </a>
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-// Two rows, opposite directions, slightly different speeds
-const TwoLineCarousel = ({ items }) => { /* ... */ };
-  const mid = Math.ceil(items.length / 2);
-  const top = items.slice(0, mid);
-  const bottom = items.slice(mid);
+const TwoLineCarousel = ({ items }) => {
+  const mid = Math.ceil(items.length / 2)
+  const top = items.slice(0, mid)
+  const bottom = items.slice(mid)
+
   return (
     <div className="space-y-3">
-      <MarqueeRow items={top} direction="left"  speedSeconds={26} />
+      <MarqueeRow items={top} direction="left" speedSeconds={26} />
       <MarqueeRow items={bottom} direction="right" speedSeconds={32} />
     </div>
-  );
-};
+  )
+}
+
+/* ------------------------------ Page ------------------------------ */
 
 export default function App() {
-  const handleImgError = (e) => { e.currentTarget.src = FALLBACK_HEADSHOT; e.currentTarget.onerror = null }
+  const handleImgError = (e) => {
+    e.currentTarget.src = FALLBACK_HEADSHOT
+    e.currentTarget.onerror = null
+  }
+
   return (
     <div className={`${brand.bg} min-h-screen`}>
       <header className="sticky top-0 z-40 backdrop-blur bg-white/70 border-b border-black/5">
@@ -126,7 +133,13 @@ export default function App() {
                 Hey, I’m Imeth! I work to connect science, humanity, and innovation to shape the future of medicine.
               </motion.h1>
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="mt-2 text-lg md:text-xl text-emerald-900/80">
-                <Typewriter options={{ strings: ['Student', 'Researcher', 'Preventative Medicine Advocate', 'Public Health Policy Advisor', 'Mentor'], autoStart: true, loop: true }} />
+                <Typewriter
+                  options={{
+                    strings: ['Student', 'Researcher', 'Preventative Medicine Advocate', 'Public Health Policy Advisor', 'Mentor'],
+                    autoStart: true,
+                    loop: true
+                  }}
+                />
               </motion.div>
               <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="mt-4 max-w-3xl text-emerald-900/90">
                 I’m into prevention-first thinking and turning evidence into action — from campus overdose response to imaging-based early detection. My work spans public health, harm reduction, mental health, and the brain–gut axis, with a focus on real-world impact and health equity.
@@ -144,9 +157,11 @@ export default function App() {
           </div>
 
           {/* Infinite Logos Carousel */}
-<div className="pt-4">
-  <TwoLineCarousel items={affiliations} />
-</div>
+          <div className="pt-4">
+            <TwoLineCarousel items={affiliations} />
+          </div>
+        </div>
+      </section>
 
       {/* Journey */}
       <section id="journey" className="max-w-6xl mx-auto px-6 md:px-8 py-14">
@@ -173,18 +188,25 @@ export default function App() {
 
       {/* Contact */}
       <section id="contact" className="max-w-6xl mx-auto px-6 md:px-8 py-16 md:py-24">
-        <div className="mb-8"><h2 className={`text-2xl md:text-3xl font-semibold ${brand.text}`}>Contact</h2><p className="mt-2 text-emerald-900/70 max-w-3xl">Open to collaborations in imaging, public health, and tech-for-good.</p></div>
+        <div className="mb-8">
+          <h2 className={`text-2xl md:text-3xl font-semibold ${brand.text}`}>Contact</h2>
+          <p className="mt-2 text-emerald-900/70 max-w-3xl">Open to collaborations in imaging, public health, and tech-for-good.</p>
+        </div>
         <div className="grid md:grid-cols-3 gap-6">
           <Card><h4 className="font-semibold text-emerald-950">Email</h4><a href="mailto:imperuma@gmail.com" className="mt-2 block text-emerald-800 hover:underline">imperuma@gmail.com</a></Card>
-          <Card><h4 className="font-semibold text-emerald-950">LinkedIn</h4><a href="https://www.linkedin.com/in/imeth-illamperuma" className="mt-2 inline-flex items-center gap-2 text-emerald-800 hover:underline"><Linkedin className="w-4 h-4"/> LinkedIn</a></Card>
-          <Card><h4 className="font-semibold text-emerald-950">GitHub</h4><a href="https://github.com/" className="mt-2 inline-flex items-center gap-2 text-emerald-800 hover:underline"><Github className="w-4 h-4"/> GitHub</a></Card>
+          <Card><h4 className="font-semibold text-emerald-950">LinkedIn</h4><a href="https://www.linkedin.com/in/imeth-illamperuma" className="mt-2 inline-flex items-center gap-2 text-emerald-800 hover:underline"><Linkedin className="w-4 h-4" /> LinkedIn</a></Card>
+          <Card><h4 className="font-semibold text-emerald-950">GitHub</h4><a href="https://github.com/" className="mt-2 inline-flex items-center gap-2 text-emerald-800 hover:underline"><Github className="w-4 h-4" /> GitHub</a></Card>
         </div>
       </section>
 
       <footer className="border-t border-black/5">
         <div className="max-w-6xl mx-auto px-6 md:px-8 py-10 text-sm text-emerald-900/70 flex flex-col md:flex-row items-center justify-between gap-3">
           <div>© {new Date().getFullYear()} Imeth Illamperuma</div>
-          <div className="flex items-center gap-4"><a className="hover:underline" href="#journey">Journey</a><a className="hover:underline" href="#offerings">What I Offer</a><a className="hover:underline" href="#contact">Contact</a></div>
+          <div className="flex items-center gap-4">
+            <a className="hover:underline" href="#journey">Journey</a>
+            <a className="hover:underline" href="#offerings">What I Offer</a>
+            <a className="hover:underline" href="#contact">Contact</a>
+          </div>
         </div>
       </footer>
     </div>
