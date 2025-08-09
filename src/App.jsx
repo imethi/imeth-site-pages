@@ -38,8 +38,7 @@ const affiliations = [
 ].map(i => ({ ...i, safeLogo: i.logo, placeholder: logoFallback(i.org) }))
 
 // One thin row that scrolls infinitely in a chosen direction
-const MarqueeRow = ({ items, direction = "left", speedSeconds = 28 }) => {
-  const anim =
+const MarqueeRow = ({ items, direction = "left", speedSeconds = 28 }) => { /* ... */ };
     direction === "left"
       ? `animate-[marquee_${speedSeconds}s_linear_infinite]`
       : `animate-[marqueeReverse_${speedSeconds}s_linear_infinite]`;
@@ -84,7 +83,7 @@ const MarqueeRow = ({ items, direction = "left", speedSeconds = 28 }) => {
 };
 
 // Two rows, opposite directions, slightly different speeds
-const TwoLineCarousel = ({ items }) => {
+const TwoLineCarousel = ({ items }) => { /* ... */ };
   const mid = Math.ceil(items.length / 2);
   const top = items.slice(0, mid);
   const bottom = items.slice(mid);
@@ -145,9 +144,9 @@ export default function App() {
           </div>
 
           {/* Infinite Logos Carousel */}
-          <div className="pt-4"><TwolineCarousel items={affiliations} /</div>
-        </div>
-      </section>
+<div className="pt-4">
+  <TwoLineCarousel items={affiliations} />
+</div>
 
       {/* Journey */}
       <section id="journey" className="max-w-6xl mx-auto px-6 md:px-8 py-14">
