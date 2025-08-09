@@ -2,15 +2,51 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { color-scheme: light; }
-
-/* Leftward */
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+:root {
+  color-scheme: light;
 }
-/* Rightward */
+
+/* Smooth continuous scroll (leftward) */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Smooth continuous scroll (rightward) */
 @keyframes marqueeReverse {
-  0% { transform: translateX(-50%); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Utility classes for both directions */
+.animate-marquee {
+  animation: marquee linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-reverse {
+  animation: marqueeReverse linear infinite;
+  will-change: transform;
+}
+
+/* Ensures logos/text align properly in carousel rows */
+.carousel-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  white-space: nowrap;
+}
+
+.carousel-item img {
+  height: 2rem; /* match thin row style */
+  width: auto;
+  object-fit: contain;
 }
