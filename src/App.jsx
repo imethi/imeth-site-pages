@@ -151,9 +151,9 @@ function OrcidIcon({ className = "w-4 h-4" }) {
 function PublicationsPage() {
   // 🔗 Replace these with your real profiles
   const LINKS = {
-    scholar: "https://scholar.google.com/citations?user=YOUR_ID",
-    orcid: "https://orcid.org/0000-0000-0000-0000",
-    linkedin: "https://www.linkedin.com/in/imeth-illamperuma/details/publications/",
+    scholar: "https://scholar.google.com/citations?user=Pzwn3y0AAAAJ&hl=en",
+    orcid: "https://orcid.org/0009-0007-3778-7635",
+    linkedin: "https://www.linkedin.com/in/imeth-illamperuma-3a734a193/details/publications/",
   };
 
   // Your logo files (pictures only)
