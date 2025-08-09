@@ -3,13 +3,15 @@
 @tailwind utilities;
 
 :root { color-scheme: light; }
-@keyframes marquee { 0% { transform: translateX(0) } 100% { transform: translateX(-50%) } }
+
+/* Leftward scrolling */
 @keyframes marquee {
   0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); } /* leftward */
+  100% { transform: translateX(-50%); }
 }
 
+/* Rightward scrolling */
 @keyframes marqueeReverse {
   0%   { transform: translateX(-50%); }
-  100% { transform: translateX(0); }    /* rightward */
+  100% { transform: translateX(0); }
 }
