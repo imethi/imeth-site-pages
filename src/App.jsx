@@ -37,21 +37,48 @@ const affiliations = [
   { org: 'LMC Healthcare', role: 'Medical Office Administrator (Intern)', logo: `${BASE}logos/lmc.png`, link: 'https://www.lmc.ca/' },
 ].map(i => ({ ...i, safeLogo: i.logo, placeholder: logoFallback(i.org) }))
 
-const CarouselRow = ({ items, speed = 'animate-[marquee_28s_linear_infinite]' }) => (
+// Carousel row component
+const CarouselRow = ({ items, speed, reverse }) => (
   <div className="overflow-hidden">
-    <div className={`flex gap-10 whitespace-nowrap ${speed}`}>
-      {[...items, ...items].map((it, idx) => (
-        <a key={idx} href={it.link || '#'} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-2 py-3 hover:opacity-80 transition" title={`${it.role} — ${it.org}`}>
-          <img src={it.safeLogo} onError={(e) => { e.currentTarget.src = it.placeholder; e.currentTarget.onerror = null; }} alt={it.org} className="h-10 w-auto object-contain opacity-90" />
-          <div className="text-emerald-900/80 text-sm">
-            <div className="font-semibold text-emerald-950 leading-none">{it.org}</div>
-            <div className="text-xs leading-tight">{it.role}</div>
-          </div>
+    <div
+      className={`flex gap-10 whitespace-nowrap ${
+        reverse ? 'animate-[marqueeReverse_28s_linear_infinite]' : 'animate-[marquee_28s_linear_infinite]'
+      } ${speed}`}
+    >
+      {items.map((it, idx) => (
+        <a
+          key={idx}
+          href={it.link || '#'}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2"
+        >
+          <img
+            src={it.safeLogo}
+            onError={(e) => { e.currentTarget.src = it.placeholder; e.currentTarget.onerror = null; }}
+            className="text-emerald-900/80 text-sm"
+          />
+          <div className="font-semibold text-emerald-950 leading-none">{it.org}</div>
+          <div className="text-xs leading-tight">{it.role}</div>
         </a>
       ))}
     </div>
   </div>
-)
+);
+
+// Two-row carousel wrapper
+const Carousel = ({ items }) => {
+  const mid = Math.ceil(items.length / 2);
+  const firstRow = items.slice(0, mid);
+  const secondRow = items.slice(mid);
+
+  return (
+    <div className="space-y-4">
+      <CarouselRow items={firstRow} reverse={false} />
+      <CarouselRow items={secondRow} reverse={true} />
+    </div>
+  );
+};
 
 export default function App() {
   const handleImgError = (e) => { e.currentTarget.src = FALLBACK_HEADSHOT; e.currentTarget.onerror = null }
@@ -102,7 +129,7 @@ export default function App() {
           </div>
 
           {/* Infinite Logos Carousel */}
-          <div className="pt-4"><CarouselRow items={affiliations} /></div>
+          <div className="pt-4"><Carousel items={affiliations} /></div>
         </div>
       </section>
 
