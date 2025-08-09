@@ -81,7 +81,7 @@ export default function App() {
             </motion.div>
             <div>
               <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-4xl md:text-5xl font-semibold tracking-tight text-emerald-950">
-                Hi, I’m Imeth — I connect imaging, prevention, and public health.
+                Hey, I’m Imeth! I work to connect science, humanity, and innovation to shape the future of medicine.
               </motion.h1>
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="mt-2 text-lg md:text-xl text-emerald-900/80">
                 <Typewriter options={{ strings: ['Student', 'Researcher', 'Preventative Medicine Advocate', 'Public Health Policy Advisor', 'Mentor'], autoStart: true, loop: true }} />
