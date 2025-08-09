@@ -20,3 +20,4 @@ Commit the change and Pages will redeploy.
 - Optional CV: place at repo root as `Imeth-Illamperuma-CV.pdf` (button included).
 
 This template uses BASE-safe paths so assets work on GitHub Pages without blank screens.
+ 
