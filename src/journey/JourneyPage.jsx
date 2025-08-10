@@ -14,7 +14,7 @@ function usePreloadImages(srcs) {
 }
 const onErr = (e) => { e.currentTarget.src = FALLBACK }
 
-/* ---------- timeline data (same as before; edit as you like) ---------- */
+/* ---------- timeline data (unchanged) ---------- */
 const timeline = [
   {
     year: '2025',
@@ -134,11 +134,10 @@ const Timeline = ({ groups }) => (
   </div>
 )
 
-/* ---------- NEW: Animated hero (no mosaic) ---------- */
+/* ---------- Animated hero (no mosaic) ---------- */
 function AnimatedHero() {
   return (
     <div className="relative overflow-hidden rounded-3xl ring-1 ring-white/10 bg-gradient-to-b from-slate-900/0 to-slate-900/20">
-      {/* aurora blobs */}
       <motion.div className="pointer-events-none absolute -top-10 -left-10 h-56 w-56 rounded-full blur-3xl bg-indigo-500/30"
         animate={{ x: [0, 10, -10, 0], y: [0, -10, 10, 0] }} transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}/>
       <motion.div className="pointer-events-none absolute -bottom-12 left-1/2 h-56 w-56 rounded-full blur-3xl bg-fuchsia-500/25"
@@ -164,14 +163,14 @@ function AnimatedHero() {
   )
 }
 
-/* ---------- FEATURED: infinite carousel ---------- */
+/* ---------- Featured Stories: infinite marquee with SMART image fit + fixed whitespace ---------- */
 const extraFeatured = [
   {
     year: '2025—Present',
     title: 'Juravinski Cancer Centre',
-    desc: 'Oncology department operations: patient flow, quality & safety, and multi-disciplinary coordination.',
+    desc: 'Oncology department operations: patient flow, quality & safety, and multidisciplinary coordination.',
     img: `${BASE}images/journey-featured/jcc.jpg`,
-    link: '#/journey', // point to a deep page if/when you add it
+    link: '#/journey',
   },
   {
     year: '2025—Present',
@@ -183,21 +182,40 @@ const extraFeatured = [
 ]
 const FEATURED_STORIES = [...stories, ...extraFeatured]
 
+// Individual card with dynamic image fit and text wrapping fixed
 function FeaturedCard({ s }) {
+  const [fit, setFit] = React.useState('cover')
+  const handleLoad = (e) => {
+    const { naturalWidth: w, naturalHeight: h } = e.currentTarget
+    const r = w / h
+    // Very wide or very tall → treat like a logo/graphic (contain)
+    setFit(r >= 1.8 || r <= 0.75 ? 'contain' : 'cover')
+  }
+
   return (
     <a href={s.link} className="inline-block w-80">
       <Card className="p-0 overflow-hidden">
-        <img src={s.img} alt={s.title} onError={onErr} className="h-48 w-full object-cover" />
-        <div className="p-5">
+        <div className="h-48 bg-slate-900/30">
+          <img
+            src={s.img}
+            alt={s.title}
+            onError={onErr}
+            onLoad={handleLoad}
+            className={`w-full h-full ${fit === 'contain' ? 'object-contain p-2' : 'object-cover'}`}
+          />
+        </div>
+        {/* Reset inherited no-wrap from marquee */}
+        <div className="p-5 whitespace-normal">
           <div className="text-sm font-medium text-indigo-300">{s.year}</div>
-          <h3 className="mt-1 font-semibold text-lg text-slate-50">{s.title}</h3>
-          <p className="mt-1 text-sm text-slate-100/90">{s.desc}</p>
+          <h3 className="mt-1 font-semibold text-lg leading-snug text-slate-50">{s.title}</h3>
+          <p className="mt-2 text-sm leading-relaxed text-slate-100/90">{s.desc}</p>
           <span className="mt-3 inline-flex items-center text-sm font-medium text-indigo-300">Read More →</span>
         </div>
       </Card>
     </a>
   )
 }
+
 function FeaturedMarquee({ items, speed = 36 }) {
   return (
     <div className="relative overflow-hidden">
@@ -227,7 +245,6 @@ export default function JourneyPage() {
           <h2 className="text-2xl md:text-3xl font-semibold text-slate-50">Featured Stories</h2>
           <span className="text-sm text-indigo-300">Chronological</span>
         </div>
-        {/* Infinite carousel */}
         <FeaturedMarquee items={FEATURED_STORIES} speed={40} />
       </div>
 
