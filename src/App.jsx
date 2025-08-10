@@ -19,9 +19,22 @@ const FALLBACK_HEADSHOT = (() => {
 })()
 
 // ---------- UI helpers ----------
-const brand = { bg: 'bg-emerald-50 dark:bg-emerald-950', text: 'text-emerald-950 dark:text-emerald-100', accentBg: 'bg-emerald-700', card: 'bg-white/80 dark:bg-emerald-900/40 backdrop-blur' }
-const Pill  = ({ children }) => (<span className="inline-flex items-center rounded-full border border-emerald-700/20 px-3 py-1 text-xs text-emerald-900/80 dark:text-emerald-200/80">{children}</span>)
-const Card  = ({ children }) => (<div className={`rounded-2xl ${brand.card} shadow-sm ring-1 ring-black/5 dark:ring-white/10 p-6`}>{children}</div>)
+const brand = {
+  bg: 'bg-emerald-50 dark:bg-emerald-950',
+  text: 'text-emerald-950 dark:text-emerald-100',
+  accentBg: 'bg-emerald-700',
+  card: 'bg-white/80 dark:bg-emerald-900/40 backdrop-blur'
+}
+const Pill  = ({ children }) => (
+  <span className="inline-flex items-center rounded-full border border-emerald-700/20 px-3 py-1 text-xs text-emerald-900/80 dark:text-emerald-200/80">
+    {children}
+  </span>
+)
+const Card  = ({ children }) => (
+  <div className={`rounded-2xl ${brand.card} shadow-sm ring-1 ring-black/5 dark:ring-white/10 p-6`}>
+    {children}
+  </div>
+)
 
 const logoFallback = (text) =>
   `data:image/svg+xml;utf8,${encodeURIComponent(
@@ -39,6 +52,22 @@ const affiliations = [
   { org: 'McMaster DB Sports Med & Rehab', role: 'Sports Specialist Rehab Assistant (Intern)', logo: `${BASE}logos/mcmaster-sportsmed.png`, link: 'https://sportmed.mcmaster.ca/' },
   { org: 'LMC Healthcare', role: 'Medical Office Administrator (Intern)', logo: `${BASE}logos/lmc.png`, link: 'https://www.lmc.ca/' },
 ].map(i => ({ ...i, safeLogo: i.logo, placeholder: logoFallback(i.org) }))
+
+// ---------- Journey collage sources (put images in /public/journey/) ----------
+const journeyImages = [
+  `${BASE}journey/j1.jpg`,
+  `${BASE}journey/j2.jpg`,
+  `${BASE}journey/j3.jpg`,
+  `${BASE}journey/j4.jpg`,
+  `${BASE}journey/j5.jpg`,
+]
+const journeyImagesB = [
+  `${BASE}journey/j6.jpg`,
+  `${BASE}journey/j7.jpg`,
+  `${BASE}journey/j8.jpg`,
+  `${BASE}journey/j9.jpg`,
+  `${BASE}journey/j10.jpg`,
+]
 
 /* ================= Two-line infinite carousel (opposite directions) ================= */
 
@@ -128,6 +157,7 @@ function ContactPage() {
   )
 }
 
+// Small inline icons for Publications links bar
 function ScholarIcon({ className = "w-4 h-4" }) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
@@ -136,9 +166,7 @@ function ScholarIcon({ className = "w-4 h-4" }) {
     </svg>
   );
 }
-
 function OrcidIcon({ className = "w-4 h-4" }) {
-  // ORCID green
   return (
     <svg viewBox="0 0 256 256" className={className} aria-hidden="true">
       <circle cx="128" cy="128" r="128" fill="#A6CE39" />
@@ -149,19 +177,17 @@ function OrcidIcon({ className = "w-4 h-4" }) {
 }
 
 function PublicationsPage() {
-  // 🔗 Replace these with your real profiles
   const LINKS = {
     scholar: "https://scholar.google.com/citations?user=Pzwn3y0AAAAJ&hl=en",
     orcid: "https://orcid.org/0009-0007-3778-7635",
     linkedin: "https://www.linkedin.com/in/imeth-illamperuma-3a734a193/details/publications/",
-  };
+  }
 
-  // Your logo files (pictures only)
   const logos = [
     "guardian.png","time.png","stat.png","bmj.png","hill.png",
     "newscientist.png","npr.png","natgeo.png","mittr.png","wired.png",
-  ];
-  const sources = logos.map((file) => `${BASE}pub-logos/${file}`);
+  ]
+  const sources = logos.map((file) => `${BASE}pub-logos/${file}`)
 
   return (
     <section className="max-w-6xl mx-auto px-6 md:px-8 py-14">
@@ -172,7 +198,6 @@ function PublicationsPage() {
         A selection of outlets featuring my work.
       </p>
 
-      {/* --- Aesthetic links bar --- */}
       <div className={`mt-6 rounded-2xl ${brand.card} ring-1 ring-black/5 dark:ring-white/10 p-4`}>
         <div className="flex flex-wrap items-center gap-3">
           <a
@@ -185,7 +210,6 @@ function PublicationsPage() {
             <span>Google Scholar</span>
             <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition" />
           </a>
-
           <a
             href={LINKS.orcid}
             target="_blank"
@@ -196,7 +220,6 @@ function PublicationsPage() {
             <span>ORCID iD</span>
             <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition" />
           </a>
-
           <a
             href={LINKS.linkedin}
             target="_blank"
@@ -210,7 +233,6 @@ function PublicationsPage() {
         </div>
       </div>
 
-      {/* --- Pure image grid (pictures only) --- */}
       <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {sources.map((src, i) => (
           <div
@@ -232,7 +254,22 @@ function PublicationsPage() {
         Logos are for identification only and belong to their respective owners.
       </div>
     </section>
-  );
+  )
+}
+
+// --------- (NEW) Full Journey page stub (for later build-out) ----------
+function JourneyPage() {
+  return (
+    <section className="max-w-6xl mx-auto px-6 md:px-8 py-14">
+      <h1 className="text-3xl md:text-4xl font-semibold text-emerald-950 dark:text-emerald-100">
+        My Journey
+      </h1>
+      <p className="mt-3 text-emerald-900/80 dark:text-emerald-300/80 max-w-3xl">
+        A deeper look at the projects, teams, and ideas that shaped how I think about
+        prevention-first medicine, imaging, and public health. (Full timeline and stories coming soon.)
+      </p>
+    </section>
+  )
 }
 
 /* ================= Main App ================= */
@@ -308,21 +345,65 @@ export default function App() {
             </div>
           </div>
 
-          {/* Home-only sections */}
+          {/* -------- NEW Journey preview (story + animated collage) -------- */}
           <section id="journey" className="max-w-6xl mx-auto px-6 md:px-8 py-14">
-            <div className="mb-6">
-              <h2 className={`text-2xl md:text-3xl font-semibold ${brand.text}`}>My Journey</h2>
-              <p className="mt-2 text-emerald-900/70 dark:text-emerald-300/70 max-w-3xl">
-                How curiosity about prevention grew into research, advocacy, and building systems that help people earlier.
-              </p>
-            </div>
-            <div className="grid md:grid-cols-3 gap-6">
-              <Card><h3 className="font-semibold text-emerald-950 dark:text-emerald-100">Where it started</h3><p className="mt-2 text-emerald-900/80 dark:text-emerald-300/80">Kinesiology at McMaster sharpened my lens on how small upstream choices ripple into lifelong health.</p></Card>
-              <Card><h3 className="font-semibold text-emerald-950 dark:text-emerald-100">Turning questions into tools</h3><p className="mt-2 text-emerald-900/80 dark:text-emerald-300/80">At Stanford Radiology, I explored molecular imaging and the brain–gut axis to spot risk before symptoms speak.</p></Card>
-              <Card><h3 className="font-semibold text-emerald-950 dark:text-emerald-100">Evidence → Action</h3><p className="mt-2 text-emerald-900/80 dark:text-emerald-300/80">On campus, we placed naloxone kits, trained peers, and built momentum for safer communities.</p></Card>
+            <div className="grid md:grid-cols-2 gap-10 items-center">
+              {/* Left: title + sincere description + CTA */}
+              <div>
+                <h2 className="text-3xl md:text-4xl font-semibold text-emerald-950 dark:text-emerald-100">
+                  My Journey
+                </h2>
+                <p className="mt-3 text-emerald-900/80 dark:text-emerald-300/80 leading-relaxed">
+                  Medicine became more than a destination for me—it’s been a series of
+                  questions, mentors, and moments that reshaped how I think about care.
+                  I started with movement and prevention, then found myself drawn to the
+                  spaces where science meets lived experience: imaging for earlier
+                  detection, harm reduction on campus, and public health that treats
+                  people as whole. Along the way I’ve been part of teams that encouraged
+                  curiosity, built programs from the ground up, and pushed for equity
+                  as the standard—not the exception. This page is a glimpse into that
+                  path and the impact it’s had on what I value and how I work.
+                </p>
+
+                <a
+                  href="#/journey"
+                  className="mt-6 inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-emerald-700 text-white hover:opacity-90 transition"
+                >
+                  Read the full story
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
+                </a>
+              </div>
+
+              {/* Right: animated collage */}
+              <div className="relative">
+                <div className="rounded-3xl ring-1 ring-black/5 dark:ring-white/10 overflow-hidden bg-white/50 dark:bg-emerald-900/30 p-4">
+                  <div className="space-y-4">
+                    <div className="journey-row animate-journeyLeft" style={{ animationDuration: '40s' }}>
+                      {journeyImages.map((src, i) => (
+                        <img key={'top-'+i} src={src} className="journey-tile" alt="" />
+                      ))}
+                      {journeyImages.map((src, i) => (
+                        <img key={'topb-'+i} src={src} className="journey-tile" alt="" />
+                      ))}
+                    </div>
+                    <div className="journey-row animate-journeyRight" style={{ animationDuration: '48s' }}>
+                      {journeyImagesB.map((src, i) => (
+                        <img key={'bot-'+i} src={src} className="journey-tile" alt="" />
+                      ))}
+                      {journeyImagesB.map((src, i) => (
+                        <img key={'botb-'+i} src={src} className="journey-tile" alt="" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-2 text-xs text-emerald-900/60 dark:text-emerald-300/60">
+                  Moments with teams and projects that shaped my work.
+                </div>
+              </div>
             </div>
           </section>
 
+          {/* Offerings */}
           <section id="offerings" className="max-w-6xl mx-auto px-6 md:px-8 py-14">
             <div className="mb-6"><h2 className={`text-2xl md:text-3xl font-semibold ${brand.text}`}>What I Offer</h2></div>
             <div className="grid md:grid-cols-3 gap-6">
@@ -336,6 +417,7 @@ export default function App() {
 
       {route === 'publications' && <PublicationsPage />}
       {route === 'contact' && <ContactPage />}
+      {route === 'journey' && <JourneyPage />}
 
       <footer className="border-t border-black/5 dark:border-white/10">
         <div className="max-w-6xl mx-auto px-6 md:px-8 py-10 text-sm text-emerald-900/70 dark:text-emerald-300/70 flex flex-col md:flex-row items-center justify-between gap-3">
