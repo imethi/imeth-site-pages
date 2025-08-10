@@ -2,61 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Default to dark mode across the site */
 :root {
   color-scheme: dark;
 }
 
-/* Default site background and text */
+/* Global page surface */
 body {
   @apply bg-gray-900 text-gray-100;
 }
 
-/* Smooth continuous scroll (leftward) */
+/* ---------------- Marquee (infinite scroll) ---------------- */
+
+/* Leftward */
 @keyframes marquee {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); } /* we duplicate items, so -50% loops cleanly */
 }
 
-/* Smooth continuous scroll (rightward) */
+/* Rightward */
 @keyframes marqueeReverse {
-  0% {
-    transform: translateX(-50%);
-  }
-  100% {
-    transform: translateX(0);
-  }
+  0%   { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
 }
 
-/* Utility classes for both directions */
+/* Utility classes you can apply from JSX
+   (you can override duration inline via style={{animationDuration:'28s'}}) */
 .animate-marquee {
   animation: marquee linear infinite;
   will-change: transform;
 }
-
 .animate-marquee-reverse {
   animation: marqueeReverse linear infinite;
   will-change: transform;
 }
 
-/* Ensures logos/text align properly in carousel rows */
+/* Keeps logos/text nicely aligned in thin rows */
 .carousel-item {
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
   white-space: nowrap;
 }
-
 .carousel-item img {
-  height: 2rem; /* match thin row style */
+  height: 2rem; /* thin row look */
   width: auto;
   object-fit: contain;
 }
 
-/* Publications — floating logo wall */
+/* ---------------- Publications logo tiles ---------------- */
+
 @keyframes floatY {
   0%   { transform: translateY(0); }
   50%  { transform: translateY(-6px); }
@@ -65,8 +60,12 @@ body {
 
 .logo-tile {
   filter: grayscale(100%);
-  opacity: 0.8;
-  transition: transform .2s ease, filter .2s ease, opacity .2s ease, box-shadow .2s ease;
+  opacity: 0.85;
+  transition:
+    transform .2s ease,
+    filter .2s ease,
+    opacity .2s ease,
+    box-shadow .2s ease;
   animation: floatY 10s ease-in-out infinite;
   will-change: transform;
 }
@@ -77,28 +76,37 @@ body {
   transform: translateY(-2px) scale(1.03);
 }
 
-/* Journey collage */
+/* ---------------- Journey collage (two opposing rows) ---------------- */
+
 .journey-row {
   display: inline-flex;
   white-space: nowrap;
   width: max-content;
   gap: 12px;
 }
+
 .journey-tile {
-  height: 88px;            /* tweak size here */
+  height: 88px;          /* adjust to make the strip taller/shorter */
   width: auto;
   object-fit: cover;
   border-radius: 16px;
   filter: saturate(1.05);
-  box-shadow: 0 6px 20px rgba(0,0,0,.08);
-  transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    filter .2s ease;
 }
+
 .journey-tile:hover {
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 10px 28px rgba(0,0,0,.15);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
   filter: saturate(1.15);
 }
-@keyframes journeyLeft  { 0% {transform:translateX(0)} 100% {transform:translateX(-50%)} }
-@keyframes journeyRight { 0% {transform:translateX(-50%)} 100% {transform:translateX(0)} }
-.animate-journeyLeft  { animation: journeyLeft linear infinite; }
-.animate-journeyRight { animation: journeyRight linear infinite; }
+
+/* Opposite-direction loops. Duration is set in JSX inline, but these are the defaults. */
+@keyframes journeyLeft  { 0% { transform: translateX(0);    } 100% { transform: translateX(-50%); } }
+@keyframes journeyRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0);    } }
+
+.animate-journeyLeft  { animation: journeyLeft  40s linear infinite; }
+.animate-journeyRight { animation: journeyRight 48s linear infinite; }
