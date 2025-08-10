@@ -69,7 +69,7 @@ const StanfordStory = {
     },
     {
       id: 'capstone',
-      title: 'My capstone: the brain–gut axis',
+      title: 'My Research Project: Molecular Imagining Predictors for Alzheimers the Brain Gut-Axis',
       content: (
         <>
           <p>
