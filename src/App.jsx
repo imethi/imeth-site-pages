@@ -55,12 +55,18 @@ const affiliations = [
 
 // ---------- Journey collage sources (put images in /public/journey/) ----------
 const journeyImages = [
-  `${BASE}journey/j1.jpg`,
-  `${BASE}journey/j2.jpg`,
-  `${BASE}journey/j3.jpg`,
-  `${BASE}journey/j4.jpg`,
-  `${BASE}journey/j5.jpg`,
-]
+  '019929.png',
+  '392883.png',
+  '8982934.png',
+  '92034.png',
+  '9234929.png',
+  'IMG_2962.png',
+  'IMG_3664.png',
+  'IMG_5720.png',
+  'IMG_5726.png',
+  'IMG_8893.png',
+];
+
 const journeyImagesB = [
   `${BASE}journey/j6.jpg`,
   `${BASE}journey/j7.jpg`,
