@@ -76,3 +76,29 @@ body {
   opacity: 1;
   transform: translateY(-2px) scale(1.03);
 }
+
+/* Journey collage */
+.journey-row {
+  display: inline-flex;
+  white-space: nowrap;
+  width: max-content;
+  gap: 12px;
+}
+.journey-tile {
+  height: 88px;            /* tweak size here */
+  width: auto;
+  object-fit: cover;
+  border-radius: 16px;
+  filter: saturate(1.05);
+  box-shadow: 0 6px 20px rgba(0,0,0,.08);
+  transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+}
+.journey-tile:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 28px rgba(0,0,0,.15);
+  filter: saturate(1.15);
+}
+@keyframes journeyLeft  { 0% {transform:translateX(0)} 100% {transform:translateX(-50%)} }
+@keyframes journeyRight { 0% {transform:translateX(-50%)} 100% {transform:translateX(0)} }
+.animate-journeyLeft  { animation: journeyLeft linear infinite; }
+.animate-journeyRight { animation: journeyRight linear infinite; }
