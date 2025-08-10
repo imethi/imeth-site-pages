@@ -77,9 +77,11 @@ const StanfordStory = {
             Over the past months I’ve grown a real interest in nutrition—not as rules, but as a conversation between gut and brain. The fellowship gave me methods to test it. I designed a project using <strong>molecular imaging + multi-omics</strong> to look for <strong>early inflammatory and metabolic signals</strong> along the brain–gut axis that might forecast cognitive decline.
           </p>
           <ul>
-            <li><strong>Motivation:</strong> symptoms arrive late; gut-derived metabolites & immune mediators may precede them.</li>
-            <li><strong>Concept:</strong> pair PET/MRI readouts with microbiome/metabolomics & cognitive indices; test compact features against brain activity/risk.</li>
-            <li><strong>Build:</strong> blueprint for QC, ROI definition, feature engineering, CCA/PLS integration, validation + an illustrative figure.</li>
+            <li><strong>Motivation:</strong> Symptoms arrive late; gut-derived metabolites & immune mediators may precede them.</li>
+            
+            <li><strong>Concept:</strong> Pair PET/MRI readouts with microbiome/metabolomics & cognitive indices; test compact features against brain activity/risk.</li>
+            
+            <li><strong>Build:</strong> Blueprint for QC, ROI definition, feature engineering, CCA/PLS integration, validation + an illustrative figure.</li>
           </ul>
         </>
       ),
