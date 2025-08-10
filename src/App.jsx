@@ -76,10 +76,9 @@ const journeyFiles = [
   'IMG_8893.png',
 ]
 
-// Build absolute asset URLs (works locally and on Pages)
+// Build absolute asset URLs (works locally and on Pages). Add a cache-buster.
 const J_BASE = `${BASE}images/journey-images/`
-const journeyA = journeyFiles.map(f => `${J_BASE}${encodeURIComponent(f)}?v=1`)
-const journeyB = [...journeyA].reverse()
+const journeySources = journeyFiles.map(f => `${J_BASE}${encodeURIComponent(f)}?v=2`)
 
 /* ================= Two-line infinite carousel (opposite directions) ================= */
 const MarqueeRow = ({ items, direction = 'left', speedSeconds = 28 }) => {
@@ -335,7 +334,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* -------- Journey preview (story + animated collage) -------- */}
+          {/* -------- Journey preview (story + single-row collage) -------- */}
           <section id="journey" className="max-w-6xl mx-auto px-6 md:px-8 py-14">
             <div className="grid md:grid-cols-2 gap-10 items-center">
               {/* Left: description + CTA */}
@@ -362,36 +361,23 @@ export default function App() {
                 </a>
               </div>
 
-              {/* Right: animated collage */}
+              {/* Right: single, larger, smooth-scrolling collage */}
               <div className="relative">
                 <div className="rounded-3xl ring-1 ring-black/5 dark:ring-white/10 overflow-hidden bg-white/50 dark:bg-emerald-900/30 p-4">
-                  <div className="space-y-4">
-                    {/* Row 1 — leftward */}
-                    <div className="journey-row animate-journeyLeft" style={{ animationDuration: '40s' }}>
-                      {[...journeyA, ...journeyA].map((src, i) => (
+                  <div className="overflow-hidden">
+                    <div
+                      className="inline-flex items-center gap-4 whitespace-nowrap animate-marquee will-change-transform"
+                      style={{ width: 'max-content', animationDuration: '36s' }}
+                    >
+                      {[...journeySources, ...journeySources].map((src, i) => (
                         <img
-                          key={`ja-${i}`}
+                          key={`jr-${i}`}
                           src={src}
                           alt=""
-                          className="journey-tile"
+                          className="h-[140px] w-auto object-cover rounded-2xl shadow-sm ring-1 ring-black/5 dark:ring-white/10"
                           onError={(e) => {
                             console.error('Journey image failed:', src)
-                            e.currentTarget.style.opacity = 0.25
-                          }}
-                        />
-                      ))}
-                    </div>
-                    {/* Row 2 — rightward */}
-                    <div className="journey-row animate-journeyRight" style={{ animationDuration: '48s' }}>
-                      {[...journeyB, ...journeyB].map((src, i) => (
-                        <img
-                          key={`jb-${i}`}
-                          src={src}
-                          alt=""
-                          className="journey-tile"
-                          onError={(e) => {
-                            console.error('Journey image failed:', src)
-                            e.currentTarget.style.opacity = 0.25
+                            e.currentTarget.src = FALLBACK_HEADSHOT
                           }}
                         />
                       ))}
