@@ -8,12 +8,16 @@ const BASE = import.meta.env.BASE_URL
 
 // ---------- Assets ----------
 const HEADSHOT_PATH = `${BASE}images/imeth-profile1.png`
-
 const FALLBACK_HEADSHOT = (() => {
   const svg = `
     <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'>
-      <defs><linearGradient id='g' x1='0' x2='1' y1='0' y2='1'><stop offset='0%' stop-color='#bbf7d0'/><stop offset='100%' stop-color='#34d399'/></linearGradient></defs>
-      <circle cx='128' cy='128' r='128' fill='url(#g)'/><text x='50%' y='54%' text-anchor='middle' font-family='system-ui,Segoe UI,Roboto,Helvetica,Arial' font-size='84' fill='#064e3b' dy='.35em'>II</text>
+      <defs><linearGradient id='g' x1='0' x2='1' y1='0' y2='1'>
+        <stop offset='0%' stop-color='#bbf7d0'/><stop offset='100%' stop-color='#34d399'/>
+      </linearGradient></defs>
+      <circle cx='128' cy='128' r='128' fill='url(#g)'/>
+      <text x='50%' y='54%' text-anchor='middle'
+        font-family='system-ui,Segoe UI,Roboto,Helvetica,Arial'
+        font-size='84' fill='#064e3b' dy='.35em'>II</text>
     </svg>`
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
 })()
@@ -38,7 +42,12 @@ const Card  = ({ children }) => (
 
 const logoFallback = (text) =>
   `data:image/svg+xml;utf8,${encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 200'><rect width='600' height='200' fill='#ecfdf5'/><text x='50%' y='50%' text-anchor='middle' font-family='system-ui,Segoe UI,Roboto,Helvetica,Arial' font-size='28' fill='#065f46'>${text}</text></svg>`
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 200'>
+      <rect width='600' height='200' fill='#ecfdf5'/>
+      <text x='50%' y='50%' text-anchor='middle'
+        font-family='system-ui,Segoe UI,Roboto,Helvetica,Arial'
+        font-size='28' fill='#065f46'>${text}</text>
+    </svg>`
   )}`
 
 // ---------- Data ----------
@@ -53,27 +62,16 @@ const affiliations = [
   { org: 'LMC Healthcare', role: 'Medical Office Administrator (Intern)', logo: `${BASE}logos/lmc.png`, link: 'https://www.lmc.ca/' },
 ].map(i => ({ ...i, safeLogo: i.logo, placeholder: logoFallback(i.org) }))
 
-// ---------- Journey collage sources (put images in /public/journey/) ----------
 // ---------- Journey collage sources (in /public/images/journey-images/) ----------
 const journeyFiles = [
-  '019929.png',
-  '392883.png',
-  '8982934.png',
-  '92034.png',
-  '9234929.png',
-  'IMG_2962.png',
-  'IMG_3664.png',
-  'IMG_5720.png',
-  'IMG_5726.png',
-  'IMG_8893.png',
-];
-
+  '019929.png','392883.png','8982934.png','92034.png','9234929.png',
+  'IMG_2962.png','IMG_3664.png','IMG_5720.png','IMG_5726.png','IMG_8893.png',
+]
 // Row A in normal order, Row B reversed for visual variety
-const journeyA = journeyFiles.map((f) => `${BASE}images/journey-images/${f}`);
-const journeyB = [...journeyA].reverse();
+const journeyA = journeyFiles.map((f) => `${BASE}images/journey-images/${f}`)
+const journeyB = [...journeyA].reverse()
 
 /* ================= Two-line infinite carousel (opposite directions) ================= */
-
 const MarqueeRow = ({ items, direction = 'left', speedSeconds = 28 }) => {
   const anim = direction === 'left' ? 'animate-marquee' : 'animate-marquee-reverse'
   return (
@@ -114,16 +112,14 @@ const TwoLineCarousel = ({ items }) => {
   const bottom = items.slice(mid)
   return (
     <div className="space-y-3">
-      <MarqueeRow items={top} direction="left" speedSeconds={26} />
+      <MarqueeRow items={top} direction="left"  speedSeconds={26} />
       <MarqueeRow items={bottom} direction="right" speedSeconds={32} />
     </div>
   )
 }
 
 /* ================= Router + Dark Mode ================= */
-
 const getRoute = () => (location.hash.replace(/^#\/?/, '') || 'home')
-
 function useDarkMode() {
   const [dark, setDark] = React.useState(() => localStorage.getItem('theme') === 'dark')
   React.useEffect(() => {
@@ -135,9 +131,8 @@ function useDarkMode() {
 }
 
 /* ================= Standalone Pages ================= */
-
 function ContactPage() {
-  const FORMSPREE_ID = "your_form_id_here" // ← replace when you’re ready
+  const FORMSPREE_ID = "your_form_id_here" // replace when you’re ready
   const action = `https://formspree.io/f/${FORMSPREE_ID}`
   return (
     <section className="max-w-3xl mx-auto px-6 md:px-8 py-14">
@@ -203,32 +198,22 @@ function PublicationsPage() {
 
       <div className={`mt-6 rounded-2xl ${brand.card} ring-1 ring-black/5 dark:ring-white/10 p-4`}>
         <div className="flex flex-wrap items-center gap-3">
-          <a
-            href={LINKS.scholar}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm"
-          >
+          <a href={LINKS.scholar} target="_blank" rel="noopener noreferrer"
+             className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm">
             <ScholarIcon className="w-4 h-4" />
             <span>Google Scholar</span>
             <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition" />
           </a>
-          <a
-            href={LINKS.orcid}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm"
-          >
+
+          <a href={LINKS.orcid} target="_blank" rel="noopener noreferrer"
+             className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm">
             <OrcidIcon className="w-4 h-4" />
             <span>ORCID iD</span>
             <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition" />
           </a>
-          <a
-            href={LINKS.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm"
-          >
+
+          <a href={LINKS.linkedin} target="_blank" rel="noopener noreferrer
+             "className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm">
             <Linkedin className="w-4 h-4" />
             <span>LinkedIn Publications</span>
             <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition" />
@@ -238,17 +223,11 @@ function PublicationsPage() {
 
       <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {sources.map((src, i) => (
-          <div
-            key={src}
-            className={`rounded-2xl ${brand.card} ring-1 ring-black/5 dark:ring-white/10 px-4 py-3 grid place-items-center logo-tile`}
-            style={{ animationDuration: `${9 + (i % 5)}s`, animationDelay: `${(i % 5) * 0.2}s` }}
-          >
-            <img
-              src={src}
-              alt=""
-              className="h-10 md:h-12 w-auto object-contain"
-              onError={(e) => { e.currentTarget.style.opacity = 0.25; }}
-            />
+          <div key={src}
+               className={`rounded-2xl ${brand.card} ring-1 ring-black/5 dark:ring-white/10 px-4 py-3 grid place-items-center logo-tile`}
+               style={{ animationDuration: `${9 + (i % 5)}s`, animationDelay: `${(i % 5) * 0.2}s` }}>
+            <img src={src} alt="" className="h-10 md:h-12 w-auto object-contain"
+                 onError={(e) => { e.currentTarget.style.opacity = 0.25; }} />
           </div>
         ))}
       </div>
@@ -260,7 +239,7 @@ function PublicationsPage() {
   )
 }
 
-// --------- (NEW) Full Journey page stub (for later build-out) ----------
+// --------- Full Journey page stub ----------
 function JourneyPage() {
   return (
     <section className="max-w-6xl mx-auto px-6 md:px-8 py-14">
@@ -276,7 +255,6 @@ function JourneyPage() {
 }
 
 /* ================= Main App ================= */
-
 export default function App() {
   const handleImgError = (e) => { e.currentTarget.src = FALLBACK_HEADSHOT; e.currentTarget.onerror = null }
   const [dark, setDark] = useDarkMode()
@@ -348,10 +326,10 @@ export default function App() {
             </div>
           </div>
 
-          {/* -------- NEW Journey preview (story + animated collage) -------- */}
+          {/* -------- Journey preview (story + animated collage) -------- */}
           <section id="journey" className="max-w-6xl mx-auto px-6 md:px-8 py-14">
             <div className="grid md:grid-cols-2 gap-10 items-center">
-              {/* Left: title + sincere description + CTA */}
+              {/* Left: description + CTA */}
               <div>
                 <h2 className="text-3xl md:text-4xl font-semibold text-emerald-950 dark:text-emerald-100">
                   My Journey
@@ -368,10 +346,8 @@ export default function App() {
                   path and the impact it’s had on what I value and how I work.
                 </p>
 
-                <a
-                  href="#/journey"
-                  className="mt-6 inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-emerald-700 text-white hover:opacity-90 transition"
-                >
+                <a href="#/journey"
+                   className="mt-6 inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-emerald-700 text-white hover:opacity-90 transition">
                   Read the full story
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
                 </a>
@@ -381,20 +357,16 @@ export default function App() {
               <div className="relative">
                 <div className="rounded-3xl ring-1 ring-black/5 dark:ring-white/10 overflow-hidden bg-white/50 dark:bg-emerald-900/30 p-4">
                   <div className="space-y-4">
+                    {/* Row A → left */}
                     <div className="journey-row animate-journeyLeft" style={{ animationDuration: '40s' }}>
-                      {journeyImages.map((src, i) => (
-                        <img key={'top-'+i} src={src} className="journey-tile" alt="" />
-                      ))}
-                      {journeyImages.map((src, i) => (
-                        <img key={'topb-'+i} src={src} className="journey-tile" alt="" />
+                      {journeyA.concat(journeyA).map((src, i) => (
+                        <img key={`ja-${i}`} src={src} className="journey-tile" alt="" onError={(e)=>{e.currentTarget.style.opacity=0.25;}} />
                       ))}
                     </div>
+                    {/* Row B → right */}
                     <div className="journey-row animate-journeyRight" style={{ animationDuration: '48s' }}>
-                      {journeyImagesB.map((src, i) => (
-                        <img key={'bot-'+i} src={src} className="journey-tile" alt="" />
-                      ))}
-                      {journeyImagesB.map((src, i) => (
-                        <img key={'botb-'+i} src={src} className="journey-tile" alt="" />
+                      {journeyB.concat(journeyB).map((src, i) => (
+                        <img key={`jb-${i}`} src={src} className="journey-tile" alt="" onError={(e)=>{e.currentTarget.style.opacity=0.25;}} />
                       ))}
                     </div>
                   </div>
