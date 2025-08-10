@@ -212,8 +212,8 @@ function PublicationsPage() {
             <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition" />
           </a>
 
-          <a href={LINKS.linkedin} target="_blank" rel="noopener noreferrer
-             "className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm">
+          <a href={LINKS.linkedin} target="_blank" rel="noopener noreferrer"
+             className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm">
             <Linkedin className="w-4 h-4" />
             <span>LinkedIn Publications</span>
             <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition" />
@@ -353,49 +353,29 @@ export default function App() {
                 </a>
               </div>
 
-              // ---------- Journey collage sources (in /public/images/journey-images/) ----------
-const journeyFiles = [
-  '019929.png',
-  '392883.png',
-  '8982934.png',
-  '92034.png',
-  '9234929.png',
-  'IMG_2962.png',
-  'IMG_3664.png',
-  'IMG_5720.png',
-  'IMG_5726.png',
-  'IMG_8893.png',
-];
-
-// Row A in normal order, Row B reversed for a nice counter-scroll
-const journeyA = journeyFiles.map(f => `${BASE}images/journey-images/${f}`);
-const journeyB = [...journeyA].reverse();
-
-             {/* Right: animated collage */}
-<div className="relative">
-  <div className="rounded-3xl ring-1 ring-black/5 dark:ring-white/10 overflow-hidden bg-white/50 dark:bg-emerald-900/30 p-4">
-    <div className="space-y-4">
-      {/* Row 1 — leftward */}
-      <div className="journey-row animate-journeyLeft" style={{ animationDuration: '40s' }}>
-        {[...journeyA, ...journeyA].map((src, i) => (
-          <img key={`ja-${i}`} src={src} className="journey-tile" alt="" />
-        ))}
-      </div>
-
-      {/* Row 2 — rightward */}
-      <div className="journey-row animate-journeyRight" style={{ animationDuration: '48s' }}>
-        {[...journeyB, ...journeyB].map((src, i) => (
-          <img key={`jb-${i}`} src={src} className="journey-tile" alt="" />
-        ))}
-      </div>
-    </div>
-  </div>
-
-  <div className="mt-2 text-xs text-emerald-900/60 dark:text-emerald-300/60">
-    Moments with teams and projects that shaped my work.
-  </div>
-</div>
-
+              {/* Right: animated collage */}
+              <div className="relative">
+                <div className="rounded-3xl ring-1 ring-black/5 dark:ring-white/10 overflow-hidden bg-white/50 dark:bg-emerald-900/30 p-4">
+                  <div className="space-y-4">
+                    {/* Row 1 — leftward */}
+                    <div className="journey-row animate-journeyLeft" style={{ animationDuration: '40s' }}>
+                      {[...journeyA, ...journeyA].map((src, i) => (
+                        <img key={`ja-${i}`} src={src} className="journey-tile" alt="" />
+                      ))}
+                    </div>
+                    {/* Row 2 — rightward */}
+                    <div className="journey-row animate-journeyRight" style={{ animationDuration: '48s' }}>
+                      {[...journeyB, ...journeyB].map((src, i) => (
+                        <img key={`jb-${i}`} src={src} className="journey-tile" alt="" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-2 text-xs text-emerald-900/60 dark:text-emerald-300/60">
+                  Moments with teams and projects that shaped my work.
+                </div>
+              </div>
+            </div>
           </section>
 
           {/* Offerings */}
