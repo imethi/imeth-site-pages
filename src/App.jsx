@@ -67,7 +67,7 @@ const journeyFiles = [
 ]
 const journeySrcs = journeyFiles.map(f => `${BASE}images/journey-images/${f}`)
 
-/* ================= Two-line logo marquee (unchanged) ================= */
+/* ================= Two-line logo marquee ================= */
 const MarqueeRow = ({ items, direction = 'left', speedSeconds = 28 }) => {
   const anim = direction === 'left' ? 'animate-marquee' : 'animate-marquee-reverse'
   return (
@@ -126,7 +126,7 @@ function useDarkMode() {
 
 /* ================== Featured Stories (data + helpers) ================== */
 const FEATURED_DIR = `${BASE}images/journey-featured/`
-const STORY_FALLBACK = `${BASE}images/journey-featured/_fallback.jpg` // optional; add a simple placeholder image
+const STORY_FALLBACK = `${BASE}images/journey-featured/_fallback.jpg` // optional
 
 const featuredStories = [
   {
@@ -159,13 +159,11 @@ const featuredStories = [
   }
 ]
 
-/* Preload images + log 404s clearly in DevTools */
 function usePreloadImages(srcs) {
   React.useEffect(() => {
     srcs.forEach(src => {
       const img = new Image()
-      img.onload = () => {}
-      img.onerror = () => console.warn(`[featured] 404 or load error: ${src} — check filename/case & path`)
+      img.onerror = () => console.warn(`[featured] 404 or load error: ${src}`)
       img.src = src
     })
   }, [srcs])
@@ -276,39 +274,20 @@ function PublicationsPage() {
   )
 }
 
-/* --------- Full Journey page stub ---------- */
-function JourneyPage() {
-  return (
-    <section className="max-w-6xl mx-auto px-6 md:px-8 py-14">
-      <h1 className="text-3xl md:text-4xl font-semibold text-emerald-950 dark:text-emerald-100">My Journey</h1>
-      <p className="mt-3 text-emerald-900/80 dark:text-emerald-300/80 max-w-3xl">
-        A deeper look at the projects, teams, and ideas that shaped how I think about
-        prevention-first medicine, imaging, and public health. (Full timeline and stories coming soon.)
-      </p>
-    </section>
-  )
-}
-
-/* ================= Featured Stories Carousel component ================= */
+/* --------- Journey Page (with featured stories section) ---------- */
 function FeaturedStoriesStrip() {
   usePreloadImages(featuredStories.map(s => s.img))
-
   const onImgErr = (e) => {
-    // swap to fallback if present, then dim so you notice missing asset
     if (STORY_FALLBACK) e.currentTarget.src = STORY_FALLBACK
     e.currentTarget.style.opacity = 0.6
   }
-
   return (
-    <section id="featured-stories" className="max-w-6xl mx-auto px-6 md:px-8 pt-2 pb-8">
+    <section id="featured-stories" className="mt-8">
       <div className="flex items-end justify-between gap-4 mb-3">
         <h2 className="text-2xl md:text-3xl font-semibold text-emerald-950 dark:text-emerald-100">Featured Stories</h2>
-        <a href="#/journey" className="text-sm text-emerald-700 dark:text-emerald-200 hover:underline">See all →</a>
+        <span className="text-sm text-emerald-700 dark:text-emerald-200">Chronological</span>
       </div>
-
-      {/* Horizontal snap carousel */}
-      <div className="overflow-x-auto flex gap-6 pb-2 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none]"
-           style={{ scrollbarWidth: 'none' }}>
+      <div className="overflow-x-auto flex gap-6 pb-2 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none]">
         {featuredStories.map((story, idx) => (
           <a key={idx} href={story.link}
              className="snap-start flex-none w-80 rounded-2xl overflow-hidden ring-1 ring-black/5 dark:ring-white/10 bg-white/70 dark:bg-emerald-900/40 hover:shadow-lg transition">
@@ -324,6 +303,22 @@ function FeaturedStoriesStrip() {
           </a>
         ))}
       </div>
+    </section>
+  )
+}
+
+function JourneyPage() {
+  return (
+    <section className="max-w-6xl mx-auto px-6 md:px-8 py-14">
+      <h1 className="text-3xl md:text-4xl font-semibold text-emerald-950 dark:text-emerald-100">My Journey</h1>
+      <p className="mt-3 text-emerald-900/80 dark:text-emerald-300/80 max-w-3xl">
+        A deeper look at the projects, teams, and ideas that shaped how I think about prevention-first medicine, imaging, and public health.
+      </p>
+
+      {/* Featured stories live ONLY on this page */}
+      <FeaturedStoriesStrip />
+
+      {/* (You can add more Journey-only sections below) */}
     </section>
   )
 }
@@ -350,6 +345,7 @@ export default function App() {
 
           <nav className="hidden md:flex items-center gap-6 text-emerald-900/80 dark:text-emerald-200/80">
             <a href="#/" className="hover:text-emerald-900 dark:hover:text-emerald-100 transition">Home</a>
+            <a href="#/journey" className="hover:text-emerald-900 dark:hover:text-emerald-100 transition">My Journey</a>
             <a href="#/publications" className="hover:text-emerald-900 dark:hover:text-emerald-100 transition">Publications</a>
             <a href="#/contact" className="hover:text-emerald-900 dark:hover:text-emerald-100 transition">Contact</a>
             <button
@@ -401,34 +397,21 @@ export default function App() {
             </div>
           </div>
 
-          {/* ====== NEW: Featured Stories on Home ====== */}
-          <FeaturedStoriesStrip />
-
-          {/* -------- Journey preview (story + SINGLE ROW collage) -------- */}
+          {/* Journey preview (kept, but no Featured Stories here) */}
           <section id="journey" className="max-w-6xl mx-auto px-6 md:px-8 py-14">
             <div className="grid md:grid-cols-2 gap-10 items-center">
-              {/* Left: description + CTA */}
               <div>
                 <h2 className="text-3xl md:text-4xl font-semibold text-emerald-950 dark:text-emerald-100">My Journey</h2>
                 <p className="mt-3 text-emerald-900/80 dark:text-emerald-300/80 leading-relaxed">
-                  Medicine became more than a destination for me—it’s been a series of
-                  questions, mentors, and moments that reshaped how I think about care.
-                  I started with movement and prevention, then found myself drawn to the
-                  spaces where science meets lived experience: imaging for earlier
-                  detection, harm reduction on campus, and public health that treats
-                  people as whole. Along the way I’ve been part of teams that encouraged
-                  curiosity, built programs from the ground up, and pushed for equity as
-                  the standard—not the exception.
+                  Medicine became more than a destination for me—it’s been a series of questions, mentors, and moments that reshaped how I think about care. I started with movement and prevention, then found myself drawn to the spaces where science meets lived experience.
                 </p>
-
                 <a href="#/journey"
                    className="mt-6 inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-emerald-700 text-white hover:opacity-90 transition">
-                  Read the full story
+                  Explore My Journey
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
                 </a>
               </div>
 
-              {/* Right: SINGLE large row, seamless loop */}
               <div className="relative">
                 <div className="rounded-3xl ring-1 ring-black/5 dark:ring-white/10 overflow-hidden bg-white/50 dark:bg-emerald-900/30 p-4">
                   <div
@@ -464,15 +447,16 @@ export default function App() {
         </section>
       )}
 
+      {route === 'journey' && <JourneyPage />}
       {route === 'publications' && <PublicationsPage />}
       {route === 'contact' && <ContactPage />}
-      {route === 'journey' && <JourneyPage />}
 
       <footer className="border-t border-black/5 dark:border-white/10">
         <div className="max-w-6xl mx-auto px-6 md:px-8 py-10 text-sm text-emerald-900/70 dark:text-emerald-300/70 flex flex-col md:flex-row items-center justify-between gap-3">
           <div>© {new Date().getFullYear()} Imeth Illamperuma</div>
           <div className="flex items-center gap-4">
             <a className="hover:underline" href="#/">Home</a>
+            <a className="hover:underline" href="#/journey">My Journey</a>
             <a className="hover:underline" href="#/publications">Publications</a>
             <a className="hover:underline" href="#/contact">Contact</a>
           </div>
