@@ -1,12 +1,12 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Mail, Github, Linkedin, FileDown, ExternalLink } from 'lucide-react'
+import { Mail, Linkedin, FileDown, ExternalLink } from 'lucide-react'
 import Typewriter from 'typewriter-effect'
 
-// ---------------- Base paths ----------------
-const BASE = import.meta.env.BASE_URL
+/* ---------------- Base paths ---------------- */
+const BASE = import.meta.env.BASE_URL || '/'
 
-// ---------------- Assets ----------------
+/* ---------------- Assets ---------------- */
 const HEADSHOT_PATH = `${BASE}images/imeth-profile1.png`
 const FALLBACK_HEADSHOT = (() => {
   const svg = `
@@ -22,12 +22,12 @@ const FALLBACK_HEADSHOT = (() => {
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
 })()
 
-// ---------------- UI helpers ----------------
+/* ---------------- UI helpers ---------------- */
 const brand = {
   bg: 'bg-emerald-50 dark:bg-emerald-950',
   text: 'text-emerald-950 dark:text-emerald-100',
   accentBg: 'bg-emerald-700',
-  card: 'bg-white/80 dark:bg-emerald-900/40 backdrop-blur'
+  card: 'bg-white/80 dark:bg-emerald-900/40 backdrop-blur',
 }
 const Pill = ({ children }) => (
   <span className="inline-flex items-center rounded-full border border-emerald-700/20 px-3 py-1 text-xs text-emerald-900/80 dark:text-emerald-200/80">
@@ -50,7 +50,7 @@ const logoFallback = (text) =>
     </svg>`
   )}`
 
-// ---------------- Data ----------------
+/* ---------------- Data ---------------- */
 const affiliations = [
   { org: 'Stanford Department of Medicine', role: 'Molecular Imaging Research Fellow', logo: `${BASE}logos/stanford.png`, link: 'https://med.stanford.edu/radiology.html' },
   { org: 'McMaster University — Dept. of Medicine', role: 'Research Student', logo: `${BASE}logos/mcmaster-med.png`, link: 'https://medicine.healthsci.mcmaster.ca/' },
@@ -62,7 +62,7 @@ const affiliations = [
   { org: 'LMC Healthcare', role: 'Medical Office Administrator (Intern)', logo: `${BASE}logos/lmc.png`, link: 'https://www.lmc.ca/' },
 ].map(i => ({ ...i, safeLogo: i.logo, placeholder: logoFallback(i.org) }))
 
-// ---------------- Journey collage (exact filenames you uploaded) ----------------
+/* ---------------- Journey collage (your exact filenames) ---------------- */
 const journeyFiles = [
   '019929.png',
   '392883.png',
@@ -76,9 +76,9 @@ const journeyFiles = [
   'IMG_8893.png',
 ]
 
-// Prefix each with BASE so it works under /imeth-site-pages/
-const journeyA = journeyFiles.map(f => `${BASE}images/journey-images/${f}`)
-const journeyB = [...journeyA].reverse()
+// Serve from /public/images/journey-images/*
+const journeyA = journeyFiles.slice(0, 5).map(f => `${BASE}images/journey-images/${f}`)
+const journeyB = journeyFiles.slice(5).map(f => `${BASE}images/journey-images/${f}`)
 
 /* ================= Two-line infinite carousel (opposite directions) ================= */
 const MarqueeRow = ({ items, direction = 'left', speedSeconds = 28 }) => {
@@ -141,7 +141,7 @@ function useDarkMode() {
 
 /* ================= Standalone Pages ================= */
 function ContactPage() {
-  const FORMSPREE_ID = "your_form_id_here" // replace when you’re ready
+  const FORMSPREE_ID = 'your_form_id_here'
   const action = `https://formspree.io/f/${FORMSPREE_ID}`
   return (
     <section className="max-w-3xl mx-auto px-6 md:px-8 py-14">
@@ -164,15 +164,14 @@ function ContactPage() {
   )
 }
 
-function ScholarIcon({ className = "w-4 h-4" }) {
+function ScholarIcon({ className = 'w-4 h-4' }) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
-      <path fill="currentColor"
-        d="M12 3L2 9l10 6 10-6-10-6Zm0 8.5L5.2 9 12 5.5 18.8 9 12 11.5Zm-7 3.2V15l7 4 7-4v-.3L12 16.7 5 14.7Z" />
+      <path fill="currentColor" d="M12 3L2 9l10 6 10-6-10-6Zm0 8.5L5.2 9 12 5.5 18.8 9 12 11.5Zm-7 3.2V15l7 4 7-4v-.3L12 16.7 5 14.7Z" />
     </svg>
   )
 }
-function OrcidIcon({ className = "w-4 h-4" }) {
+function OrcidIcon({ className = 'w-4 h-4' }) {
   return (
     <svg viewBox="0 0 256 256" className={className} aria-hidden="true">
       <circle cx="128" cy="128" r="128" fill="#A6CE39" />
@@ -184,44 +183,35 @@ function OrcidIcon({ className = "w-4 h-4" }) {
 
 function PublicationsPage() {
   const LINKS = {
-    scholar: "https://scholar.google.com/citations?user=Pzwn3y0AAAAJ&hl=en",
-    orcid: "https://orcid.org/0009-0007-3778-7635",
-    linkedin: "https://www.linkedin.com/in/imeth-illamperuma-3a734a193/details/publications/",
+    scholar: 'https://scholar.google.com/citations?user=Pzwn3y0AAAAJ&hl=en',
+    orcid: 'https://orcid.org/0009-0007-3778-7635',
+    linkedin: 'https://www.linkedin.com/in/imeth-illamperuma-3a734a193/details/publications/',
   }
 
   const logos = [
-    "guardian.png","time.png","stat.png","bmj.png","hill.png",
-    "newscientist.png","npr.png","natgeo.png","mittr.png","wired.png",
+    'guardian.png','time.png','stat.png','bmj.png','hill.png',
+    'newscientist.png','npr.png','natgeo.png','mittr.png','wired.png',
   ]
   const sources = logos.map((file) => `${BASE}pub-logos/${file}`)
 
   return (
     <section className="max-w-6xl mx-auto px-6 md:px-8 py-14">
-      <h1 className="text-3xl font-semibold text-emerald-950 dark:text-emerald-100">
-        Writing Published In
-      </h1>
-      <p className="mt-2 text-emerald-900/80 dark:text-emerald-300/80">
-        A selection of outlets featuring my work.
-      </p>
+      <h1 className="text-3xl font-semibold text-emerald-950 dark:text-emerald-100">Writing Published In</h1>
+      <p className="mt-2 text-emerald-900/80 dark:text-emerald-300/80">A selection of outlets featuring my work.</p>
 
       <div className={`mt-6 rounded-2xl ${brand.card} ring-1 ring-black/5 dark:ring-white/10 p-4`}>
         <div className="flex flex-wrap items-center gap-3">
-          <a href={LINKS.scholar} target="_blank" rel="noopener noreferrer"
-             className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm">
+          <a href={LINKS.scholar} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm">
             <ScholarIcon className="w-4 h-4" />
             <span>Google Scholar</span>
             <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition" />
           </a>
-
-          <a href={LINKS.orcid} target="_blank" rel="noopener noreferrer"
-             className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm">
+          <a href={LINKS.orcid} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm">
             <OrcidIcon className="w-4 h-4" />
             <span>ORCID iD</span>
             <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition" />
           </a>
-
-          <a href={LINKS.linkedin} target="_blank" rel="noopener noreferrer"
-             className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm">
+          <a href={LINKS.linkedin} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm">
             <Linkedin className="w-4 h-4" />
             <span>LinkedIn Publications</span>
             <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition" />
@@ -231,11 +221,17 @@ function PublicationsPage() {
 
       <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {sources.map((src, i) => (
-          <div key={src}
-               className={`rounded-2xl ${brand.card} ring-1 ring-black/5 dark:ring-white/10 px-4 py-3 grid place-items-center logo-tile`}
-               style={{ animationDuration: `${9 + (i % 5)}s`, animationDelay: `${(i % 5) * 0.2}s` }}>
-            <img src={src} alt="" className="h-10 md:h-12 w-auto object-contain"
-                 onError={(e) => { e.currentTarget.style.opacity = 0.25; }} />
+          <div
+            key={src}
+            className={`rounded-2xl ${brand.card} ring-1 ring-black/5 dark:ring-white/10 px-4 py-3 grid place-items-center logo-tile`}
+            style={{ animationDuration: `${9 + (i % 5)}s`, animationDelay: `${(i % 5) * 0.2}s` }}
+          >
+            <img
+              src={src}
+              alt=""
+              className="h-10 md:h-12 w-auto object-contain"
+              onError={(e) => { e.currentTarget.style.opacity = 0.25 }}
+            />
           </div>
         ))}
       </div>
@@ -247,13 +243,11 @@ function PublicationsPage() {
   )
 }
 
-// --------- Full Journey page stub ----------
+/* --------- Full Journey page stub ---------- */
 function JourneyPage() {
   return (
     <section className="max-w-6xl mx-auto px-6 md:px-8 py-14">
-      <h1 className="text-3xl md:text-4xl font-semibold text-emerald-950 dark:text-emerald-100">
-        My Journey
-      </h1>
+      <h1 className="text-3xl md:text-4xl font-semibold text-emerald-950 dark:text-emerald-100">My Journey</h1>
       <p className="mt-3 text-emerald-900/80 dark:text-emerald-300/80 max-w-3xl">
         A deeper look at the projects, teams, and ideas that shaped how I think about
         prevention-first medicine, imaging, and public health. (Full timeline and stories coming soon.)
@@ -267,6 +261,7 @@ export default function App() {
   const handleImgError = (e) => { e.currentTarget.src = FALLBACK_HEADSHOT; e.currentTarget.onerror = null }
   const [dark, setDark] = useDarkMode()
   const [route, setRoute] = React.useState(getRoute())
+
   React.useEffect(() => {
     const onHash = () => setRoute(getRoute())
     window.addEventListener('hashchange', onHash)
@@ -282,7 +277,7 @@ export default function App() {
             <div className="font-medium tracking-tight text-emerald-900 dark:text-emerald-100 group-hover:opacity-90 transition">Imeth Illamperuma</div>
           </a>
 
-        <nav className="hidden md:flex items-center gap-6 text-emerald-900/80 dark:text-emerald-200/80">
+          <nav className="hidden md:flex items-center gap-6 text-emerald-900/80 dark:text-emerald-200/80">
             <a href="#/" className="hover:text-emerald-900 dark:hover:text-emerald-100 transition">Home</a>
             <a href="#/publications" className="hover:text-emerald-900 dark:hover:text-emerald-100 transition">Publications</a>
             <a href="#/contact" className="hover:text-emerald-900 dark:hover:text-emerald-100 transition">Contact</a>
@@ -339,9 +334,7 @@ export default function App() {
             <div className="grid md:grid-cols-2 gap-10 items-center">
               {/* Left: description + CTA */}
               <div>
-                <h2 className="text-3xl md:text-4xl font-semibold text-emerald-950 dark:text-emerald-100">
-                  My Journey
-                </h2>
+                <h2 className="text-3xl md:text-4xl font-semibold text-emerald-950 dark:text-emerald-100">My Journey</h2>
                 <p className="mt-3 text-emerald-900/80 dark:text-emerald-300/80 leading-relaxed">
                   Medicine became more than a destination for me—it’s been a series of
                   questions, mentors, and moments that reshaped how I think about care.
@@ -354,27 +347,44 @@ export default function App() {
                   path and the impact it’s had on what I value and how I work.
                 </p>
 
-                <a href="#/journey"
-                   className="mt-6 inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-emerald-700 text-white hover:opacity-90 transition">
+                <a href="#/journey" className="mt-6 inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-emerald-700 text-white hover:opacity-90 transition">
                   Read the full story
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
                 </a>
               </div>
 
-              {/* Right: animated collage */}
+              {/* Right: animated collage (bigger tiles) */}
               <div className="relative">
-                <div className="rounded-3xl ring-1 ring-black/5 dark:ring-white/10 overflow-hidden bg-white/50 dark:bg-emerald-900/30 p-4">
+                <div className="rounded-3xl ring-1 ring-black/5 dark:ring-white/10 overflow-hidden bg-white/60 dark:bg-emerald-900/30 p-5">
                   <div className="space-y-4">
                     {/* Row 1 — leftward */}
                     <div className="journey-row animate-journeyLeft" style={{ animationDuration: '40s' }}>
                       {[...journeyA, ...journeyA].map((src, i) => (
-                        <img key={`ja-${i}`} src={src} className="journey-tile" alt="" />
+                        <img
+                          key={`ja-${i}`}
+                          src={src}
+                          alt=""
+                          className="journey-tile"
+                          style={{ height: 120 }}         /* bigger tiles */
+                          onError={(e) => { e.currentTarget.src = FALLBACK_HEADSHOT; e.currentTarget.onerror = null }}
+                          loading="lazy"
+                          decoding="async"
+                        />
                       ))}
                     </div>
                     {/* Row 2 — rightward */}
                     <div className="journey-row animate-journeyRight" style={{ animationDuration: '48s' }}>
                       {[...journeyB, ...journeyB].map((src, i) => (
-                        <img key={`jb-${i}`} src={src} className="journey-tile" alt="" />
+                        <img
+                          key={`jb-${i}`}
+                          src={src}
+                          alt=""
+                          className="journey-tile"
+                          style={{ height: 120 }}
+                          onError={(e) => { e.currentTarget.src = FALLBACK_HEADSHOT; e.currentTarget.onerror = null }}
+                          loading="lazy"
+                          decoding="async"
+                        />
                       ))}
                     </div>
                   </div>
