@@ -53,7 +53,6 @@ const affiliations = [
 ].map(i => ({ ...i, safeLogo: i.logo }))
 
 /* ---------------- Journey collage (SINGLE ROW, LARGE TILES) ---------------- */
-/* Exact filenames in public/images/journey-images */
 const journeyFiles = [
   '019929.png',
   '392883.png',
@@ -125,9 +124,56 @@ function useDarkMode() {
   return [dark, setDark]
 }
 
-/* ================= Standalone Pages ================= */
+/* ================== Featured Stories (data + helpers) ================== */
+const FEATURED_DIR = `${BASE}images/journey-featured/`
+const STORY_FALLBACK = `${BASE}images/journey-featured/_fallback.jpg` // optional; add a simple placeholder image
+
+const featuredStories = [
+  {
+    year: "2025",
+    title: "Stanford Fellowship: Molecular Imaging of the Brain–Gut Axis",
+    desc: "During a research fellowship at Stanford University, I investigated how molecular imaging and multi-omics can uncover early gut–brain axis biomarkers linked to dementia risk. This work reframes prevention by looking for warning signs years before symptoms appear.",
+    img: `${FEATURED_DIR}stanford.jpg`,
+    link: "#/journey/stanford"
+  },
+  {
+    year: "2024–2025",
+    title: "The Naloxone Project: Saving Lives on Campus",
+    desc: "I co-led a campus-wide overdose prevention initiative that placed 32 emergency naloxone kits across McMaster University. By improving accessibility and awareness, we strengthened our community’s readiness to respond to opioid-related emergencies.",
+    img: `${FEATURED_DIR}naloxone.jpg`,
+    link: "#/journey/naloxone"
+  },
+  {
+    year: "2024",
+    title: "University of Manitoba Paediatric Research",
+    desc: "As part of INGAUGE Laboratories under Dr. Roberta Woodgate, I contributed to research amplifying the voices of children and youth navigating complex healthcare systems. Our goal: to make pediatric care more compassionate, inclusive, and patient-centered.",
+    img: `${FEATURED_DIR}manitoba.jpg`,
+    link: "#/journey/manitoba"
+  },
+  {
+    year: "Ongoing",
+    title: "CAMH Public Health Research",
+    desc: "At the Centre for Addiction and Mental Health, I’m involved in projects that bridge harm reduction and culturally informed care. Our work aims to shape more equitable, effective strategies for addressing opioid use and mental health challenges.",
+    img: `${FEATURED_DIR}camh.jpg`,
+    link: "#/journey/camh"
+  }
+]
+
+/* Preload images + log 404s clearly in DevTools */
+function usePreloadImages(srcs) {
+  React.useEffect(() => {
+    srcs.forEach(src => {
+      const img = new Image()
+      img.onload = () => {}
+      img.onerror = () => console.warn(`[featured] 404 or load error: ${src} — check filename/case & path`)
+      img.src = src
+    })
+  }, [srcs])
+}
+
+/* --------- Standalone Pages --------- */
 function ContactPage() {
-  const FORMSPREE_ID = "your_form_id_here"    // replace when you’re ready
+  const FORMSPREE_ID = "your_form_id_here"
   const action = `https://formspree.io/f/${FORMSPREE_ID}`
   return (
     <section className="max-w-3xl mx-auto px-6 md:px-8 py-14">
@@ -232,49 +278,41 @@ function PublicationsPage() {
 
 /* --------- Full Journey page stub ---------- */
 function JourneyPage() {
-  const featuredStories = [
-    {
-      year: "2025",
-      title: "Stanford Fellowship: Molecular Imaging of the Brain–Gut Axis",
-      desc: "During a research fellowship at Stanford University, I investigated how molecular imaging and multi-omics can uncover early gut–brain axis biomarkers linked to dementia risk. This work reframes prevention by looking for warning signs years before symptoms appear.",
-      img: `${BASE}images/journey-featured/stanford.jpg`,
-      link: "#/journey/stanford"
-    },
-    {
-      year: "2024–2025",
-      title: "The Naloxone Project: Saving Lives on Campus",
-      desc: "I co-led a campus-wide overdose prevention initiative that placed 32 emergency naloxone kits across McMaster University. By improving accessibility and awareness, we strengthened our community’s readiness to respond to opioid-related emergencies.",
-      img: `${BASE}images/journey-featured/naloxone.jpg`,
-      link: "#/journey/naloxone"
-    },
-    {
-      year: "2024",
-      title: "University of Manitoba Paediatric Research",
-      desc: "As part of INGUAGE Laboratories under Dr. Roberta Woodgate, I contributed to research amplifying the voices of children and youth navigating complex healthcare systems. Our goal: to make pediatric care more compassionate, inclusive, and patient-centered.",
-      img: `${BASE}images/journey-featured/manitoba.jpg`,
-      link: "#/journey/manitoba"
-    },
-    {
-      year: "Ongoing",
-      title: "CAMH Public Health Research",
-      desc: "At the Centre for Addiction and Mental Health, I’m involved in projects that bridge harm reduction and culturally informed care. Our work aims to shape more equitable, effective strategies for addressing opioid use and mental health challenges.",
-      img: `${BASE}images/journey-featured/camh.jpg`,
-      link: "#/journey/camh"
-    }
-  ]
-
   return (
     <section className="max-w-6xl mx-auto px-6 md:px-8 py-14">
       <h1 className="text-3xl md:text-4xl font-semibold text-emerald-950 dark:text-emerald-100">My Journey</h1>
-      <p className="mt-3 mb-8 text-emerald-900/80 dark:text-emerald-300/80 max-w-3xl">
-        Explore the projects and collaborations that have shaped my path — from imaging-based research and harm reduction advocacy to pediatric health and public policy.
+      <p className="mt-3 text-emerald-900/80 dark:text-emerald-300/80 max-w-3xl">
+        A deeper look at the projects, teams, and ideas that shaped how I think about
+        prevention-first medicine, imaging, and public health. (Full timeline and stories coming soon.)
       </p>
+    </section>
+  )
+}
 
-      {/* Featured Stories Carousel */}
-      <div className="overflow-x-auto flex gap-6 pb-4 snap-x snap-mandatory">
+/* ================= Featured Stories Carousel component ================= */
+function FeaturedStoriesStrip() {
+  usePreloadImages(featuredStories.map(s => s.img))
+
+  const onImgErr = (e) => {
+    // swap to fallback if present, then dim so you notice missing asset
+    if (STORY_FALLBACK) e.currentTarget.src = STORY_FALLBACK
+    e.currentTarget.style.opacity = 0.6
+  }
+
+  return (
+    <section id="featured-stories" className="max-w-6xl mx-auto px-6 md:px-8 pt-2 pb-8">
+      <div className="flex items-end justify-between gap-4 mb-3">
+        <h2 className="text-2xl md:text-3xl font-semibold text-emerald-950 dark:text-emerald-100">Featured Stories</h2>
+        <a href="#/journey" className="text-sm text-emerald-700 dark:text-emerald-200 hover:underline">See all →</a>
+      </div>
+
+      {/* Horizontal snap carousel */}
+      <div className="overflow-x-auto flex gap-6 pb-2 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none]"
+           style={{ scrollbarWidth: 'none' }}>
         {featuredStories.map((story, idx) => (
-          <a key={idx} href={story.link} className="snap-start flex-none w-80 rounded-2xl overflow-hidden ring-1 ring-black/5 dark:ring-white/10 bg-white/70 dark:bg-emerald-900/40 hover:shadow-lg transition">
-            <img src={story.img} alt={story.title} className="h-48 w-full object-cover" />
+          <a key={idx} href={story.link}
+             className="snap-start flex-none w-80 rounded-2xl overflow-hidden ring-1 ring-black/5 dark:ring-white/10 bg-white/70 dark:bg-emerald-900/40 hover:shadow-lg transition">
+            <img src={story.img} alt={story.title} onError={onImgErr} className="h-48 w-full object-cover" />
             <div className="p-5 flex flex-col gap-2">
               <div className="text-sm font-medium text-emerald-600 dark:text-emerald-300">{story.year}</div>
               <h3 className="font-semibold text-lg text-emerald-950 dark:text-emerald-100">{story.title}</h3>
@@ -363,6 +401,9 @@ export default function App() {
             </div>
           </div>
 
+          {/* ====== NEW: Featured Stories on Home ====== */}
+          <FeaturedStoriesStrip />
+
           {/* -------- Journey preview (story + SINGLE ROW collage) -------- */}
           <section id="journey" className="max-w-6xl mx-auto px-6 md:px-8 py-14">
             <div className="grid md:grid-cols-2 gap-10 items-center">
@@ -377,8 +418,7 @@ export default function App() {
                   detection, harm reduction on campus, and public health that treats
                   people as whole. Along the way I’ve been part of teams that encouraged
                   curiosity, built programs from the ground up, and pushed for equity as
-                  the standard—not the exception. This page is a glimpse into that path
-                  and the impact it’s had on what I value and how I work.
+                  the standard—not the exception.
                 </p>
 
                 <a href="#/journey"
