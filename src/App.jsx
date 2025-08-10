@@ -1,3 +1,4 @@
+// src/App.jsx
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Mail, Linkedin, FileDown, ExternalLink } from 'lucide-react'
@@ -5,11 +6,27 @@ import Typewriter from 'typewriter-effect'
 
 const BASE = import.meta.env.BASE_URL
 
+// shared UI
 import { brand, Pill, Card } from './ui/brand.jsx'
+
+// journey pages
 import JourneyPage from './journey/JourneyPage.jsx'
 import StoryPage from './journey/StoryPage.jsx'
 import StanfordStory from './journey/data/stanford.jsx'
 
+/* ---------- router + theme (defined ONCE) ---------- */
+const getRoute = () => (location.hash.replace(/^#\/?/, '') || 'home')
+function useDarkMode() {
+  const [dark, setDark] = React.useState(() => localStorage.getItem('theme') === 'dark')
+  React.useEffect(() => {
+    const root = document.documentElement
+    if (dark) { root.classList.add('dark'); localStorage.setItem('theme', 'dark') }
+    else { root.classList.remove('dark'); localStorage.setItem('theme', 'light') }
+  }, [dark])
+  return [dark, setDark]
+}
+
+/* ---------- assets ---------- */
 const HEADSHOT_PATH = `${BASE}images/imeth-profile1.png`
 const FALLBACK_HEADSHOT = (() => {
   const svg = `
@@ -25,6 +42,7 @@ const FALLBACK_HEADSHOT = (() => {
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
 })()
 
+/* ---------- marquee data ---------- */
 const affiliations = [
   { org: 'Stanford Department of Medicine', role: 'Molecular Imaging Research Fellow', logo: `${BASE}logos/stanford.png`, link: 'https://med.stanford.edu/radiology.html' },
   { org: 'McMaster University — Dept. of Medicine', role: 'Research Student', logo: `${BASE}logos/mcmaster-med.png`, link: 'https://medicine.healthsci.mcmaster.ca/' },
@@ -36,20 +54,11 @@ const affiliations = [
   { org: 'LMC Healthcare', role: 'Medical Office Administrator (Intern)', logo: `${BASE}logos/lmc.png`, link: 'https://www.lmc.ca/' },
 ].map(i => ({ ...i, safeLogo: i.logo }))
 
+/* ---------- one-row collage on home ---------- */
 const journeyFiles = ['019929.png','392883.png','8982934.png','92034.png','9234929.png','IMG_2962.png','IMG_3664.png','IMG_5720.png','IMG_5726.png','IMG_8893.png']
 const journeySrcs = journeyFiles.map(f => `${BASE}images/journey-images/${f}`)
 
-const getRoute = () => (location.hash.replace(/^#\/?/, '') || 'home')
-function useDarkMode() {
-  const [dark, setDark] = React.useState(() => localStorage.getItem('theme') === 'dark')
-  React.useEffect(() => {
-    const root = document.documentElement
-    if (dark) { root.classList.add('dark'); localStorage.setItem('theme', 'dark') }
-    else { root.classList.remove('dark'); localStorage.setItem('theme', 'light') }
-  }, [dark])
-  return [dark, setDark]
-}
-
+/* ---------- marquee UI ---------- */
 const MarqueeRow = ({ items, direction = 'left', speedSeconds = 28 }) => {
   const anim = direction === 'left' ? 'animate-marquee' : 'animate-marquee-reverse'
   return (
@@ -78,6 +87,7 @@ const TwoLineCarousel = ({ items }) => {
   )
 }
 
+/* ---------- pages ---------- */
 function ContactPage() {
   const FORMSPREE_ID = 'your_form_id_here'
   const action = `https://formspree.io/f/${FORMSPREE_ID}`
@@ -147,6 +157,7 @@ function PublicationsPage() {
   )
 }
 
+/* ---------- Journey teaser on home ---------- */
 function JourneyTeaser() {
   return (
     <section id="journey" className="max-w-6xl mx-auto px-6 md:px-8 py-14">
@@ -177,6 +188,7 @@ function JourneyTeaser() {
   )
 }
 
+/* ---------- Main App ---------- */
 export default function App() {
   const handleImgError = (e) => { e.currentTarget.src = FALLBACK_HEADSHOT; e.currentTarget.onerror = null }
   const [dark, setDark] = useDarkMode()
@@ -215,6 +227,7 @@ export default function App() {
       {route === 'home' && (
         <section id="home" className="relative overflow-hidden">
           <div className="max-w-6xl mx-auto px-6 md:px-8 py-16 md:py-20 flex flex-col gap-10">
+            {/* HERO */}
             <div className="flex flex-col md:flex-row items-center gap-8">
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="flex-shrink-0 relative">
                 <img src={HEADSHOT_PATH} onError={handleImgError} alt="Imeth Illamperuma" className="w-40 h-40 md:w-56 md:h-56 rounded-full object-cover shadow-lg ring-4 ring-white" />
@@ -241,15 +254,18 @@ export default function App() {
               </div>
             </div>
 
+            {/* Logos */}
             <div className="pt-4">
               <TwoLineCarousel items={affiliations} />
             </div>
           </div>
 
+          {/* Journey teaser */}
           <JourneyTeaser />
 
+          {/* Offerings */}
           <section id="offerings" className="max-w-6xl mx-auto px-6 md:px-8 py-14">
-            <div className="mb-6"><h2 className={`text-2xl md:text-3xl font-semibold ${brand.text}`}>What I Offer</h2></div>
+            <div className="mb-6"><h2 className={`text-2xl md:text-3xl font-semibold text-slate-950 dark:text-slate-50`}>What I Offer</h2></div>
             <div className="grid md:grid-cols-3 gap-6">
               <Card><h3 className="font-semibold text-slate-950 dark:text-slate-50">Research Collaboration</h3><p className="mt-2 text-slate-900 dark:text-slate-100/90">Imaging + multi-omics for early detection along the brain–gut axis.</p></Card>
               <Card><h3 className="font-semibold text-slate-950 dark:text-slate-50">Policy & Advocacy</h3><p className="mt-2 text-slate-900 dark:text-slate-100/90">Translating findings into practical guidance for equitable systems.</p></Card>
@@ -278,8 +294,3 @@ export default function App() {
     </div>
   )
 }
-
-function useDarkMode() {
-  // ...
-}
-function getRoute() { return (location.hash.replace(/^#\/?/, '') || 'home') }
