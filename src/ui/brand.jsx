@@ -1,15 +1,14 @@
 import React from 'react'
 
 export const brand = {
-  bg: 'bg-emerald-50 dark:bg-emerald-950',
-  text: 'text-emerald-950 dark:text-emerald-50',
-  accentBg: 'bg-emerald-700',
-  // solid cards for better contrast (no transparency)
-  card: 'bg-white dark:bg-emerald-900',
+  bg: 'bg-slate-50 dark:bg-slate-950',
+  text: 'text-slate-950 dark:text-slate-50',
+  accentBg: 'bg-indigo-600',
+  card: 'bg-white dark:bg-slate-900',
 }
 
 export const Pill = ({ children }) => (
-  <span className="inline-flex items-center rounded-full border border-emerald-700/25 px-3 py-1 text-xs text-emerald-900 dark:text-emerald-100">
+  <span className="inline-flex items-center rounded-full border border-indigo-600/25 px-3 py-1 text-xs text-slate-900 dark:text-slate-100">
     {children}
   </span>
 )
