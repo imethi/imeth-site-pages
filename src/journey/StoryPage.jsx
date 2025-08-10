@@ -6,7 +6,10 @@ function useScrollSpy(ids) {
   const [active, setActive] = React.useState(ids?.[0] || '')
   React.useEffect(() => {
     const obs = new IntersectionObserver(
-      (entries) => { const vis = entries.filter(e => e.isIntersecting); if (vis[0]) setActive(vis[0].target.id) },
+      (entries) => {
+        const vis = entries.filter(e => e.isIntersecting)
+        if (vis[0]) setActive(vis[0].target.id)
+      },
       { rootMargin: '0px 0px -70% 0px', threshold: [0, 0.33, 1] }
     )
     ids.forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el) })
@@ -36,22 +39,35 @@ export default function StoryPage({ story }) {
   const sectionIds = story.sections.map(s => s.id)
   const active = useScrollSpy(sectionIds)
   const progress = useProgress()
-  const onImgErr = (e) => { e.currentTarget.src = story.fallbackImg || ''; e.currentTarget.style.opacity = 0.7 }
+  const onImgErr = (e) => { e.currentTarget.style.opacity = 0.7 }
 
   return (
     <section id="story-root" className="max-w-6xl mx-auto px-6 md:px-8">
-      <div className="sticky top-16 z-30 h-1 bg-transparent">
-        <div className="h-1 bg-indigo-600" style={{ width: `${progress}%` }} />
+      {/* slim progress bar pinned below header */}
+      <div className="sticky top-16 z-30 h-1">
+        <div className="h-1 bg-indigo-500" style={{ width: `${progress}%` }} />
       </div>
 
-      <div className="pt-8 grid md:grid-cols-12 gap-6 items-start">
+      {/* tightened top spacing */}
+      <div className="pt-4 md:pt-6 grid md:grid-cols-12 gap-6 items-start">
+        {/* hero */}
         <div className="md:col-span-8">
           <Card className="p-0 overflow-hidden">
-            <img src={story.hero} alt={story.title} className="w-full h-64 md:h-80 object-cover" onError={onImgErr}/>
+            <img
+              src={story.hero}
+              alt={story.title}
+              className="w-full h-[18rem] md:h-[22rem] object-cover"
+              onError={onImgErr}
+            />
           </Card>
         </div>
+
+        {/* sidebar header */}
         <div className="md:col-span-4">
-          <h1 className="text-3xl md:text-4xl font-semibold text-slate-950 dark:text-slate-50">{story.title}</h1>
+          {/* Stanford light-maroon in light mode, softer rose in dark for contrast */}
+          <h1 className="text-3xl md:text-4xl font-semibold leading-tight text-[#8C1515] dark:text-rose-300">
+            {story.title}
+          </h1>
           <p className="mt-2 text-slate-900 dark:text-slate-100/90">{story.dek}</p>
           <div className="mt-3 flex flex-wrap gap-2">{story.chips?.map(c => <Pill key={c}>{c}</Pill>)}</div>
 
@@ -85,16 +101,24 @@ export default function StoryPage({ story }) {
         </div>
       </div>
 
-      <div className="mt-10 grid md:grid-cols-12 gap-8">
+      {/* content + toc */}
+      <div className="mt-8 grid md:grid-cols-12 gap-8">
         <main className="md:col-span-8 space-y-10">
           {story.sections.map(s => (
             <section id={s.id} key={s.id} className="scroll-mt-24">
               <h2 className="text-2xl font-semibold text-slate-950 dark:text-slate-50">{s.title}</h2>
               <div className="mt-3 leading-relaxed text-slate-900 dark:text-slate-100/90">{s.content}</div>
+
+              {/* figures: show full image without cropping */}
               {s.figure && (
                 <figure className="mt-5">
                   <Card className="p-0 overflow-hidden">
-                    <img src={s.figure.src} alt={s.figure.alt || s.figure.caption || ''} onError={onImgErr} />
+                    <img
+                      src={s.figure.src}
+                      alt={s.figure.alt || s.figure.caption || ''}
+                      onError={onImgErr}
+                      className="w-full max-h-[40rem] object-contain bg-slate-900"
+                    />
                   </Card>
                   {s.figure.caption && (
                     <figcaption className="mt-2 text-sm text-slate-900/80 dark:text-slate-100/75">
@@ -106,13 +130,19 @@ export default function StoryPage({ story }) {
             </section>
           ))}
 
+          {/* bigger gallery tiles, no cropping */}
           {story.gallery?.length > 0 && (
             <section id="gallery" className="scroll-mt-24">
               <h2 className="text-2xl font-semibold text-slate-950 dark:text-slate-50">Gallery</h2>
               <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {story.gallery.map((g, i) => (
                   <Card key={i} className="p-0 overflow-hidden">
-                    <img src={g} alt={`Gallery ${i+1}`} onError={onImgErr} className="w-full h-56 object-cover" />
+                    <img
+                      src={g}
+                      alt={`Gallery ${i + 1}`}
+                      onError={onImgErr}
+                      className="w-full h-72 md:h-80 object-contain bg-slate-900"
+                    />
                   </Card>
                 ))}
               </div>
