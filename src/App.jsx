@@ -309,15 +309,3 @@ export default function App() {
     </div>
   )
 }
-
-/* helper hooks */
-function useDarkMode() {
-  const [dark, setDark] = React.useState(() => localStorage.getItem('theme') === 'dark')
-  React.useEffect(() => {
-    const root = document.documentElement
-    if (dark) { root.classList.add('dark'); localStorage.setItem('theme', 'dark') }
-    else { root.classList.remove('dark'); localStorage.setItem('theme', 'light') }
-  }, [dark])
-  return [dark, setDark]
-}
-function getRoute() { return (location.hash.replace(/^#\/?/, '') || 'home') }
