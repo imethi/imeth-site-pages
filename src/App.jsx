@@ -54,7 +54,8 @@ const affiliations = [
 ].map(i => ({ ...i, safeLogo: i.logo, placeholder: logoFallback(i.org) }))
 
 // ---------- Journey collage sources (put images in /public/journey/) ----------
-const journeyImages = [
+// ---------- Journey collage sources (in /public/images/journey-images/) ----------
+const journeyFiles = [
   '019929.png',
   '392883.png',
   '8982934.png',
@@ -67,13 +68,9 @@ const journeyImages = [
   'IMG_8893.png',
 ];
 
-const journeyImagesB = [
-  `${BASE}journey/j6.jpg`,
-  `${BASE}journey/j7.jpg`,
-  `${BASE}journey/j8.jpg`,
-  `${BASE}journey/j9.jpg`,
-  `${BASE}journey/j10.jpg`,
-]
+// Row A in normal order, Row B reversed for visual variety
+const journeyA = journeyFiles.map((f) => `${BASE}images/journey-images/${f}`);
+const journeyB = [...journeyA].reverse();
 
 /* ================= Two-line infinite carousel (opposite directions) ================= */
 
