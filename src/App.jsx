@@ -54,16 +54,8 @@ const affiliations = [
 
 /* ---------------- Journey collage (SINGLE ROW, LARGE TILES) ---------------- */
 const journeyFiles = [
-  '019929.png',
-  '392883.png',
-  '8982934.png',
-  '92034.png',
-  '9234929.png',
-  'IMG_2962.png',
-  'IMG_3664.png',
-  'IMG_5720.png',
-  'IMG_5726.png',
-  'IMG_8893.png',
+  '019929.png','392883.png','8982934.png','92034.png','9234929.png',
+  'IMG_2962.png','IMG_3664.png','IMG_5720.png','IMG_5726.png','IMG_8893.png',
 ]
 const journeySrcs = journeyFiles.map(f => `${BASE}images/journey-images/${f}`)
 
@@ -72,24 +64,10 @@ const MarqueeRow = ({ items, direction = 'left', speedSeconds = 28 }) => {
   const anim = direction === 'left' ? 'animate-marquee' : 'animate-marquee-reverse'
   return (
     <div className="overflow-hidden">
-      <div
-        className={`inline-flex items-center whitespace-nowrap gap-12 will-change-transform ${anim}`}
-        style={{ width: 'max-content', animationDuration: `${speedSeconds}s` }}
-      >
+      <div className={`inline-flex items-center whitespace-nowrap gap-12 will-change-transform ${anim}`} style={{ width: 'max-content', animationDuration: `${speedSeconds}s` }}>
         {[...items, ...items].map((it, idx) => (
-          <a
-            key={`${it.org}-${idx}`}
-            href={it.link || '#'}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 pr-2"
-            title={`${it.role} — ${it.org}`}
-          >
-            <img
-              src={it.safeLogo}
-              alt={it.org}
-              className="h-8 w-auto object-contain"
-            />
+          <a key={`${it.org}-${idx}`} href={it.link || '#'} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 pr-2" title={`${it.role} — ${it.org}`}>
+            <img src={it.safeLogo} alt={it.org} className="h-8 w-auto object-contain" />
             <div className="leading-tight">
               <div className="text-sm font-semibold text-emerald-950 dark:text-emerald-100">{it.org}</div>
               <div className="text-[11px] text-emerald-900/75 dark:text-emerald-300/70">{it.role}</div>
@@ -106,7 +84,7 @@ const TwoLineCarousel = ({ items }) => {
   const bottom = items.slice(mid)
   return (
     <div className="space-y-3">
-      <MarqueeRow items={top} direction="left"  speedSeconds={26} />
+      <MarqueeRow items={top} direction="left" speedSeconds={26} />
       <MarqueeRow items={bottom} direction="right" speedSeconds={32} />
     </div>
   )
@@ -124,325 +102,9 @@ function useDarkMode() {
   return [dark, setDark]
 }
 
-/* ============================ STORY PAGE TEMPLATE ============================ */
-function useScrollSpy(ids) {
-  const [active, setActive] = React.useState(ids?.[0] || '')
-  React.useEffect(() => {
-    const obs = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter(e => e.isIntersecting)
-          .sort((a,b) => a.boundingClientRect.top - b.boundingClientRect.top)
-        if (visible[0]) setActive(visible[0].target.id)
-      },
-      { rootMargin: '0px 0px -70% 0px', threshold: [0, 0.2, 0.5, 1] }
-    )
-    ids.forEach(id => {
-      const el = document.getElementById(id)
-      if (el) obs.observe(el)
-    })
-    return () => obs.disconnect()
-  }, [ids])
-  return active
-}
-function useProgress() {
-  const [pct, setPct] = React.useState(0)
-  React.useEffect(() => {
-    const onScroll = () => {
-      const el = document.getElementById('story-root')
-      if (!el) return
-      const rect = el.getBoundingClientRect()
-      const total = el.scrollHeight - window.innerHeight
-      const scrolled = Math.min(Math.max(window.scrollY - el.offsetTop, 0), total)
-      setPct(total > 0 ? (scrolled / total) * 100 : 0)
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-  return pct
-}
-
-function StoryPage({ story }) {
-  const sectionIds = story.sections.map(s => s.id)
-  const active = useScrollSpy(sectionIds)
-  const progress = useProgress()
-  const onImgErr = (e) => {
-    e.currentTarget.src = story.fallbackImg || `${BASE}images/journey/stanford/_fallback.jpg`
-    e.currentTarget.style.opacity = 0.7
-  }
-
-  return (
-    <section id="story-root" className="max-w-6xl mx-auto px-6 md:px-8 py-0">
-      {/* Progress bar */}
-      <div className="sticky top-16 z-30 h-1 bg-transparent">
-        <div className="h-1 bg-emerald-600/70" style={{ width: `${progress}%` }} />
-      </div>
-
-      {/* Hero */}
-      <div className="pt-8">
-        <nav className="text-sm text-emerald-900/70 dark:text-emerald-300/70">
-          <a href="#/" className="hover:underline">Home</a> <span>›</span>{' '}
-          <a href="#/journey" className="hover:underline">My Journey</a> <span>›</span>{' '}
-          <span className="text-emerald-900 dark:text-emerald-100">{story.shortTitle}</span>
-        </nav>
-
-        <div className="mt-4 grid md:grid-cols-12 gap-6 items-start">
-          <div className="md:col-span-8">
-            <img
-              src={story.hero}
-              alt={story.title}
-              className="w-full h-64 md:h-80 object-cover rounded-2xl ring-1 ring-black/5 dark:ring-white/10"
-              onError={onImgErr}
-            />
-          </div>
-          <div className="md:col-span-4">
-            <h1 className="text-3xl md:text-4xl font-semibold text-emerald-950 dark:text-emerald-100">{story.title}</h1>
-            <p className="mt-2 text-emerald-900/80 dark:text-emerald-300/80">{story.dek}</p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {story.chips?.map((c) => <Pill key={c}>{c}</Pill>)}
-            </div>
-
-            {/* At a glance */}
-            {story.atAGlance?.length > 0 && (
-              <div className={`mt-5 rounded-2xl ${brand.card} ring-1 ring-black/5 dark:ring-white/10 p-4`}>
-                <h3 className="font-semibold text-emerald-950 dark:text-emerald-100 mb-2">At a glance</h3>
-                <ul className="grid grid-cols-1 gap-2 text-sm">
-                  {story.atAGlance.map((it, i) => (
-                    <li key={i} className="flex justify-between gap-3">
-                      <span className="text-emerald-900/70 dark:text-emerald-300/70">{it.label}</span>
-                      <span className="font-medium text-emerald-950 dark:text-emerald-100">{it.value}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Body with sticky sidebar */}
-      <div className="mt-10 grid md:grid-cols-12 gap-8">
-        {/* Sidebar */}
-        <aside className="md:col-span-3 hidden md:block">
-          <div className="sticky top-24">
-            <div className={`rounded-2xl ${brand.card} ring-1 ring-black/5 dark:ring-white/10 p-4`}>
-              <div className="text-sm font-semibold mb-2 text-emerald-950 dark:text-emerald-100">On this page</div>
-              <ul className="space-y-2 text-sm">
-                {story.sections.map((s) => (
-                  <li key={s.id}>
-                    <a
-                      href={`#${s.id}`}
-                      className={`block hover:underline ${active === s.id ? 'text-emerald-800 dark:text-emerald-200 font-medium' : 'text-emerald-900/80 dark:text-emerald-300/80'}`}
-                    >
-                      {s.title}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Downloads */}
-            {story.downloads?.length > 0 && (
-              <div className={`mt-4 rounded-2xl ${brand.card} ring-1 ring-black/5 dark:ring-white/10 p-4`}>
-                <div className="text-sm font-semibold mb-2 text-emerald-950 dark:text-emerald-100">Artifacts</div>
-                <div className="grid gap-2">
-                  {story.downloads.map((d, i) => (
-                    <a key={i} href={d.href} target="_blank" rel="noopener noreferrer"
-                       className="inline-flex items-center gap-2 text-sm text-emerald-700 dark:text-emerald-200 hover:underline">
-                      <Download className="w-4 h-4" /> {d.label}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </aside>
-
-        {/* Main content */}
-        <main className="md:col-span-9 space-y-10">
-          {story.sections.map((s) => (
-            <section id={s.id} key={s.id} className="scroll-mt-24">
-              <h2 className="text-2xl font-semibold text-emerald-950 dark:text-emerald-100">{s.title}</h2>
-              <div className="prose prose-emerald dark:prose-invert mt-3 max-w-none">
-                {s.content}
-              </div>
-
-              {/* Optional figure slot */}
-              {s.figure && (
-                <figure className="mt-5">
-                  <img
-                    src={s.figure.src}
-                    alt={s.figure.alt || s.figure.caption || ''}
-                    className="w-full rounded-2xl ring-1 ring-black/5 dark:ring-white/10"
-                    onError={onImgErr}
-                  />
-                  {s.figure.caption && (
-                    <figcaption className="mt-2 text-sm text-emerald-900/70 dark:text-emerald-300/70">
-                      {s.figure.caption}
-                    </figcaption>
-                  )}
-                </figure>
-              )}
-            </section>
-          ))}
-
-          {/* Gallery */}
-          {story.gallery?.length > 0 && (
-            <section id="gallery" className="scroll-mt-24">
-              <h2 className="text-2xl font-semibold text-emerald-950 dark:text-emerald-100">Gallery</h2>
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {story.gallery.map((g, i) => (
-                  <img
-                    key={i}
-                    src={g}
-                    alt={`Gallery ${i+1}`}
-                    className="w-full h-56 object-cover rounded-2xl ring-1 ring-black/5 dark:ring-white/10"
-                    onError={onImgErr}
-                  />
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* CTA back + contact */}
-          <div className="flex flex-wrap gap-3 pt-4">
-            <a href="#/journey" className="inline-flex items-center gap-2 rounded-xl px-4 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm">
-              ← Back to My Journey
-            </a>
-            <a href="#/contact" className="bg-emerald-700 text-white inline-flex items-center gap-2 rounded-xl px-4 py-2 hover:opacity-90">
-              Let’s collaborate
-            </a>
-          </div>
-        </main>
-      </div>
-    </section>
-  )
-}
-
-/* ======================= STORY: STANFORD FELLOWSHIP ======================= */
-const STANFORD_DIR = `${BASE}images/journey/stanford/`
-const STANFORD_DL = `${BASE}downloads/stanford/`
-
-const StanfordStory = {
-  slug: 'stanford',
-  shortTitle: 'Stanford Fellowship',
-  title: 'Stanford Fellowship: Molecular Imaging of the Brain–Gut Axis',
-  dek: 'Investigating how PET/MRI and multi-omics can surface early gut–brain biomarkers linked to dementia risk—shifting prevention years upstream.',
-  hero: `${STANFORD_DIR}hero.jpg`,
-  fallbackImg: `${STANFORD_DIR}_fallback.jpg`,
-  chips: ['2025', 'Molecular Imaging Fellow', 'Stanford Radiology'],
-  atAGlance: [
-    { label: 'Duration', value: 'Summer 2025' },
-    { label: 'Focus', value: 'Early GBA inflammatory/metabolic signals' },
-    { label: 'Outputs', value: 'Talk • Poster • Slide deck' },
-    { label: 'Mentors', value: 'F. Habte • A. Natarajan • L.J. Pisani' },
-  ],
-  downloads: [
-    { label: 'Slides (PDF)', href: `${STANFORD_DL}stanford_slides.pdf` },
-    { label: 'Poster (PDF)', href: `${STANFORD_DL}stanford_poster.pdf` },
-    { label: 'One-pager (PDF)', href: `${STANFORD_DL}stanford_onepager.pdf` },
-  ],
-  sections: [
-    {
-      id: 'why-this-program-mattered',
-      title: 'Why this program mattered',
-      content: (
-        <>
-          <p>
-            I was selected to join the 2025 Stanford Radiology Summer Mini-Fellowship—an intensive, mentor-led program that brings students into the world of molecular imaging. What made it special wasn’t just the faculty; it was how deliberately the curriculum bridged <strong>study</strong>, <strong>research</strong>, and <strong>clinical translation</strong>.
-          </p>
-          <p>
-            Each week layered concepts that moved from fundamentals to practice—imaging technologies; agents, tracers, and radiochemistry; physics of luminescence; cellular and preclinical workflows; clinical applications; and biomedical image analysis with AI. It felt less like a class and more like joining a working lab that thinks hard about how imaging changes patient care.
-          </p>
-        </>
-      ),
-    },
-    {
-      id: 'what-i-learned',
-      title: 'What I learned (highlights)',
-      content: (
-        <>
-          <ul>
-            <li><strong>Foundations & technologies:</strong> how PET, SPECT, MRI, and optical approaches answer distinct biological questions.</li>
-            <li><strong>Imaging agents & radiochemistry:</strong> tracer design, half-life trade-offs, signal-to-noise, and clinical constraints.</li>
-            <li><strong>Physics of luminescence:</strong> what the signal model permits—and where it breaks.</li>
-            <li><strong>Cellular & preclinical imaging:</strong> animal prep, acquisition protocols, quantification, and data quality.</li>
-            <li><strong>Clinical applications:</strong> how molecular imaging informs oncology, cardiology, and neurology decisions.</li>
-            <li><strong>Image analysis & AI:</strong> QC → registration → segmentation → features → modeling; when classical beats deep learning, and how to validate both.</li>
-          </ul>
-        </>
-      ),
-    },
-    {
-      id: 'relevance-to-medicine',
-      title: 'Why molecular imaging matters for medicine',
-      content: (
-        <>
-          <p>
-            Molecular imaging doesn’t just show anatomy—it shows <em>biology in motion</em>. Instead of waiting for structure to fail, it asks: what pathways are active now, and can we modulate them before damage sets in? That shift—from detecting late structural change to capturing early molecular activity—is the posture prevention needs.
-          </p>
-          <p>
-            Practically, it enables earlier screening, sharper risk stratification, and quantitative treatment response—well before conventional imaging alone would register change.
-          </p>
-        </>
-      ),
-      figure: {
-        src: `${STANFORD_DIR}figure_pipeline.png`,
-        caption: 'Integrated imaging–omics pipeline linking clinical data, microbiome/metabolomic profiling, and brain imaging to identify gut–brain axis biomarkers in MCI and AD.',
-        alt: 'Integrated imaging–omics pipeline diagram',
-      }
-    },
-    {
-      id: 'capstone',
-      title: 'Designing my capstone: why the brain–gut axis?',
-      content: (
-        <>
-          <p>
-            Over the past few months at university, I’ve grown a real interest in nutrition—not as a rules list, but as a biological conversation between the gut and brain. The fellowship gave me tools to connect that curiosity to methods that could test it. For my final project, I explored a concept I care about deeply: using <strong>molecular imaging plus multi-omics</strong> to look for <strong>early inflammatory and metabolic signals</strong> along the brain–gut axis that might forecast cognitive decline.
-          </p>
-          <ul>
-            <li><strong>Motivation:</strong> neurodegenerative disease is usually diagnosed after years of silent biology; gut-derived metabolites and immune mediators might precede symptoms.</li>
-            <li><strong>Concept:</strong> pair PET/MRI readouts with microbiome/metabolomic measures and cognitive indices; test if a compact feature set aligns with regional brain activity or risk.</li>
-            <li><strong>What I built:</strong> a reproducible analysis blueprint (QC, ROI definition, feature engineering, CCA/PLS integration, validation) and an illustrative figure.</li>
-          </ul>
-        </>
-      ),
-      figure: {
-        src: `${STANFORD_DIR}figure_gba.png`,
-        caption: 'Concept sketch: linking gut-derived signals to region-specific brain activity as a prevention-first strategy.',
-        alt: 'Brain–gut axis concept figure',
-      }
-    },
-    {
-      id: 'impact-next',
-      title: 'Impact on me & next steps',
-      content: (
-        <>
-          <p>
-            This fellowship didn’t just teach me molecular imaging—it recalibrated how I see prevention. I think in mechanisms now, not just findings. “Normal MRI” isn’t the end of the road; it’s the cue to ask a molecular question instead.
-          </p>
-          <ol>
-            <li><strong>Prototype the pipeline</strong> on a small curated dataset to surface feasibility issues early.</li>
-            <li><strong>Iterate the feature set</strong> (metabolites, cytokines, imaging ROIs) with mentors; pre-register analysis steps.</li>
-            <li><strong>Present & refine</strong> via a short deck/poster; solicit feedback from imaging and neurogastroenterology groups.</li>
-            <li><strong>Pilot study or methods paper</strong> depending on data access.</li>
-          </ol>
-        </>
-      ),
-    },
-  ],
-  gallery: [
-    `${STANFORD_DIR}gallery_01.jpg`,
-    `${STANFORD_DIR}gallery_02.jpg`,
-    `${STANFORD_DIR}gallery_03.jpg`,
-  ],
-}
-
-/* ================== Featured Stories (for Journey page only) ================== */
+/* ================= Featured Stories (Journey page only) ================= */
 const FEATURED_DIR = `${BASE}images/journey-featured/`
-const STORY_FALLBACK = `${BASE}images/journey-featured/_fallback.jpg`
-
+const STORY_FALLBACK = `${BASE}images/journey-featured/_fallback.jpg` // optional
 const featuredStories = [
   {
     year: "2025",
@@ -484,10 +146,7 @@ function usePreloadImages(srcs) {
 }
 function FeaturedStoriesStrip() {
   usePreloadImages(featuredStories.map(s => s.img))
-  const onImgErr = (e) => {
-    if (STORY_FALLBACK) e.currentTarget.src = STORY_FALLBACK
-    e.currentTarget.style.opacity = 0.6
-  }
+  const onImgErr = (e) => { if (STORY_FALLBACK) e.currentTarget.src = STORY_FALLBACK; e.currentTarget.style.opacity = 0.6 }
   return (
     <section id="featured-stories" className="mt-8">
       <div className="flex items-end justify-between gap-4 mb-3">
@@ -503,15 +162,270 @@ function FeaturedStoriesStrip() {
               <div className="text-sm font-medium text-emerald-600 dark:text-emerald-300">{story.year}</div>
               <h3 className="font-semibold text-lg text-emerald-950 dark:text-emerald-100">{story.title}</h3>
               <p className="text-sm text-emerald-900/80 dark:text-emerald-300/80">{story.desc}</p>
-              <span className="mt-2 inline-flex items-center text-sm font-medium text-emerald-700 dark:text-emerald-200">
-                Read More →
-              </span>
+              <span className="mt-2 inline-flex items-center text-sm font-medium text-emerald-700 dark:text-emerald-200">Read More →</span>
             </div>
           </a>
         ))}
       </div>
     </section>
   )
+}
+
+/* ================= StoryPage template + Stanford story ================= */
+function useScrollSpy(ids) {
+  const [active, setActive] = React.useState(ids?.[0] || '')
+  React.useEffect(() => {
+    const obs = new IntersectionObserver((entries) => {
+      const vis = entries.filter(e => e.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top)
+      if (vis[0]) setActive(vis[0].target.id)
+    }, { rootMargin: '0px 0px -70% 0px', threshold: [0, 0.2, 0.5, 1] })
+    ids.forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el) })
+    return () => obs.disconnect()
+  }, [ids])
+  return active
+}
+function useProgress() {
+  const [pct, setPct] = React.useState(0)
+  React.useEffect(() => {
+    const onScroll = () => {
+      const el = document.getElementById('story-root')
+      if (!el) return
+      const total = el.scrollHeight - window.innerHeight
+      const scrolled = Math.min(Math.max(window.scrollY - el.offsetTop, 0), total)
+      setPct(total > 0 ? (scrolled / total) * 100 : 0)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+  return pct
+}
+function StoryPage({ story }) {
+  const sectionIds = story.sections.map(s => s.id)
+  const active = useScrollSpy(sectionIds)
+  const progress = useProgress()
+  const onImgErr = (e) => { e.currentTarget.src = story.fallbackImg || ''; e.currentTarget.style.opacity = 0.7 }
+
+  return (
+    <section id="story-root" className="max-w-6xl mx-auto px-6 md:px-8 py-0">
+      {/* Progress bar */}
+      <div className="sticky top-16 z-30 h-1 bg-transparent">
+        <div className="h-1 bg-emerald-600/70" style={{ width: `${progress}%` }} />
+      </div>
+
+      {/* Hero */}
+      <div className="pt-8">
+        <nav className="text-sm text-emerald-900/70 dark:text-emerald-300/70">
+          <a href="#/" className="hover:underline">Home</a> <span>›</span>{' '}
+          <a href="#/journey" className="hover:underline">My Journey</a> <span>›</span>{' '}
+          <span className="text-emerald-900 dark:text-emerald-100">{story.shortTitle}</span>
+        </nav>
+
+        <div className="mt-4 grid md:grid-cols-12 gap-6 items-start">
+          <div className="md:col-span-8">
+            <img src={story.hero} alt={story.title} className="w-full h-64 md:h-80 object-cover rounded-2xl ring-1 ring-black/5 dark:ring-white/10" onError={onImgErr}/>
+          </div>
+          <div className="md:col-span-4">
+            <h1 className="text-3xl md:text-4xl font-semibold text-emerald-950 dark:text-emerald-100">{story.title}</h1>
+            <p className="mt-2 text-emerald-900/80 dark:text-emerald-300/80">{story.dek}</p>
+            <div className="mt-3 flex flex-wrap gap-2">{story.chips?.map(c => <Pill key={c}>{c}</Pill>)}</div>
+
+            {story.atAGlance?.length > 0 && (
+              <div className={`mt-5 rounded-2xl ${brand.card} ring-1 ring-black/5 dark:ring-white/10 p-4`}>
+                <h3 className="font-semibold text-emerald-950 dark:text-emerald-100 mb-2">At a glance</h3>
+                <ul className="grid gap-2 text-sm">
+                  {story.atAGlance.map((it, i) => (
+                    <li key={i} className="flex justify-between gap-3">
+                      <span className="text-emerald-900/70 dark:text-emerald-300/70">{it.label}</span>
+                      <span className="font-medium text-emerald-950 dark:text-emerald-100">{it.value}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {story.downloads?.length > 0 && (
+              <div className={`mt-4 rounded-2xl ${brand.card} ring-1 ring-black/5 dark:ring-white/10 p-4`}>
+                <div className="text-sm font-semibold mb-2 text-emerald-950 dark:text-emerald-100">Artifacts</div>
+                <div className="grid gap-2">
+                  {story.downloads.map((d, i) => (
+                    <a key={i} href={d.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm text-emerald-700 dark:text-emerald-200 hover:underline">
+                      <Download className="w-4 h-4" /> {d.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Body */}
+      <div className="mt-10 grid md:grid-cols-12 gap-8">
+        <aside className="md:col-span-3 hidden md:block">
+          <div className="sticky top-24">
+            <div className={`rounded-2xl ${brand.card} ring-1 ring-black/5 dark:ring-white/10 p-4`}>
+              <div className="text-sm font-semibold mb-2 text-emerald-950 dark:text-emerald-100">On this page</div>
+              <ul className="space-y-2 text-sm">
+                {story.sections.map(s => (
+                  <li key={s.id}>
+                    <a href={`#${s.id}`} className={`block hover:underline ${active === s.id ? 'text-emerald-800 dark:text-emerald-200 font-medium' : 'text-emerald-900/80 dark:text-emerald-300/80'}`}>{s.title}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </aside>
+
+        <main className="md:col-span-9 space-y-10">
+          {story.sections.map(s => (
+            <section id={s.id} key={s.id} className="scroll-mt-24">
+              <h2 className="text-2xl font-semibold text-emerald-950 dark:text-emerald-100">{s.title}</h2>
+              <div className="prose prose-emerald dark:prose-invert mt-3 max-w-none">{s.content}</div>
+              {s.figure && (
+                <figure className="mt-5">
+                  <img src={s.figure.src} alt={s.figure.alt || s.figure.caption || ''} className="w-full rounded-2xl ring-1 ring-black/5 dark:ring-white/10" onError={onImgErr}/>
+                  {s.figure.caption && <figcaption className="mt-2 text-sm text-emerald-900/70 dark:text-emerald-300/70">{s.figure.caption}</figcaption>}
+                </figure>
+              )}
+            </section>
+          ))}
+
+          {story.gallery?.length > 0 && (
+            <section id="gallery" className="scroll-mt-24">
+              <h2 className="text-2xl font-semibold text-emerald-950 dark:text-emerald-100">Gallery</h2>
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {story.gallery.map((g, i) => (
+                  <img key={i} src={g} alt={`Gallery ${i+1}`} className="w-full h-56 object-cover rounded-2xl ring-1 ring-black/5 dark:ring-white/10" onError={onImgErr}/>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <div className="flex flex-wrap gap-3 pt-4">
+            <a href="#/journey" className="inline-flex items-center gap-2 rounded-xl px-4 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm">← Back to My Journey</a>
+            <a href="#/contact" className="bg-emerald-700 text-white inline-flex items-center gap-2 rounded-xl px-4 py-2 hover:opacity-90">Let’s collaborate</a>
+          </div>
+        </main>
+      </div>
+    </section>
+  )
+}
+
+/* ---------- STORY DATA: Stanford Fellowship ---------- */
+const STANFORD_DIR = `${BASE}images/journey/stanford/`
+const STANFORD_DL  = `${BASE}downloads/stanford/`
+const StanfordStory = {
+  slug: 'stanford',
+  shortTitle: 'Stanford Fellowship',
+  title: 'Stanford Fellowship: Molecular Imaging of the Brain–Gut Axis',
+  dek: 'Investigating how PET/MRI and multi-omics can surface early gut–brain biomarkers linked to dementia risk—shifting prevention years upstream.',
+  hero: `${STANFORD_DIR}hero.jpg`,
+  fallbackImg: `${STANFORD_DIR}_fallback.jpg`,
+  chips: ['2025', 'Molecular Imaging Fellow', 'Stanford Radiology'],
+  atAGlance: [
+    { label: 'Duration', value: 'Summer 2025' },
+    { label: 'Focus', value: 'Early GBA inflammatory/metabolic signals' },
+    { label: 'Outputs', value: 'Talk • Poster • Slide deck' },
+    { label: 'Mentors', value: 'F. Habte • A. Natarajan • L.J. Pisani' },
+  ],
+  downloads: [
+    { label: 'Slides (PDF)', href: `${STANFORD_DL}stanford_slides.pdf` },
+    { label: 'Poster (PDF)', href: `${STANFORD_DL}stanford_poster.pdf` },
+    { label: 'One-pager (PDF)', href: `${STANFORD_DL}stanford_onepager.pdf` },
+  ],
+  sections: [
+    {
+      id: 'why-this-program-mattered',
+      title: 'Why this program mattered',
+      content: (
+        <>
+          <p>
+            I was selected to join the 2025 Stanford Radiology Summer Mini-Fellowship—an intensive, mentor-led program that brings students into the world of molecular imaging. What made it special wasn’t just the faculty; it was how deliberately the curriculum bridged <strong>study</strong>, <strong>research</strong>, and <strong>clinical translation</strong>.
+          </p>
+          <p>
+            Each week layered concepts that moved from fundamentals to practice—imaging technologies; agents, tracers, and radiochemistry; physics of luminescence; cellular and preclinical workflows; clinical applications; and biomedical image analysis with AI. It felt less like a class and more like joining a working lab that thinks hard about how imaging changes patient care.
+          </p>
+        </>
+      ),
+    },
+    {
+      id: 'what-i-learned',
+      title: 'What I learned (highlights)',
+      content: (
+        <ul>
+          <li><strong>Foundations & technologies:</strong> how PET, SPECT, MRI, and optical approaches answer distinct biological questions.</li>
+          <li><strong>Imaging agents & radiochemistry:</strong> tracer design, half-life trade-offs, signal-to-noise, clinical constraints.</li>
+          <li><strong>Physics of luminescence:</strong> what the signal model permits—and where it breaks.</li>
+          <li><strong>Cellular & preclinical imaging:</strong> animal prep, acquisition protocols, quantification, and data quality.</li>
+          <li><strong>Clinical applications:</strong> how molecular imaging informs oncology, cardiology, and neurology.</li>
+          <li><strong>Image analysis & AI:</strong> QC → registration → segmentation → features → modeling; when classical beats deep learning, and how to validate both.</li>
+        </ul>
+      ),
+    },
+    {
+      id: 'relevance-to-medicine',
+      title: 'Why molecular imaging matters for medicine',
+      content: (
+        <>
+          <p>
+            Molecular imaging doesn’t just show anatomy—it shows <em>biology in motion</em>. Instead of waiting for structure to fail, it asks: what pathways are active now, and can we modulate them before damage sets in? That shift—from detecting late structural change to capturing early molecular activity—is the posture prevention needs.
+          </p>
+          <p>
+            Practically, it enables earlier screening, sharper risk stratification, and quantitative treatment response—well before conventional imaging alone would register change.
+          </p>
+        </>
+      ),
+      figure: {
+        src: `${STANFORD_DIR}figure_pipeline.png`,
+        caption: 'Integrated imaging–omics pipeline linking clinical data, microbiome/metabolomic profiling, and brain imaging to identify gut–brain axis biomarkers.',
+        alt: 'Integrated imaging–omics pipeline diagram',
+      }
+    },
+    {
+      id: 'capstone',
+      title: 'Designing my capstone: why the brain–gut axis?',
+      content: (
+        <>
+          <p>
+            Over the past few months at university, I’ve grown a real interest in nutrition—not as a rules list, but as a biological conversation between the gut and brain. The fellowship gave me tools to connect that curiosity to methods that could test it. For my final project, I explored a concept I care about deeply: using <strong>molecular imaging plus multi-omics</strong> to look for <strong>early inflammatory and metabolic signals</strong> along the brain–gut axis that might forecast cognitive decline.
+          </p>
+          <ul>
+            <li><strong>Motivation:</strong> neurodegenerative disease is usually diagnosed after years of silent biology; gut-derived metabolites and immune mediators might precede symptoms.</li>
+            <li><strong>Concept:</strong> pair PET/MRI readouts with microbiome/metabolomic measures and cognitive indices; test if a compact feature set aligns with regional brain activity or risk.</li>
+            <li><strong>What I built:</strong> a reproducible analysis blueprint (QC, ROI definition, feature engineering, CCA/PLS integration, validation) and an illustrative figure.</li>
+          </ul>
+        </>
+      ),
+      figure: {
+        src: `${STANFORD_DIR}figure_gba.png`,
+        caption: 'Concept sketch linking gut signals to region-specific brain activity as a prevention-first strategy.',
+        alt: 'Brain–gut axis concept figure',
+      }
+    },
+    {
+      id: 'impact-next',
+      title: 'Impact on me & next steps',
+      content: (
+        <>
+          <p>
+            This fellowship didn’t just teach me molecular imaging—it recalibrated how I see prevention. I think in mechanisms now, not just findings. “Normal MRI” isn’t the end of the road; it’s the cue to ask a molecular question instead.
+          </p>
+          <ol>
+            <li><strong>Prototype the pipeline</strong> on a small curated dataset to surface feasibility issues early.</li>
+            <li><strong>Iterate the feature set</strong> (metabolites, cytokines, imaging ROIs) with mentors; pre-register analysis steps.</li>
+            <li><strong>Present & refine</strong> via a short deck/poster; solicit feedback from imaging and neurogastroenterology groups.</li>
+            <li><strong>Pilot study or methods paper</strong> depending on data access.</li>
+          </ol>
+        </>
+      ),
+    },
+  ],
+  gallery: [
+    `${STANFORD_DIR}gallery_01.jpg`,
+    `${STANFORD_DIR}gallery_02.jpg`,
+    `${STANFORD_DIR}gallery_03.jpg`,
+  ],
 }
 
 /* --------- Standalone Pages --------- */
@@ -557,18 +471,13 @@ function OrcidIcon({ className = "w-4 h-4" }) {
     </svg>
   )
 }
-
 function PublicationsPage() {
   const LINKS = {
     scholar: "https://scholar.google.com/citations?user=Pzwn3y0AAAAJ&hl=en",
     orcid: "https://orcid.org/0009-0007-3778-7635",
     linkedin: "https://www.linkedin.com/in/imeth-illamperuma-3a734a193/details/publications/",
   }
-
-  const logos = [
-    "guardian.png","time.png","stat.png","bmj.png","hill.png",
-    "newscientist.png","npr.png","natgeo.png","mittr.png","wired.png",
-  ]
+  const logos = ["guardian.png","time.png","stat.png","bmj.png","hill.png","newscientist.png","npr.png","natgeo.png","mittr.png","wired.png"]
   const sources = logos.map((file) => `${BASE}pub-logos/${file}`)
 
   return (
@@ -578,36 +487,22 @@ function PublicationsPage() {
 
       <div className={`mt-6 rounded-2xl ${brand.card} ring-1 ring-black/5 dark:ring-white/10 p-4`}>
         <div className="flex flex-wrap items-center gap-3">
-          <a href={LINKS.scholar} target="_blank" rel="noopener noreferrer"
-             className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm">
-            <ScholarIcon className="w-4 h-4" />
-            <span>Google Scholar</span>
-            <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition" />
+          <a href={LINKS.scholar} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm">
+            <ScholarIcon className="w-4 h-4" /><span>Google Scholar</span><ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition" />
           </a>
-
-          <a href={LINKS.orcid} target="_blank" rel="noopener noreferrer"
-             className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm">
-            <OrcidIcon className="w-4 h-4" />
-            <span>ORCID iD</span>
-            <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition" />
+          <a href={LINKS.orcid} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm">
+            <OrcidIcon className="w-4 h-4" /><span>ORCID iD</span><ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition" />
           </a>
-
-          <a href={LINKS.linkedin} target="_blank" rel="noopener noreferrer"
-             className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm">
-            <Linkedin className="w-4 h-4" />
-            <span>LinkedIn Publications</span>
-            <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition" />
+          <a href={LINKS.linkedin} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-50 hover:shadow-sm">
+            <Linkedin className="w-4 h-4" /><span>LinkedIn Publications</span><ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition" />
           </a>
         </div>
       </div>
 
       <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {sources.map((src, i) => (
-          <div key={src}
-               className={`rounded-2xl ${brand.card} ring-1 ring-black/5 dark:ring-white/10 px-4 py-3 grid place-items-center logo-tile`}
-               style={{ animationDuration: `${9 + (i % 5)}s`, animationDelay: `${(i % 5) * 0.2}s` }}>
-            <img src={src} alt="" className="h-10 md:h-12 w-auto object-contain"
-                 onError={(e) => { e.currentTarget.style.opacity = 0.25; }} />
+          <div key={src} className={`rounded-2xl ${brand.card} ring-1 ring-black/5 dark:ring-white/10 px-4 py-3 grid place-items-center logo-tile`} style={{ animationDuration: `${9 + (i % 5)}s`, animationDelay: `${(i % 5) * 0.2}s` }}>
+            <img src={src} alt="" className="h-10 md:h-12 w-auto object-contain" onError={(e) => { e.currentTarget.style.opacity = 0.25; }} />
           </div>
         ))}
       </div>
@@ -619,7 +514,7 @@ function PublicationsPage() {
   )
 }
 
-/* --------- Journey Page (with featured stories section) ---------- */
+/* --------- Journey Page (with Featured Stories) ---------- */
 function JourneyPage() {
   return (
     <section className="max-w-6xl mx-auto px-6 md:px-8 py-14">
@@ -628,10 +523,9 @@ function JourneyPage() {
         A deeper look at the projects, teams, and ideas that shaped how I think about prevention-first medicine, imaging, and public health.
       </p>
 
-      {/* Featured stories live ONLY on this page */}
       <FeaturedStoriesStrip />
 
-      {/* (Add more Journey-only sections below as you like) */}
+      {/* Add more Journey-only sections later if you want */}
     </section>
   )
 }
@@ -710,7 +604,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* Journey preview (kept, but Featured Stories live ONLY on the Journey page) */}
+          {/* Journey preview (no Featured Stories here) */}
           <section id="journey" className="max-w-6xl mx-auto px-6 md:px-8 py-14">
             <div className="grid md:grid-cols-2 gap-10 items-center">
               <div>
@@ -718,8 +612,7 @@ export default function App() {
                 <p className="mt-3 text-emerald-900/80 dark:text-emerald-300/80 leading-relaxed">
                   Medicine became more than a destination for me—it’s been a series of questions, mentors, and moments that reshaped how I think about care. I started with movement and prevention, then found myself drawn to the spaces where science meets lived experience.
                 </p>
-                <a href="#/journey"
-                   className="mt-6 inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-emerald-700 text-white hover:opacity-90 transition">
+                <a href="#/journey" className="mt-6 inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-emerald-700 text-white hover:opacity-90 transition">
                   Explore My Journey
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
                 </a>
@@ -727,23 +620,13 @@ export default function App() {
 
               <div className="relative">
                 <div className="rounded-3xl ring-1 ring-black/5 dark:ring-white/10 overflow-hidden bg-white/50 dark:bg-emerald-900/30 p-4">
-                  <div
-                    className="inline-flex items-center gap-3 whitespace-nowrap animate-marquee will-change-transform"
-                    style={{ width: 'max-content', animationDuration: '38s' }}
-                  >
+                  <div className="inline-flex items-center gap-3 whitespace-nowrap animate-marquee will-change-transform" style={{ width: 'max-content', animationDuration: '38s' }}>
                     {[...journeySrcs, ...journeySrcs].map((src, i) => (
-                      <img
-                        key={`jr-${i}`}
-                        src={src}
-                        alt=""
-                        className="h-36 md:h-44 w-auto object-cover rounded-2xl shadow-sm ring-1 ring-black/5 dark:ring-white/10"
-                      />
+                      <img key={`jr-${i}`} src={src} alt="" className="h-36 md:h-44 w-auto object-cover rounded-2xl shadow-sm ring-1 ring-black/5 dark:ring-white/10" />
                     ))}
                   </div>
                 </div>
-                <div className="mt-2 text-xs text-emerald-900/60 dark:text-emerald-300/60">
-                  Moments with teams and projects that shaped my work.
-                </div>
+                <div className="mt-2 text-xs text-emerald-900/60 dark:text-emerald-300/60">Moments with teams and projects that shaped my work.</div>
               </div>
             </div>
           </section>
