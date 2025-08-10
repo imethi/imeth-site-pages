@@ -115,39 +115,87 @@ function ContactPage() {
 function ScholarIcon({ className = 'w-4 h-4' }) { return (<svg viewBox="0 0 24 24" className={className}><path fill="currentColor" d="M12 3L2 9l10 6 10-6-10-6Zm0 8.5L5.2 9 12 5.5 18.8 9 12 11.5Zm-7 3.2V15l7 4 7-4v-.3L12 16.7 5 14.7Z"/></svg>) }
 function OrcidIcon({ className = 'w-4 h-4' }) { return (<svg viewBox="0 0 256 256" className={className}><circle cx="128" cy="128" r="128" fill="#A6CE39"/><rect x="92" y="76" width="20" height="104" rx="3" fill="white"/><path fill="white" d="M150 76c-29 0-52 23-52 52s23 52 52 52 52-23 52-52-23-52-52-52zm0 20c18 0 32 14 32 32s-14 32-32 32-32-14-32-32 14-32 32-32z"/></svg>) }
 function PublicationsPage() {
+  const BASE = import.meta.env.BASE_URL
+
+  // Use your exact filenames + nice display names for titles
+  const LOGOS = [
+    { file: 'healthydebate.png',     name: 'Healthy Debate' },
+    { file: 'jack.org.png',          name: 'Jack.org' },
+    { file: 'mac.png',               name: 'McMaster University' },
+    { file: 'mdpi.png',              name: 'MDPI' },
+    { file: 'MEDCITYNEWS.png',       name: 'MedCity News' },
+    { file: 'NIH.png',               name: 'National Institutes of Health' },
+    { file: 'OFID.png',              name: 'Open Forum Infectious Diseases' },
+    { file: 'plos.png',              name: 'PLOS' },
+    { file: 'sage.svg.png',          name: 'SAGE Publishing' },
+    { file: 'stanfordmed.gif.png',   name: 'Stanford Medicine' },
+  ]
+
   const LINKS = {
     scholar: 'https://scholar.google.com/citations?user=Pzwn3y0AAAAJ&hl=en',
     orcid: 'https://orcid.org/0009-0007-3778-7635',
     linkedin: 'https://www.linkedin.com/in/imeth-illamperuma-3a734a193/details/publications/',
   }
-  const logos = ['guardian.png','time.png','stat.png','bmj.png','hill.png','newscientist.png','npr.png','natgeo.png','mittr.png','wired.png']
-  const sources = logos.map(f => `${BASE}pub-logos/${f}`)
+
+  // Split into two rows (evens / odds)
+  const ROW_A = LOGOS.filter((_, i) => i % 2 === 0)
+  const ROW_B = LOGOS.filter((_, i) => i % 2 === 1)
+
+  // Local row component with infinite marquee
+  const LogoRow = ({ files, direction = 'left', speed = 30 }) => {
+    const anim = direction === 'left' ? 'animate-marquee' : 'animate-marquee-reverse'
+    return (
+      <div className="overflow-hidden rounded-2xl ring-1 ring-black/10 dark:ring-white/10 bg-white/5">
+        <div
+          className={`inline-flex items-center whitespace-nowrap gap-10 will-change-transform ${anim}`}
+          style={{ width: 'max-content', animationDuration: `${speed}s` }}
+        >
+          {[...files, ...files].map(({ file, name }, idx) => (
+            <div key={`${file}-${idx}`} className="px-6 py-5">
+              <img
+                src={`${BASE}pub-logos/${file}`}
+                alt={name}
+                title={name}
+                className="h-10 md:h-12 w-auto object-contain opacity-90 hover:opacity-100 transition"
+                onError={(e) => {
+                  e.currentTarget.style.opacity = 0.25
+                  e.currentTarget.title = `${name} (missing file)`
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <section className="max-w-6xl mx-auto px-6 md:px-8 py-14">
       <h1 className="text-3xl font-semibold text-slate-950 dark:text-slate-50">Writing Published In</h1>
       <p className="mt-2 text-slate-900 dark:text-slate-100/90">A selection of outlets featuring my work.</p>
 
-      <Card className="mt-6 p-4">
+      {/* links strip */}
+      <div className="mt-6 rounded-2xl bg-white/5 ring-1 ring-black/10 dark:ring-white/10 p-4">
         <div className="flex flex-wrap items-center gap-3">
-          <a href={LINKS.scholar} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 hover:shadow-sm">
-            <ScholarIcon className="w-4 h-4" /><span>Google Scholar</span><ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition" />
+          <a href={LINKS.scholar} target="_blank" rel="noopener noreferrer"
+             className="inline-flex items-center gap-2 rounded-xl px-3 py-2 bg-white/10 hover:bg-white/20 text-slate-100 ring-1 ring-white/10">
+            🔎 Google Scholar
           </a>
-          <a href={LINKS.orcid} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 hover:shadow-sm">
-            <OrcidIcon className="w-4 h-4" /><span>ORCID iD</span><ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition" />
+          <a href={LINKS.orcid} target="_blank" rel="noopener noreferrer"
+             className="inline-flex items-center gap-2 rounded-xl px-3 py-2 bg-white/10 hover:bg-white/20 text-slate-100 ring-1 ring-white/10">
+            🟢 ORCID iD
           </a>
-          <a href={LINKS.linkedin} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 hover:shadow-sm">
-            <Linkedin className="w-4 h-4" /><span>LinkedIn Publications</span><ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition" />
+          <a href={LINKS.linkedin} target="_blank" rel="noopener noreferrer"
+             className="inline-flex items-center gap-2 rounded-xl px-3 py-2 bg-white/10 hover:bg-white/20 text-slate-100 ring-1 ring-white/10">
+            💼 LinkedIn Publications
           </a>
         </div>
-      </Card>
+      </div>
 
-      <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {sources.map((src, i) => (
-          <Card key={src} className="px-4 py-3 grid place-items-center">
-            <img src={src} alt="" className="h-10 md:h-12 w-auto object-contain" onError={(e) => { e.currentTarget.style.opacity = 0.25 }} />
-          </Card>
-        ))}
+      {/* infinitely rotating logo rows */}
+      <div className="mt-8 space-y-4">
+        <LogoRow files={ROW_A} direction="left"  speed={28} />
+        <LogoRow files={ROW_B} direction="right" speed={34} />
       </div>
 
       <div className="mt-6 text-[11px] text-slate-900/80 dark:text-slate-100/75">
