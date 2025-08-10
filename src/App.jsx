@@ -62,7 +62,7 @@ const affiliations = [
   { org: 'LMC Healthcare', role: 'Medical Office Administrator (Intern)', logo: `${BASE}logos/lmc.png`, link: 'https://www.lmc.ca/' },
 ].map(i => ({ ...i, safeLogo: i.logo, placeholder: logoFallback(i.org) }))
 
-// ---------- Journey collage sources (in /public/images/journey-images) ----------
+// ---------- Journey collage sources (in /public/images/journey-images/) ----------
 const journeyImages = [
   '/images/journey-images/019929.png',
   '/images/journey-images/392883.png',
@@ -334,56 +334,59 @@ export default function App() {
           </div>
 
           {/* -------- Journey preview (story + animated collage) -------- */}
-          <section id="journey" className="max-w-6xl mx-auto px-6 md:px-8 py-14">
-            <div className="grid md:grid-cols-2 gap-10 items-center">
-              {/* Left: description + CTA */}
-              <div>
-                <h2 className="text-3xl md:text-4xl font-semibold text-emerald-950 dark:text-emerald-100">
-                  My Journey
-                </h2>
-                <p className="mt-3 text-emerald-900/80 dark:text-emerald-300/80 leading-relaxed">
-                  Medicine became more than a destination for me—it’s been a series of
-                  questions, mentors, and moments that reshaped how I think about care.
-                  I started with movement and prevention, then found myself drawn to the
-                  spaces where science meets lived experience: imaging for earlier
-                  detection, harm reduction on campus, and public health that treats
-                  people as whole. Along the way I’ve been part of teams that encouraged
-                  curiosity, built programs from the ground up, and pushed for equity
-                  as the standard—not the exception. This page is a glimpse into that
-                  path and the impact it’s had on what I value and how I work.
-                </p>
+<section id="journey" className="max-w-6xl mx-auto px-6 md:px-8 py-14">
+  <div className="grid md:grid-cols-2 gap-10 items-center">
+    {/* Left: title + sincere description + CTA */}
+    <div>
+      <h2 className="text-3xl md:text-4xl font-semibold text-emerald-950 dark:text-emerald-100">
+        My Journey
+      </h2>
+      <p className="mt-3 text-emerald-900/80 dark:text-emerald-300/80 leading-relaxed">
+        Medicine became more than a destination for me—it’s been a series of
+        questions, mentors, and moments that reshaped how I think about care.
+        I started with movement and prevention, then found myself drawn to the
+        spaces where science meets lived experience: imaging for earlier
+        detection, harm reduction on campus, and public health that treats
+        people as whole. Along the way I’ve been part of teams that encouraged
+        curiosity, built programs from the ground up, and pushed for equity
+        as the standard—not the exception. This page is a glimpse into that
+        path and the impact it’s had on what I value and how I work.
+      </p>
 
-                <a href="#/journey"
-                   className="mt-6 inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-emerald-700 text-white hover:opacity-90 transition">
-                  Read the full story
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
-                </a>
-              </div>
+      <a
+        href="#/journey"
+        className="mt-6 inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-emerald-700 text-white hover:opacity-90 transition"
+      >
+        Read the full story
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
+      </a>
+    </div>
 
-              {/* Right: animated collage */}
-              <div className="relative">
-                <div className="rounded-3xl ring-1 ring-black/5 dark:ring-white/10 overflow-hidden bg-white/50 dark:bg-emerald-900/30 p-4">
-                 {/* Row 1 — leftward */}
-<div className="journey-row animate-journeyLeft" style={{ animationDuration: '40s' }}>
-  {[...journeyImages, ...journeyImages].map((src, i) => (
-    <img key={`ja-${i}`} src={src} className="journey-tile" alt="" />
-  ))}
-</div>
+    {/* Right: animated collage */}
+    <div className="relative">
+      <div className="rounded-3xl ring-1 ring-black/5 dark:ring-white/10 overflow-hidden bg-white/50 dark:bg-emerald-900/30 p-4">
+        <div className="space-y-4">
+          {/* Row 1 — leftward */}
+          <div className="journey-row animate-journeyLeft" style={{ animationDuration: '40s' }}>
+            {[...journeyImages, ...journeyImages].map((src, i) => (
+              <img key={`ja-${i}`} src={src} className="journey-tile" alt="" />
+            ))}
+          </div>
 
-{/* Row 2 — rightward */}
-<div className="journey-row animate-journeyRight" style={{ animationDuration: '48s' }}>
-  {[...journeyImagesRev, ...journeyImagesRev].map((src, i) => (
-    <img key={`jb-${i}`} src={src} className="journey-tile" alt="" />
-  ))}
-</div>
-                  </div>
-                </div>
-                <div className="mt-2 text-xs text-emerald-900/60 dark:text-emerald-300/60">
-                  Moments with teams and projects that shaped my work.
-                </div>
-              </div>
-            </div>
-          </section>
+          {/* Row 2 — rightward */}
+          <div className="journey-row animate-journeyRight" style={{ animationDuration: '48s' }}>
+            {[...journeyImagesRev, ...journeyImagesRev].map((src, i) => (
+              <img key={`jb-${i}`} src={src} className="journey-tile" alt="" />
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="mt-2 text-xs text-emerald-900/60 dark:text-emerald-300/60">
+        Moments with teams and projects that shaped my work.
+      </div>
+    </div>
+  </div>
+</section>
 
           {/* Offerings */}
           <section id="offerings" className="max-w-6xl mx-auto px-6 md:px-8 py-14">
