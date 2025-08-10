@@ -1,12 +1,12 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Mail, Github, Linkedin, FileDown, ExternalLink } from 'lucide-react'
+import { Mail, Linkedin, FileDown, ExternalLink } from 'lucide-react'
 import Typewriter from 'typewriter-effect'
 
-// ---------------- Base paths ----------------
-const BASE = import.meta.env.BASE_URL // e.g. "/imeth-site-pages/"
+/* ---------------- Base paths ---------------- */
+const BASE = import.meta.env.BASE_URL
 
-// ---------------- Assets ----------------
+/* ---------------- Assets ---------------- */
 const HEADSHOT_PATH = `${BASE}images/imeth-profile1.png`
 const FALLBACK_HEADSHOT = (() => {
   const svg = `
@@ -22,7 +22,7 @@ const FALLBACK_HEADSHOT = (() => {
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
 })()
 
-// ---------------- UI helpers ----------------
+/* ---------------- UI helpers ---------------- */
 const brand = {
   bg: 'bg-emerald-50 dark:bg-emerald-950',
   text: 'text-emerald-950 dark:text-emerald-100',
@@ -40,17 +40,7 @@ const Card = ({ children }) => (
   </div>
 )
 
-const logoFallback = (text) =>
-  `data:image/svg+xml;utf8,${encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 200'>
-      <rect width='600' height='200' fill='#ecfdf5'/>
-      <text x='50%' y='50%' text-anchor='middle'
-        font-family='system-ui,Segoe UI,Roboto,Helvetica,Arial'
-        font-size='28' fill='#065f46'>${text}</text>
-    </svg>`
-  )}`
-
-// ---------------- Data ----------------
+/* ---------------- Data ---------------- */
 const affiliations = [
   { org: 'Stanford Department of Medicine', role: 'Molecular Imaging Research Fellow', logo: `${BASE}logos/stanford.png`, link: 'https://med.stanford.edu/radiology.html' },
   { org: 'McMaster University — Dept. of Medicine', role: 'Research Student', logo: `${BASE}logos/mcmaster-med.png`, link: 'https://medicine.healthsci.mcmaster.ca/' },
@@ -60,9 +50,10 @@ const affiliations = [
   { org: 'University of Manitoba — INGAUGE Lab', role: 'Internship / Summer Research Student', logo: `${BASE}logos/umanitoba.png`, link: 'https://www.ingauge.ca/' },
   { org: 'McMaster DB Sports Med & Rehab', role: 'Sports Specialist Rehab Assistant (Intern)', logo: `${BASE}logos/mcmaster-sportsmed.png`, link: 'https://sportmed.mcmaster.ca/' },
   { org: 'LMC Healthcare', role: 'Medical Office Administrator (Intern)', logo: `${BASE}logos/lmc.png`, link: 'https://www.lmc.ca/' },
-].map(i => ({ ...i, safeLogo: i.logo, placeholder: logoFallback(i.org) }))
+].map(i => ({ ...i, safeLogo: i.logo }))
 
-// ---------------- Journey collage (your exact filenames) ----------------
+/* ---------------- Journey collage (SINGLE ROW, LARGE TILES) ---------------- */
+/* Exact filenames in public/images/journey-images */
 const journeyFiles = [
   '019929.png',
   '392883.png',
@@ -75,12 +66,9 @@ const journeyFiles = [
   'IMG_5726.png',
   'IMG_8893.png',
 ]
+const journeySrcs = journeyFiles.map(f => `${BASE}images/journey-images/${f}`)
 
-// Build absolute asset URLs (works locally and on Pages). Add a cache-buster.
-const J_BASE = `${BASE}images/journey-images/`
-const journeySources = journeyFiles.map(f => `${J_BASE}${encodeURIComponent(f)}?v=2`)
-
-/* ================= Two-line infinite carousel (opposite directions) ================= */
+/* ================= Two-line logo marquee (unchanged) ================= */
 const MarqueeRow = ({ items, direction = 'left', speedSeconds = 28 }) => {
   const anim = direction === 'left' ? 'animate-marquee' : 'animate-marquee-reverse'
   return (
@@ -100,7 +88,6 @@ const MarqueeRow = ({ items, direction = 'left', speedSeconds = 28 }) => {
           >
             <img
               src={it.safeLogo}
-              onError={(e) => { e.currentTarget.src = it.placeholder; e.currentTarget.onerror = null }}
               alt={it.org}
               className="h-8 w-auto object-contain"
             />
@@ -114,7 +101,6 @@ const MarqueeRow = ({ items, direction = 'left', speedSeconds = 28 }) => {
     </div>
   )
 }
-
 const TwoLineCarousel = ({ items }) => {
   const mid = Math.ceil(items.length / 2)
   const top = items.slice(0, mid)
@@ -141,7 +127,7 @@ function useDarkMode() {
 
 /* ================= Standalone Pages ================= */
 function ContactPage() {
-  const FORMSPREE_ID = "your_form_id_here"
+  const FORMSPREE_ID = "your_form_id_here"    // replace when you’re ready
   const action = `https://formspree.io/f/${FORMSPREE_ID}`
   return (
     <section className="max-w-3xl mx-auto px-6 md:px-8 py-14">
@@ -164,6 +150,7 @@ function ContactPage() {
   )
 }
 
+/* tiny icons for Publications link bar */
 function ScholarIcon({ className = "w-4 h-4" }) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
@@ -197,12 +184,8 @@ function PublicationsPage() {
 
   return (
     <section className="max-w-6xl mx-auto px-6 md:px-8 py-14">
-      <h1 className="text-3xl font-semibold text-emerald-950 dark:text-emerald-100">
-        Writing Published In
-      </h1>
-      <p className="mt-2 text-emerald-900/80 dark:text-emerald-300/80">
-        A selection of outlets featuring my work.
-      </p>
+      <h1 className="text-3xl font-semibold text-emerald-950 dark:text-emerald-100">Writing Published In</h1>
+      <p className="mt-2 text-emerald-900/80 dark:text-emerald-300/80">A selection of outlets featuring my work.</p>
 
       <div className={`mt-6 rounded-2xl ${brand.card} ring-1 ring-black/5 dark:ring-white/10 p-4`}>
         <div className="flex flex-wrap items-center gap-3">
@@ -247,13 +230,11 @@ function PublicationsPage() {
   )
 }
 
-// --------- Full Journey page stub ----------
+/* --------- Full Journey page stub ---------- */
 function JourneyPage() {
   return (
     <section className="max-w-6xl mx-auto px-6 md:px-8 py-14">
-      <h1 className="text-3xl md:text-4xl font-semibold text-emerald-950 dark:text-emerald-100">
-        My Journey
-      </h1>
+      <h1 className="text-3xl md:text-4xl font-semibold text-emerald-950 dark:text-emerald-100">My Journey</h1>
       <p className="mt-3 text-emerald-900/80 dark:text-emerald-300/80 max-w-3xl">
         A deeper look at the projects, teams, and ideas that shaped how I think about
         prevention-first medicine, imaging, and public health. (Full timeline and stories coming soon.)
@@ -301,6 +282,7 @@ export default function App() {
       {route === 'home' && (
         <section id="home" className="relative overflow-hidden">
           <div className="max-w-6xl mx-auto px-6 md:px-8 py-16 md:py-20 flex flex-col gap-10">
+            {/* HERO */}
             <div className="flex flex-col md:flex-row items-center gap-8">
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="flex-shrink-0 relative">
                 <div className="absolute -z-10 -top-6 -left-6 w-12 h-12 rounded-full bg-emerald-200/70 blur-2xl" />
@@ -334,14 +316,12 @@ export default function App() {
             </div>
           </div>
 
-          {/* -------- Journey preview (story + single-row collage) -------- */}
+          {/* -------- Journey preview (story + SINGLE ROW collage) -------- */}
           <section id="journey" className="max-w-6xl mx-auto px-6 md:px-8 py-14">
             <div className="grid md:grid-cols-2 gap-10 items-center">
               {/* Left: description + CTA */}
               <div>
-                <h2 className="text-3xl md:text-4xl font-semibold text-emerald-950 dark:text-emerald-100">
-                  My Journey
-                </h2>
+                <h2 className="text-3xl md:text-4xl font-semibold text-emerald-950 dark:text-emerald-100">My Journey</h2>
                 <p className="mt-3 text-emerald-900/80 dark:text-emerald-300/80 leading-relaxed">
                   Medicine became more than a destination for me—it’s been a series of
                   questions, mentors, and moments that reshaped how I think about care.
@@ -349,9 +329,9 @@ export default function App() {
                   spaces where science meets lived experience: imaging for earlier
                   detection, harm reduction on campus, and public health that treats
                   people as whole. Along the way I’ve been part of teams that encouraged
-                  curiosity, built programs from the ground up, and pushed for equity
-                  as the standard—not the exception. This page is a glimpse into that
-                  path and the impact it’s had on what I value and how I work.
+                  curiosity, built programs from the ground up, and pushed for equity as
+                  the standard—not the exception. This page is a glimpse into that path
+                  and the impact it’s had on what I value and how I work.
                 </p>
 
                 <a href="#/journey"
@@ -361,27 +341,21 @@ export default function App() {
                 </a>
               </div>
 
-              {/* Right: single, larger, smooth-scrolling collage */}
+              {/* Right: SINGLE large row, seamless loop */}
               <div className="relative">
                 <div className="rounded-3xl ring-1 ring-black/5 dark:ring-white/10 overflow-hidden bg-white/50 dark:bg-emerald-900/30 p-4">
-                  <div className="overflow-hidden">
-                    <div
-                      className="inline-flex items-center gap-4 whitespace-nowrap animate-marquee will-change-transform"
-                      style={{ width: 'max-content', animationDuration: '36s' }}
-                    >
-                      {[...journeySources, ...journeySources].map((src, i) => (
-                        <img
-                          key={`jr-${i}`}
-                          src={src}
-                          alt=""
-                          className="h-[140px] w-auto object-cover rounded-2xl shadow-sm ring-1 ring-black/5 dark:ring-white/10"
-                          onError={(e) => {
-                            console.error('Journey image failed:', src)
-                            e.currentTarget.src = FALLBACK_HEADSHOT
-                          }}
-                        />
-                      ))}
-                    </div>
+                  <div
+                    className="inline-flex items-center gap-3 whitespace-nowrap animate-marquee will-change-transform"
+                    style={{ width: 'max-content', animationDuration: '38s' }}
+                  >
+                    {[...journeySrcs, ...journeySrcs].map((src, i) => (
+                      <img
+                        key={`jr-${i}`}
+                        src={src}
+                        alt=""
+                        className="h-36 md:h-44 w-auto object-cover rounded-2xl shadow-sm ring-1 ring-black/5 dark:ring-white/10"
+                      />
+                    ))}
                   </div>
                 </div>
                 <div className="mt-2 text-xs text-emerald-900/60 dark:text-emerald-300/60">
