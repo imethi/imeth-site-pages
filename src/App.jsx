@@ -64,16 +64,16 @@ const affiliations = [
 
 // ---------- Journey collage sources (in /public/images/journey-images) ----------
 const journeyImages = [
-  `${BASE}images/journey-images/019929.png`,
-  `${BASE}images/journey-images/392883.png`,
-  `${BASE}images/journey-images/8982934.png`,
-  `${BASE}images/journey-images/92034.png`,
-  `${BASE}images/journey-images/9234929.png`,
-  `${BASE}images/journey-images/IMG_2962.png`,
-  `${BASE}images/journey-images/IMG_3664.png`,
-  `${BASE}images/journey-images/IMG_5720.png`,
-  `${BASE}images/journey-images/IMG_5726.png`,
-  `${BASE}images/journey-images/IMG_8893.png`,
+  '/images/journey-images/019929.png',
+  '/images/journey-images/392883.png',
+  '/images/journey-images/8982934.png',
+  '/images/journey-images/92034.png',
+  '/images/journey-images/9234929.png',
+  '/images/journey-images/IMG_2962.png',
+  '/images/journey-images/IMG_3664.png',
+  '/images/journey-images/IMG_5720.png',
+  '/images/journey-images/IMG_5726.png',
+  '/images/journey-images/IMG_8893.png',
 ];
 
 const journeyImagesRev = [...journeyImages].reverse();
@@ -363,8 +363,7 @@ export default function App() {
               {/* Right: animated collage */}
               <div className="relative">
                 <div className="rounded-3xl ring-1 ring-black/5 dark:ring-white/10 overflow-hidden bg-white/50 dark:bg-emerald-900/30 p-4">
-                  <div className="space-y-4">
-                   {/* Row 1 — leftward */}
+                 {/* Row 1 — leftward */}
 <div className="journey-row animate-journeyLeft" style={{ animationDuration: '40s' }}>
   {[...journeyImages, ...journeyImages].map((src, i) => (
     <img key={`ja-${i}`} src={src} className="journey-tile" alt="" />
