@@ -6,11 +6,10 @@ import Typewriter from 'typewriter-effect'
 /* base */
 const BASE = import.meta.env.BASE_URL
 
-/* shared UI */
-import { brand, Pill, Card } from './ui/brand'
-
-// at the top of App.jsx
+/* shared UI (single import) */
 import { brand, Pill, Card } from './ui/brand.jsx'
+
+/* journey pages (single imports) */
 import JourneyPage from './journey/JourneyPage.jsx'
 import StoryPage from './journey/StoryPage.jsx'
 import StanfordStory from './journey/data/stanford.jsx'
@@ -47,7 +46,7 @@ const affiliations = [
 const journeyFiles = ['019929.png','392883.png','8982934.png','92034.png','9234929.png','IMG_2962.png','IMG_3664.png','IMG_5720.png','IMG_5726.png','IMG_8893.png']
 const journeySrcs = journeyFiles.map(f => `${BASE}images/journey-images/${f}`)
 
-/* ---------- nav + theme ---------- */
+/* ---------- router + theme (define once) ---------- */
 const getRoute = () => (location.hash.replace(/^#\/?/, '') || 'home')
 function useDarkMode() {
   const [dark, setDark] = React.useState(() => localStorage.getItem('theme') === 'dark')
@@ -172,7 +171,7 @@ function PublicationsPage() {
   )
 }
 
-/* ---------- Journey teaser collage on home ---------- */
+/* ---------- Journey teaser on home ---------- */
 function JourneyTeaser() {
   return (
     <section id="journey" className="max-w-6xl mx-auto px-6 md:px-8 py-14">
