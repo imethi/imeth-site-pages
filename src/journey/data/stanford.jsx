@@ -30,10 +30,9 @@ const StanfordStory = {
       content: (
         <>
           <p>
-            I was selected for the prestigious 2025 Stanford Radiology Summer Mini-Fellowship—an intensive, mentor-led program that deliberately bridges <strong>study</strong>, <strong>research</strong>, and <strong>clinical translation</strong>.
+            I was selected for the prestigious 2025 Stanford Radiology Summer Mini-Fellowship—an intensive, mentor-led program that deliberately bridges <strong>study</strong>, <strong>research</strong>, and <strong>clinical translation</strong>. Each week built from fundamentals to practice: imaging technologies; agents/tracers & radiochemistry; physics of luminescence; cellular and preclinical workflows; clinical applications; and image analysis with AI. Having the chance to learn with Stanford's state of the art reserach institute was an opportunity that I was definitely excited to be a part of.
           </p>
           <p>
-            Each week built from fundamentals to practice: imaging technologies; agents/tracers & radiochemistry; physics of luminescence; cellular and preclinical workflows; clinical applications; and image analysis with AI. Having the chance to learn with Stanford's state of the art reserach institute was an opportunity that I was definitely excited to be a part of.
           </p>
         </>
       ),
