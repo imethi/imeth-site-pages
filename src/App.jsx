@@ -9,10 +9,11 @@ const BASE = import.meta.env.BASE_URL
 /* shared UI */
 import { brand, Pill, Card } from './ui/brand'
 
-/* journey pages */
-import JourneyPage from './journey/JourneyPage'
-import StoryPage from './journey/StoryPage'
-import StanfordStory from './journey/data/stanford'
+// at the top of App.jsx
+import { brand, Pill, Card } from './ui/brand.jsx'
+import JourneyPage from './journey/JourneyPage.jsx'
+import StoryPage from './journey/StoryPage.jsx'
+import StanfordStory from './journey/data/stanford.jsx'
 
 /* ---------- assets ---------- */
 const HEADSHOT_PATH = `${BASE}images/imeth-profile1.png`
