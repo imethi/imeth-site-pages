@@ -1,5 +1,4 @@
 import React from 'react'
-import { Download } from 'lucide-react'
 import { Pill, Card } from '../ui/brand.jsx'
 
 function useScrollSpy(ids) {
@@ -26,14 +25,14 @@ export default function StoryPage({ story }) {
   return (
     <section id="story-root" className="max-w-6xl mx-auto px-6 md:px-8">
       {/* Header row: hero + summary */}
-      <div className="pt-3 md:pt-4 grid md:grid-cols-12 gap-6 items-start">
-        {/* Hero: frameless, rounded, full-bleed within container */}
+      <div className="pt-2 md:pt-3 grid md:grid-cols-12 gap-5 items-start">
+        {/* Hero (frameless) */}
         <div className="md:col-span-7">
           <div className="rounded-2xl overflow-hidden">
             <img
               src={story.hero}
               alt={story.title}
-              className="w-full h-[16rem] md:h-[22rem] object-cover"
+              className="w-full h-[15rem] md:h-[22rem] object-cover"
               onError={onImgErr}
             />
           </div>
@@ -41,7 +40,7 @@ export default function StoryPage({ story }) {
 
         {/* Title + meta */}
         <div className="md:col-span-5">
-          {/* Stanford maroon (good contrast on dark uses rose-300) */}
+          {/* Stanford maroon; softer rose in dark for contrast */}
           <h1 className="text-3xl md:text-4xl font-semibold leading-tight text-[#8C1515] dark:text-rose-300">
             {story.title}
           </h1>
@@ -49,37 +48,36 @@ export default function StoryPage({ story }) {
 
           <div className="mt-3 flex flex-wrap gap-2">{story.chips?.map(c => <Pill key={c}>{c}</Pill>)}</div>
 
+          {/* Compact meta bar (replaces bulky cards) */}
           {story.atAGlance?.length > 0 && (
-            <Card className="mt-4">
-              <h3 className="font-semibold text-slate-950 dark:text-slate-50 mb-2">At a glance</h3>
-              <ul className="grid gap-2 text-sm">
+            <div className="mt-3 text-sm text-slate-900 dark:text-slate-100/90">
+              <ul className="flex flex-wrap items-center gap-x-3 gap-y-1">
                 {story.atAGlance.map((it, i) => (
-                  <li key={i} className="flex justify-between gap-3">
-                    <span className="text-slate-900/80 dark:text-slate-100/80">{it.label}</span>
-                    <span className="font-medium text-slate-950 dark:text-slate-50">{it.value}</span>
+                  <li key={i} className="flex items-center">
+                    <span className="text-slate-500 dark:text-slate-400">{it.label}:</span>
+                    <span className="ml-1 font-medium">{it.value}</span>
+                    {i < story.atAGlance.length - 1 && <span className="mx-2 opacity-40">•</span>}
                   </li>
                 ))}
               </ul>
-            </Card>
+            </div>
           )}
 
+          {/* Inline downloads */}
           {story.downloads?.length > 0 && (
-            <Card className="mt-3">
-              <div className="text-sm font-semibold mb-2 text-slate-950 dark:text-slate-50">Artifacts</div>
-              <div className="grid gap-2">
-                {story.downloads.map((d, i) => (
-                  <a
-                    key={i}
-                    href={d.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-sm text-indigo-700 dark:text-indigo-300 hover:underline"
-                  >
-                    <Download className="w-4 h-4" /> {d.label}
-                  </a>
-                ))}
-              </div>
-            </Card>
+            <div className="mt-3 flex flex-wrap gap-4 text-sm">
+              {story.downloads.map((d, i) => (
+                <a
+                  key={i}
+                  href={d.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline text-indigo-700 dark:text-indigo-300 hover:no-underline"
+                >
+                  {d.label}
+                </a>
+              ))}
+            </div>
           )}
         </div>
       </div>
@@ -94,7 +92,7 @@ export default function StoryPage({ story }) {
                 {s.content}
               </div>
 
-              {/* Section figure: frameless, bigger, no crop by default */}
+              {/* Section figure: frameless & larger, no crop */}
               {s.figure && (
                 <figure className="mt-5">
                   <div className="rounded-2xl overflow-hidden">
@@ -115,11 +113,10 @@ export default function StoryPage({ story }) {
             </section>
           ))}
 
-          {/* Masonry gallery (frameless, natural aspect ratio, fuller images) */}
+          {/* Masonry gallery: frameless, natural aspect ratio */}
           {story.gallery?.length > 0 && (
             <section id="gallery" className="scroll-mt-24">
               <h2 className="text-2xl font-semibold text-slate-950 dark:text-slate-50">Gallery</h2>
-
               <div className="mt-4 columns-1 sm:columns-2 lg:columns-3 gap-4 [column-fill:balance]">
                 {story.gallery.map((g, i) => (
                   <a
