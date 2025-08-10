@@ -16,19 +16,19 @@ export default [
     img: `${DIR}naloxone.jpg`,
     link: '#/journey/naloxone',
   },
+    {
+    year: 'Ongoing',
+    title: 'CAMH Public Health Research',
+    desc: 'Harm reduction + culturally informed care for more equitable mental health strategies.',
+    img: `${DIR}camh.jpg`,
+    link: '#/journey/camh',
+  },
   {
     year: '2024',
     title: 'University of Manitoba Paediatric Research',
     desc: 'INGAUGE Labs (Dr. Woodgate): research amplifying the voices of children and youth in care.',
     img: `${DIR}manitoba.jpg`,
     link: '#/journey/manitoba',
-  },
-  {
-    year: 'Ongoing',
-    title: 'CAMH Public Health Research',
-    desc: 'Harm reduction + culturally informed care for more equitable mental health strategies.',
-    img: `${DIR}camh.jpg`,
-    link: '#/journey/camh',
   },
 ]
 
