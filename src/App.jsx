@@ -3,10 +3,10 @@ import { motion } from 'framer-motion'
 import { Mail, Github, Linkedin, FileDown, ExternalLink } from 'lucide-react'
 import Typewriter from 'typewriter-effect'
 
-// ---------- Base paths ----------
+// ---------------- Base paths ----------------
 const BASE = import.meta.env.BASE_URL
 
-// ---------- Assets ----------
+// ---------------- Assets ----------------
 const HEADSHOT_PATH = `${BASE}images/imeth-profile1.png`
 const FALLBACK_HEADSHOT = (() => {
   const svg = `
@@ -22,19 +22,19 @@ const FALLBACK_HEADSHOT = (() => {
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
 })()
 
-// ---------- UI helpers ----------
+// ---------------- UI helpers ----------------
 const brand = {
   bg: 'bg-emerald-50 dark:bg-emerald-950',
   text: 'text-emerald-950 dark:text-emerald-100',
   accentBg: 'bg-emerald-700',
   card: 'bg-white/80 dark:bg-emerald-900/40 backdrop-blur'
 }
-const Pill  = ({ children }) => (
+const Pill = ({ children }) => (
   <span className="inline-flex items-center rounded-full border border-emerald-700/20 px-3 py-1 text-xs text-emerald-900/80 dark:text-emerald-200/80">
     {children}
   </span>
 )
-const Card  = ({ children }) => (
+const Card = ({ children }) => (
   <div className={`rounded-2xl ${brand.card} shadow-sm ring-1 ring-black/5 dark:ring-white/10 p-6`}>
     {children}
   </div>
@@ -50,7 +50,7 @@ const logoFallback = (text) =>
     </svg>`
   )}`
 
-// ---------- Data ----------
+// ---------------- Data ----------------
 const affiliations = [
   { org: 'Stanford Department of Medicine', role: 'Molecular Imaging Research Fellow', logo: `${BASE}logos/stanford.png`, link: 'https://med.stanford.edu/radiology.html' },
   { org: 'McMaster University — Dept. of Medicine', role: 'Research Student', logo: `${BASE}logos/mcmaster-med.png`, link: 'https://medicine.healthsci.mcmaster.ca/' },
@@ -62,15 +62,23 @@ const affiliations = [
   { org: 'LMC Healthcare', role: 'Medical Office Administrator (Intern)', logo: `${BASE}logos/lmc.png`, link: 'https://www.lmc.ca/' },
 ].map(i => ({ ...i, safeLogo: i.logo, placeholder: logoFallback(i.org) }))
 
-// ---------- Journey collage sources (in /public/images/journey-images/) ----------
+// ---------------- Journey collage (exact filenames you uploaded) ----------------
 const journeyFiles = [
-  '019929.png', '392883.png', '8982934.png', '92034.png', '9234929.png',
-  'IMG_2962.png', 'IMG_3664.png', 'IMG_5720.png', 'IMG_5726.png', 'IMG_8893.png',
-];
+  '019929.png',
+  '392883.png',
+  '8982934.png',
+  '92034.png',
+  '9234929.png',
+  'IMG_2962.png',
+  'IMG_3664.png',
+  'IMG_5720.png',
+  'IMG_5726.png',
+  'IMG_8893.png',
+]
 
-// Always prefix with Vite's base so it works on GitHub Pages project URLs
-const journeyImages    = journeyFiles.map(f => `${BASE}images/journey-images/${f}`);
-const journeyImagesRev = [...journeyImages].reverse();
+// Prefix each with BASE so it works under /imeth-site-pages/
+const journeyA = journeyFiles.map(f => `${BASE}images/journey-images/${f}`)
+const journeyB = [...journeyA].reverse()
 
 /* ================= Two-line infinite carousel (opposite directions) ================= */
 const MarqueeRow = ({ items, direction = 'left', speedSeconds = 28 }) => {
@@ -156,14 +164,13 @@ function ContactPage() {
   )
 }
 
-// Small inline icons for Publications links bar
 function ScholarIcon({ className = "w-4 h-4" }) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
       <path fill="currentColor"
         d="M12 3L2 9l10 6 10-6-10-6Zm0 8.5L5.2 9 12 5.5 18.8 9 12 11.5Zm-7 3.2V15l7 4 7-4v-.3L12 16.7 5 14.7Z" />
     </svg>
-  );
+  )
 }
 function OrcidIcon({ className = "w-4 h-4" }) {
   return (
@@ -172,7 +179,7 @@ function OrcidIcon({ className = "w-4 h-4" }) {
       <rect x="92" y="76" width="20" height="104" rx="3" fill="white" />
       <path fill="white" d="M150 76c-29 0-52 23-52 52s23 52 52 52 52-23 52-52-23-52-52-52zm0 20c18 0 32 14 32 32s-14 32-32 32-32-14-32-32 14-32 32-32z"/>
     </svg>
-  );
+  )
 }
 
 function PublicationsPage() {
@@ -275,7 +282,7 @@ export default function App() {
             <div className="font-medium tracking-tight text-emerald-900 dark:text-emerald-100 group-hover:opacity-90 transition">Imeth Illamperuma</div>
           </a>
 
-          <nav className="hidden md:flex items-center gap-6 text-emerald-900/80 dark:text-emerald-200/80">
+        <nav className="hidden md:flex items-center gap-6 text-emerald-900/80 dark:text-emerald-200/80">
             <a href="#/" className="hover:text-emerald-900 dark:hover:text-emerald-100 transition">Home</a>
             <a href="#/publications" className="hover:text-emerald-900 dark:hover:text-emerald-100 transition">Publications</a>
             <a href="#/contact" className="hover:text-emerald-900 dark:hover:text-emerald-100 transition">Contact</a>
@@ -328,59 +335,56 @@ export default function App() {
           </div>
 
           {/* -------- Journey preview (story + animated collage) -------- */}
-<section id="journey" className="max-w-6xl mx-auto px-6 md:px-8 py-14">
-  <div className="grid md:grid-cols-2 gap-10 items-center">
-    {/* Left: title + sincere description + CTA */}
-    <div>
-      <h2 className="text-3xl md:text-4xl font-semibold text-emerald-950 dark:text-emerald-100">
-        My Journey
-      </h2>
-      <p className="mt-3 text-emerald-900/80 dark:text-emerald-300/80 leading-relaxed">
-        Medicine became more than a destination for me—it’s been a series of
-        questions, mentors, and moments that reshaped how I think about care.
-        I started with movement and prevention, then found myself drawn to the
-        spaces where science meets lived experience: imaging for earlier
-        detection, harm reduction on campus, and public health that treats
-        people as whole. Along the way I’ve been part of teams that encouraged
-        curiosity, built programs from the ground up, and pushed for equity
-        as the standard—not the exception. This page is a glimpse into that
-        path and the impact it’s had on what I value and how I work.
-      </p>
+          <section id="journey" className="max-w-6xl mx-auto px-6 md:px-8 py-14">
+            <div className="grid md:grid-cols-2 gap-10 items-center">
+              {/* Left: description + CTA */}
+              <div>
+                <h2 className="text-3xl md:text-4xl font-semibold text-emerald-950 dark:text-emerald-100">
+                  My Journey
+                </h2>
+                <p className="mt-3 text-emerald-900/80 dark:text-emerald-300/80 leading-relaxed">
+                  Medicine became more than a destination for me—it’s been a series of
+                  questions, mentors, and moments that reshaped how I think about care.
+                  I started with movement and prevention, then found myself drawn to the
+                  spaces where science meets lived experience: imaging for earlier
+                  detection, harm reduction on campus, and public health that treats
+                  people as whole. Along the way I’ve been part of teams that encouraged
+                  curiosity, built programs from the ground up, and pushed for equity
+                  as the standard—not the exception. This page is a glimpse into that
+                  path and the impact it’s had on what I value and how I work.
+                </p>
 
-      <a
-        href="#/journey"
-        className="mt-6 inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-emerald-700 text-white hover:opacity-90 transition"
-      >
-        Read the full story
-        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
-      </a>
-    </div>
+                <a href="#/journey"
+                   className="mt-6 inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-emerald-700 text-white hover:opacity-90 transition">
+                  Read the full story
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
+                </a>
+              </div>
 
-    {/* Right: animated collage */}
-    <div className="relative">
-      <div className="rounded-3xl ring-1 ring-black/5 dark:ring-white/10 overflow-hidden bg-white/50 dark:bg-emerald-900/30 p-4">
-        <div className="space-y-4">
-          {/* Row 1 — leftward */}
-          <div className="journey-row animate-journeyLeft" style={{ animationDuration: '40s' }}>
-            {[...journeyImages, ...journeyImages].map((src, i) => (
-              <img key={`ja-${i}`} src={src} className="journey-tile" alt="" />
-            ))}
-          </div>
-
-          {/* Row 2 — rightward */}
-          <div className="journey-row animate-journeyRight" style={{ animationDuration: '48s' }}>
-            {[...journeyImagesRev, ...journeyImagesRev].map((src, i) => (
-              <img key={`jb-${i}`} src={src} className="journey-tile" alt="" />
-            ))}
-          </div>
-        </div>
-      </div>
-      <div className="mt-2 text-xs text-emerald-900/60 dark:text-emerald-300/60">
-        Moments with teams and projects that shaped my work.
-      </div>
-    </div>
-  </div>
-</section>
+              {/* Right: animated collage */}
+              <div className="relative">
+                <div className="rounded-3xl ring-1 ring-black/5 dark:ring-white/10 overflow-hidden bg-white/50 dark:bg-emerald-900/30 p-4">
+                  <div className="space-y-4">
+                    {/* Row 1 — leftward */}
+                    <div className="journey-row animate-journeyLeft" style={{ animationDuration: '40s' }}>
+                      {[...journeyA, ...journeyA].map((src, i) => (
+                        <img key={`ja-${i}`} src={src} className="journey-tile" alt="" />
+                      ))}
+                    </div>
+                    {/* Row 2 — rightward */}
+                    <div className="journey-row animate-journeyRight" style={{ animationDuration: '48s' }}>
+                      {[...journeyB, ...journeyB].map((src, i) => (
+                        <img key={`jb-${i}`} src={src} className="journey-tile" alt="" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-2 text-xs text-emerald-900/60 dark:text-emerald-300/60">
+                  Moments with teams and projects that shaped my work.
+                </div>
+              </div>
+            </div>
+          </section>
 
           {/* Offerings */}
           <section id="offerings" className="max-w-6xl mx-auto px-6 md:px-8 py-14">
