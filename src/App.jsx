@@ -63,19 +63,13 @@ const affiliations = [
 ].map(i => ({ ...i, safeLogo: i.logo, placeholder: logoFallback(i.org) }))
 
 // ---------- Journey collage sources (in /public/images/journey-images/) ----------
-const journeyImages = [
-  '/images/journey-images/019929.png',
-  '/images/journey-images/392883.png',
-  '/images/journey-images/8982934.png',
-  '/images/journey-images/92034.png',
-  '/images/journey-images/9234929.png',
-  '/images/journey-images/IMG_2962.png',
-  '/images/journey-images/IMG_3664.png',
-  '/images/journey-images/IMG_5720.png',
-  '/images/journey-images/IMG_5726.png',
-  '/images/journey-images/IMG_8893.png',
+const journeyFiles = [
+  '019929.png', '392883.png', '8982934.png', '92034.png', '9234929.png',
+  'IMG_2962.png', 'IMG_3664.png', 'IMG_5720.png', 'IMG_5726.png', 'IMG_8893.png',
 ];
 
+// Always prefix with Vite's base so it works on GitHub Pages project URLs
+const journeyImages    = journeyFiles.map(f => `${BASE}images/journey-images/${f}`);
 const journeyImagesRev = [...journeyImages].reverse();
 
 /* ================= Two-line infinite carousel (opposite directions) ================= */
