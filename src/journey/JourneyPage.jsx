@@ -1,6 +1,6 @@
 import React from 'react'
-import { Card } from '../ui/brand'
-import stories from './data/featuredStories'
+import { Card } from '../ui/brand.jsx'
+import stories from './data/featuredStories.js'
 
 const BASE = import.meta.env.BASE_URL
 const FALLBACK = `${BASE}images/journey-featured/_fallback.jpg`
@@ -50,4 +50,3 @@ export default function JourneyPage() {
     </section>
   )
 }
-
