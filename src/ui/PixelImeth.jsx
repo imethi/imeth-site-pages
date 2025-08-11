@@ -1,110 +1,158 @@
 import React from 'react'
 
 /**
- * PixelImeth — a tiny animated pixel avatar in scrubs with stethoscope.
- * Props: size (px), scrub, hair, skin, accent colors
+ * PixelImeth v2 — taller, right-facing walk cycle in scrubs with stethoscope.
+ * Crisp SVG "pixel art" (no image files). Scales cleanly. Accessible to prefers-reduced-motion.
+ *
+ * Props:
+ *  - size: number (px)
+ *  - direction: 'right' | 'left'    // mirrors sprite
+ *  - skin, hair, beard, glasses, scrubsTop, scrubsPant, shoe, scope, scopeHead: color overrides
  */
 export default function PixelImeth({
-  size = 160,
-  scrubs = '#1fb6a6',       // teal scrubs
-  scrubsDark = '#15908a',   // pants
-  hair = '#2b2b2b',
-  skin = '#f1c27d',
+  size = 196,
+  direction = 'right',
+  skin = '#C58C5C',        // warm medium-brown
+  hair = '#1b1b1b',
+  beard = '#2a2118',
+  glasses = '#D4AF37',     // gold frame
+  scrubsTop = '#16b1a4',
+  scrubsPant = '#119189',
   shoe = '#6b7280',
-  scope = '#9aa0a6',        // stethoscope tube
-  scopeHead = '#e5e7eb'     // stethoscope chest piece
+  scope = '#9aa0a6',
+  scopeHead = '#e5e7eb',
 }) {
-  // helper to place 1x1 "pixels" in a 24x24 grid
-  const P = ({ x, y, c }) => <rect x={x} y={y} width="1" height="1" fill={c} />
-  const many = (coords, c) => coords.map(([x, y], i) => <P key={c + i} x={x} y={y} c={c} />)
+  // helpers to place 1x1 "pixels" on a 24x32 grid
+  const Px = ({ x, y, c }) => <rect x={x} y={y} width="1" height="1" fill={c} />
+  const many = (pts, c) => pts.map(([x, y], i) => <Px key={`${c}-${i}-${x}-${y}`} x={x} y={y} c={c} />)
+  const rectBlock = (x1, x2, y1, y2, c) => {
+    const pts = []
+    for (let y = y1; y <= y2; y++) for (let x = x1; x <= x2; x++) pts.push([x, y])
+    return many(pts, c)
+  }
+
+  // Flip for direction
+  const flip = direction === 'left' ? -1 : 1
+  const originX = direction === 'left' ? 24 : 0
 
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 24 24"
+      viewBox="0 0 24 32"
       shapeRendering="crispEdges"
       className="select-none drop-shadow-xl"
-      aria-label="Animated pixel avatar"
+      aria-label="Animated pixel avatar in scrubs walking"
     >
       <style>{`
-        @keyframes floaty { 0%{ transform: translateY(0) } 50%{ transform: translateY(-1.5px) } 100%{ transform: translateY(0) } }
-        @keyframes swing  { 0%{ transform: rotate(3deg) } 50%{ transform: rotate(-3deg) } 100%{ transform: rotate(3deg) } }
-        @keyframes blink  { 0%, 2%, 60%, 62%, 100% { opacity: 0 } 1% { opacity: 1 } 61% { opacity: 1 } }
+        @keyframes bob { 0%{ transform: translateY(0px) } 50%{ transform: translateY(-1.2px) } 100%{ transform: translateY(0px) } }
+        @keyframes armL { 0%{ transform: rotate(10deg) } 50%{ transform: rotate(-10deg) } 100%{ transform: rotate(10deg) } }
+        @keyframes armR { 0%{ transform: rotate(-10deg) } 50%{ transform: rotate(10deg) } 100%{ transform: rotate(-10deg) } }
+        @keyframes legL { 0%{ transform: rotate(-12deg) } 50%{ transform: rotate(12deg) } 100%{ transform: rotate(-12deg) } }
+        @keyframes legR { 0%{ transform: rotate(12deg) } 50%{ transform: rotate(-12deg) } 100%{ transform: rotate(12deg) } }
+        @keyframes swingScope { 0%{ transform: rotate(4deg) } 50%{ transform: rotate(-4deg) } 100%{ transform: rotate(4deg) } }
+        @keyframes blink { 0%, 92%, 100% { opacity: 1 } 93%, 96% { opacity: 0 } }
         @media (prefers-reduced-motion: reduce) {
-          .anim-float, .anim-swing { animation: none !important; }
+          .anim-bob, .anim-armL, .anim-armR, .anim-legL, .anim-legR, .anim-scope, .blink { animation: none !important; }
         }
-        .anim-float { animation: floaty 3.6s ease-in-out infinite; }
-        .anim-scope { transform-origin: 12px 10px; animation: swing 3.4s ease-in-out infinite; }
-        .blink { animation: blink 6s steps(1, end) infinite; }
+        .anim-bob { animation: bob 820ms ease-in-out infinite; }
+        .anim-armL { transform-origin: 8px 15px; animation: armL 820ms ease-in-out infinite; }
+        .anim-armR { transform-origin: 16px 15px; animation: armR 820ms ease-in-out infinite; }
+        .anim-legL { transform-origin: 10px 22px; animation: legL 820ms ease-in-out infinite; }
+        .anim-legR { transform-origin: 14px 22px; animation: legR 820ms ease-in-out infinite; }
+        .anim-scope { transform-origin: 12px 13px; animation: swingScope 1200ms ease-in-out infinite; }
+        .blink { animation: blink 4.2s steps(1,end) infinite; }
       `}</style>
 
-      {/* Whole figure */}
-      <g className="anim-float">
-        {/* Hair */}
-        {many([
-          [8,4],[9,4],[10,4],[11,4],[12,4],[13,4],[14,4],[15,4],
-          [8,5],[15,5],[9,5],[14,5],
-          [9,6],[14,6]
-        ], hair)}
+      {/* Mirror horizontally for left/right */}
+      <g transform={`translate(${originX} 0) scale(${flip} 1)`}>
+        {/* Whole body slight bob */}
+        <g className="anim-bob">
+          {/* ---- HAIR (rounded top) ---- */}
+          {rectBlock(7, 16, 3, 4, hair)}
+          {many([[7,5],[16,5],[8,5],[15,5],[9,5],[14,5]], hair)}
 
-        {/* Face */}
-        {(() => {
-          const px = []
-          for (let y = 5; y <= 9; y++) {
-            for (let x = 9; x <= 14; x++) px.push([x, y])
-          }
-          return many(px, skin)
-        })()}
+          {/* ---- FACE ---- */}
+          {rectBlock(8, 15, 6, 10, skin)}
+          {rectBlock(9, 14, 5, 5, skin)}
+          {/* nose hint */}
+          {many([[12,8]], '#8b5e3c')}
 
-        {/* Eyes (black), then eyelids overlay that blinks */}
-        {many([[10,7],[13,7]], '#111827')}
-        <g className="blink">{many([[10,7],[13,7]], skin)}</g>
+          {/* ---- GLASSES (gold frame + clear lenses) ---- */}
+          {/* frame top */}
+          {many([[9,7],[10,7],[12,7],[13,7]], glasses)}
+          {/* sides */}
+          {many([[9,8],[13,8]], glasses)}
+          {/* bridge */}
+          {many([[11,7]], glasses)}
+          {/* lenses (very light fill) */}
+          {many([[9,8],[10,8],[12,8],[13,8]], '#f9fafb')}
+          {/* temples */}
+          {many([[8,7],[14,7]], glasses)}
 
-        {/* Neck */}
-        {many([[11,10],[12,10]], skin)}
+          {/* eyes under lenses */}
+          {many([[10,8],[13,8]], '#111827')}
+          {/* blink overlay */}
+          <g className="blink">{many([[10,8],[13,8]], skin)}</g>
 
-        {/* Scrubs top */}
-        {(() => {
-          const px = []
-          for (let y = 11; y <= 15; y++) for (let x = 7; x <= 16; x++) px.push([x,y])
-          // V-neck cutout
-          return (
-            <>
-              {many(px, scrubs)}
-              {many([[11,11],[12,11]], skin)}
-            </>
-          )
-        })()}
+          {/* ---- BEARD + MUSTACHE ---- */}
+          {/* beard sides + chin */}
+          {rectBlock(8, 9, 10, 11, beard)}
+          {rectBlock(14, 15, 10, 11, beard)}
+          {rectBlock(10, 11, 11, 11, beard)}
+          {rectBlock(12, 13, 11, 11, beard)}
+          {/* mustache */}
+          {many([[10,9],[11,9],[12,9],[13,9]], beard)}
 
-        {/* Arms */}
-        {many([[6,12],[6,13],[6,14],[17,12],[17,13],[17,14]], skin)}
+          {/* neck */}
+          {rectBlock(11, 12, 12, 12, skin)}
 
-        {/* Pants */}
-        {(() => {
-          const px = []
-          for (let y = 16; y <= 19; y++) for (let x = 8; x <= 15; x++) px.push([x,y])
-          return many(px, scrubsDark)
-        })()}
+          {/* ---- SCRUBS TOP (V-neck) ---- */}
+          {rectBlock(6, 17, 13, 17, scrubsTop)}
+          {rectBlock(6, 17, 14, 18, scrubsTop)}
+          {/* V-neck cutout */}
+          {many([[11,13],[12,13]], skin)}
 
-        {/* Shoes */}
-        {many([[8,21],[9,21],[10,21],[13,21],[14,21],[15,21]], shoe)}
+          {/* ---- STETHOSCOPE (slight swing) ---- */}
+          <g className="anim-scope">
+            {/* tube loop */}
+            {many([[10,12],[9,13],[9,14],[9,15],[10,16],[11,16],[13,16],[14,15],[14,14],[14,13]], scope)}
+            {/* earpiece nubs */}
+            {many([[10,12],[13,12]], '#424a56')}
+            {/* chest piece */}
+            {rectBlock(12, 13, 17, 17, scopeHead)}
+            <rect x="12" y="17" width="2" height="1" fill="none" stroke="#cbd5e1" strokeWidth="0.25"/>
+          </g>
 
-        {/* Stethoscope (tube + chest piece); slight swing */}
-        <g className="anim-scope">
-          {/* tube around neck (pixel style) */}
-          {many([[10,10],[9,11],[9,12],[9,13],[10,14],[11,14],[13,14],[14,13],[14,12],[14,11]], scope)}
-          {/* earpieces hint */}
-          {many([[10,10],[13,10]], '#374151')}
-          {/* chest piece */}
-          <rect x="12" y="15" width="2" height="2" fill={scopeHead} />
-          <rect x="12" y="15" width="2" height="2" fill="none" stroke="#cbd5e1" strokeWidth="0.25"/>
+          {/* ---- ARMS (separate for swing) ---- */}
+          <g className="anim-armL">
+            {many([[6,15],[6,16],[6,17]], skin)}
+            {/* cuff hint */}
+            {many([[7,15]], scrubsTop)}
+          </g>
+          <g className="anim-armR">
+            {many([[17,15],[17,16],[17,17]], skin)}
+            {many([[16,15]], scrubsTop)}
+          </g>
+
+          {/* ---- PANTS ---- */}
+          {rectBlock(8, 15, 19, 22, scrubsPant)}
+
+          {/* ---- LEGS (swing groups) ---- */}
+          <g className="anim-legL">
+            {rectBlock(9, 10, 19, 22, scrubsPant)}
+            {/* shoe */}
+            {many([[9,23],[10,23]], shoe)}
+          </g>
+          <g className="anim-legR">
+            {rectBlock(13, 14, 19, 22, scrubsPant)}
+            {many([[13,23],[14,23]], shoe)}
+          </g>
+
+          {/* subtle top highlight on scrubs */}
+          {many([[7,14],[8,14],[7,15],[8,15]], '#1cc0b2')}
         </g>
-
-        {/* Subtle highlight on scrubs (adds a bit of depth) */}
-        {many([[7,12],[8,12],[9,12],[10,12],[7,13],[8,13]], '#26c2b3')}
       </g>
     </svg>
   )
 }
-
