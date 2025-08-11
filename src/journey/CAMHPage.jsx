@@ -23,8 +23,7 @@ function RotatingWord({ words = [], interval = 2200 }) {
   )
 }
 
-/* keyframes for the rotating word (Tailwind will pass-through arbitrary) */
-/* Add once; it won't duplicate at runtime */
+/* keyframes for the rotating word */
 const style = document.getElementById('camh-inline-anim') || (() => {
   const el = document.createElement('style')
   el.id = 'camh-inline-anim'
@@ -38,7 +37,7 @@ const style = document.getElementById('camh-inline-anim') || (() => {
 })()
 
 export default function CAMHPage() {
-  // ---- media paths (update names if yours differ) ----
+  // ---- media paths (update if your filenames differ) ----
   const logos = [
     `${BASE}images/camh/camh12.jpeg`,
     `${BASE}images/camh/camh123.webp`,
@@ -93,6 +92,7 @@ export default function CAMHPage() {
 
       {/* -------------------- OVERVIEW -------------------- */}
       <div className="mt-10 grid lg:grid-cols-12 gap-6">
+        {/* LEFT / MAIN */}
         <div className="lg:col-span-8 space-y-6">
           <div>
             <h2 className="text-2xl md:text-3xl font-semibold text-slate-50">
@@ -117,19 +117,9 @@ export default function CAMHPage() {
               <li>• Connecting student communities with CAMH programs and events.</li>
             </ul>
           </Card>
-
-          <div className="space-y-3">
-            <h3 className="font-semibold text-slate-50">Populations I helped reach</h3>
-            {/* GIF with no frame per request */}
-            <img
-              src={gifStats}
-              alt="Populations served at CAMH (animated chart)"
-              className="h-56 md:h-64 w-auto"
-            />
-          </div>
         </div>
 
-        {/* right column: at a glance (with logos) */}
+        {/* RIGHT / ASIDE */}
         <aside className="lg:col-span-4 space-y-6">
           <Card>
             <h3 className="font-semibold text-slate-50">At a glance</h3>
@@ -149,6 +139,16 @@ export default function CAMHPage() {
               ))}
             </div>
           </Card>
+
+          {/* Populations GIF moved here under At a glance, no frame */}
+          <div>
+            <h3 className="font-semibold text-slate-50">Populations I helped reach</h3>
+            <img
+              src={gifStats}
+              alt="Animated breakdown of populations served at CAMH"
+              className="mt-3 h-56 md:h-64 w-auto"
+            />
+          </div>
         </aside>
       </div>
 
@@ -186,12 +186,17 @@ export default function CAMHPage() {
           Research Conference: connecting policy to people
         </h3>
         <p className="mt-3 text-slate-100/85 leading-relaxed">
-          Attending the CAMH Research Conference tied the threads together—science upstream, services
-          midstream, people at the centre. It sharpened my sense of what “good” looks like: rigorous,
-          open, and usable outside the lab.
+          Attending the CAMH Research Conference tied the threads together—scientific discovery
+          upstream, service design midstream, and people at the centre downstream. Across plenaries,
+          posters, and workshops, I saw how methods and measurement translate into day-to-day
+          improvements: clearer pathways to care, language that lowers the threshold to ask for help,
+          and evaluation plans that honour context rather than erase it. I left with a sharper sense
+          of what “good” looks like for youth mental-health work: rigorous and open science, policy
+          that travels beyond PDFs, and interventions that are feasible for front-line teams—so the
+          best ideas don’t stall in the lab or at the whiteboard.
         </p>
 
-        {/* Masonry that fills width, with nice breathing room */}
+        {/* Masonry fills width; balanced columns */}
         <div className="mt-6 columns-1 sm:columns-2 lg:columns-3 gap-5 [column-fill:balance]">
           {conf.map((src, i) => (
             <a
