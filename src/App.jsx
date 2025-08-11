@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { Mail, Linkedin, FileDown } from 'lucide-react'
 import Typewriter from 'typewriter-effect'
 import stories from './journey/data/featuredStories.js'
+import NaloxonePage from './journey/NaloxonePage.jsx'
 
 const BASE = import.meta.env.BASE_URL
 
