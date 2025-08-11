@@ -3,6 +3,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { Mail, Linkedin, FileDown, ExternalLink } from 'lucide-react'
 import Typewriter from 'typewriter-effect'
+import stories from './journey/data/featuredStories.js'
 
 const BASE = import.meta.env.BASE_URL
 
