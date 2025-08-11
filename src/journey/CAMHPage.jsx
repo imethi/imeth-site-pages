@@ -174,30 +174,35 @@ export default function CAMHPage() {
         </div>
       </div>
 
-      {/* -------------------- CONFERENCE GALLERY -------------------- */}
-      <div className="mt-12">
-        <div className="mb-3 text-xs tracking-wider text-slate-400">CONFERENCE</div>
-        <h3 className="text-2xl md:text-3xl font-semibold text-slate-50">
-          Research Conference: connecting policy to people
-        </h3>
-        <p className="mt-2 text-slate-200/90">
-          Attending the CAMH Research Conference tied the threads together—science upstream, services midstream, people at
-          the centre. It sharpened my sense of what “good” looks like: rigorous, open, and usable outside the lab.
-        </p>
+  {/* -------------------- CONFERENCE (replace this whole block) -------------------- */}
+<div className="mt-12">
+  <div className="mb-3 text-xs tracking-wider text-slate-400">CONFERENCE</div>
+  <h3 className="text-2xl md:text-3xl font-semibold text-slate-50">
+    Research Conference: connecting policy to people
+  </h3>
+  <p className="mt-2 text-slate-200/90">
+    Attending the CAMH Research Conference tied the threads together—science upstream,
+    services midstream, people at the centre. It sharpened my sense of what “good”
+    looks like: rigorous, open, and usable outside the lab.
+  </p>
 
-        {/* responsive masonry columns for a clean, airy layout */}
-        <div className="mt-6 columns-1 sm:columns-2 lg:columns-3 gap-4 [column-fill:balance]">
-          {CONF.map((src, i) => (
-            <a key={src} href={src} target="_blank" rel="noopener noreferrer" className="group mb-4 block rounded-2xl overflow-hidden">
-              <img
-                src={src}
-                alt={`Conference photo ${i + 1}`}
-                className="w-full h-auto object-cover ring-1 ring-white/10 group-hover:opacity-95 transition"
-              />
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
+  {/* Clean, full-width grid (fills screen nicely, consistent cards) */}
+  <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    {CONF.map((src, i) => (
+      <a
+        key={src}
+        href={src}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group block rounded-2xl overflow-hidden ring-1 ring-white/10 bg-white/5"
+      >
+        {/* Uniform card height so the grid looks balanced */}
+        <img
+          src={src}
+          alt={`Conference photo ${i + 1}`}
+          className="w-full h-64 md:h-72 object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+        />
+      </a>
+    ))}
+  </div>
+</div>
