@@ -139,26 +139,34 @@ const Timeline = ({ groups }) => (
 function AnimatedHero() {
   return (
     <div className="relative overflow-hidden rounded-3xl ring-1 ring-white/10 bg-gradient-to-b from-slate-900/0 to-slate-900/20">
+      {/* aurora blobs (unchanged) */}
       <motion.div className="pointer-events-none absolute -top-10 -left-10 h-56 w-56 rounded-full blur-3xl bg-indigo-500/30"
-        animate={{ x: [0, 10, -10, 0], y: [0, -10, 10, 0] }} transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}/>
+        animate={{ x:[0,10,-10,0], y:[0,-10,10,0] }} transition={{ duration:18, repeat:Infinity, ease:'easeInOut' }}/>
       <motion.div className="pointer-events-none absolute -bottom-12 left-1/2 h-56 w-56 rounded-full blur-3xl bg-fuchsia-500/25"
-        animate={{ x: [0, -12, 12, 0], y: [0, 10, -10, 0] }} transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}/>
+        animate={{ x:[0,-12,12,0], y:[0,10,-10,0] }} transition={{ duration:22, repeat:Infinity, ease:'easeInOut' }}/>
       <motion.div className="pointer-events-none absolute -right-12 top-1/3 h-56 w-56 rounded-full blur-3xl bg-cyan-500/25"
-        animate={{ x: [0, 8, -8, 0], y: [0, -12, 12, 0] }} transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}/>
+        animate={{ x:[0,8,-8,0], y:[0,-12,12,0] }} transition={{ duration:20, repeat:Infinity, ease:'easeInOut' }}/>
 
-      <div className="relative z-10 p-6 md:p-10">
-        <motion.h1 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
-          className="text-3xl md:text-4xl font-semibold text-slate-50">My Journey</motion.h1>
-        <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
-          className="mt-3 text-slate-100/90 max-w-2xl">
-          A deeper look at projects, teams, and ideas that shaped how I think about
-          prevention-first medicine, imaging, and public health.
-        </motion.p>
-        <motion.a href="#featured" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
-          className="mt-6 inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-indigo-600 text-white hover:opacity-90">
-          Explore Featured Stories
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
-        </motion.a>
+      <div className="relative z-10 p-6 md:p-10 grid md:grid-cols-12 gap-6 items-center">
+        <div className="md:col-span-7">
+          <motion.h1 initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{duration:0.6}}
+            className="text-3xl md:text-4xl font-semibold text-slate-50">My Journey</motion.h1>
+          <motion.p initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{duration:0.6,delay:0.1}}
+            className="mt-3 text-slate-100/90 max-w-2xl">
+            A deeper look at projects, teams, and ideas that shaped how I think about
+            prevention-first medicine, imaging, and public health.
+          </motion.p>
+          <motion.a href="#featured" initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{duration:0.6,delay:0.2}}
+            className="mt-6 inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-indigo-600 text-white hover:opacity-90">
+            Explore Featured Stories
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
+          </motion.a>
+        </div>
+
+        {/* Pixel avatar on the right */}
+        <div className="md:col-span-5 grid place-items-center">
+          <PixelImeth size={180} />
+        </div>
       </div>
     </div>
   )
