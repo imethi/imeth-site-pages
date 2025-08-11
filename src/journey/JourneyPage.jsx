@@ -270,7 +270,7 @@ function Hero() {
           <img
             src={`${BASE}images/imeth-wave.png`}  // use any static PNG/JPG here
             alt="Imeth in scrubs"
-            className="w-[240px] sm:w-[280px] h-auto object-contain select-none"
+            className="w-[220px] sm:w-[260px] h-auto object-contain select-none"
             loading="eager"
             draggable={false}
           />
