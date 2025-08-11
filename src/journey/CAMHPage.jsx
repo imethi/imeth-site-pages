@@ -1,208 +1,215 @@
-// src/journey/camh.jsx
+// src/journey/CAMHPage.jsx
 import React from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Pill, Card } from '../ui/brand.jsx'
+import { Card, Pill } from '../ui/brand.jsx'
 
 const BASE = import.meta.env.BASE_URL
 
-/* -------------------- assets -------------------- */
-const IMG = (f) => `${BASE}images/camh/${f}`
-
-// Logos / small art
-const CAMH_LOGO = IMG('camh12.jpeg')      // purple CAMH wordmark
-const CAMH_RESEARCH = IMG('camh123.webp')  // research wordmark (optional)
-
-// CYU highlight images
-const CYU_PHOTO = IMG('CYU.jpg')
-const CYU_MAP   = IMG('cyu location.jpeg')
-
-// Population snapshot (gif)
-const POP_GIF = IMG('camhnumbers.gif')
-
-// Conference gallery (feel free to add/remove)
-const CONF = [
-  IMG('IMG_3283.jpg'),
-  IMG('IMG_3236.jpeg'),
-  IMG('IMG_3265.jpeg'),
-  IMG('IMG_5720.jpeg'),
-  IMG('IMG_5726.jpeg'),
-  IMG('IMG_3238.jpeg'),
-]
-
-/* -------------------- hero word carousel -------------------- */
-function WordCarousel({ words, interval = 2000 }) {
+// ---- rotating word in the hero ----
+function RotatingWord({ words = [], interval = 2200 }) {
   const [idx, setIdx] = React.useState(0)
   React.useEffect(() => {
     const id = setInterval(() => setIdx(i => (i + 1) % words.length), interval)
     return () => clearInterval(id)
-  }, [words, interval])
-
+  }, [interval, words.length])
   return (
-    <span className="inline-block relative h-[1em] align-baseline">
-      <AnimatePresence mode="wait">
-        <motion.span
-          key={words[idx]}
-          initial={{ y: '100%', opacity: 0 }}
-          animate={{ y: '0%',   opacity: 1 }}
-          exit={{ y: '-100%',   opacity: 0 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="inline-block"
-        >
-          {words[idx]}
-        </motion.span>
-      </AnimatePresence>
+    <span className="inline-block min-w-[7ch] align-baseline">
+      <span
+        key={idx}
+        className="inline-block will-change-transform animate-[fadeUp_480ms_ease]"
+      >
+        {words[idx]}
+      </span>
     </span>
   )
 }
 
-/* ==================== Page ==================== */
-export default function CAMHPage() {
-  return (
-    <section className="max-w-6xl mx-auto px-6 md:px-8 py-10">
-      {/* -------------------- HERO -------------------- */}
-      <div className="relative overflow-hidden rounded-3xl border border-black/5 dark:border-white/10 bg-gradient-to-br from-indigo-600/15 via-fuchsia-500/10 to-sky-400/10 p-6 md:p-10">
-        <div className="flex flex-col gap-4">
-          <h1 className="text-3xl md:text-5xl font-semibold tracking-tight text-slate-50">
-            CAMH Public Health & Policy Work
-          </h1>
-          <h2 className="text-2xl md:text-4xl font-semibold">
-            <span className="text-slate-200/90">Advancing </span>
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-300 via-indigo-300 to-sky-300">
-              <WordCarousel
-                words={[
-                  'equity',
-                  'harm reduction',
-                  'youth mental health',
-                  'human-centred design',
-                ]}
-                interval={2200}
-              />
-            </span>
-          </h2>
+/* keyframes for the rotating word (Tailwind will pass-through arbitrary) */
+/* Add once; it won't duplicate at runtime */
+const style = document.getElementById('camh-inline-anim') || (() => {
+  const el = document.createElement('style')
+  el.id = 'camh-inline-anim'
+  el.textContent = `
+@keyframes fadeUp {
+  0%   { opacity:.0; transform: translateY(6px) scale(.99); }
+  100% { opacity:1;  transform: translateY(0)   scale(1); }
+}`
+  document.head.appendChild(el)
+  return el
+})()
 
-          <div className="mt-2 flex flex-wrap gap-2">
-            <Pill>Ongoing</Pill>
-            <Pill>Public health & policy advisory</Pill>
-            <Pill>Harm reduction</Pill>
-            <Pill>Health equity</Pill>
-          </div>
+export default function CAMHPage() {
+  // ---- media paths (update names if yours differ) ----
+  const logos = [
+    `${BASE}images/camh/camh12.jpeg`,
+    `${BASE}images/camh/camh123.webp`,
+  ]
+
+  const cyuPhotos = [
+    { src: `${BASE}images/camh/CYU.jpg`, caption: 'Concurrent Youth Unit (CYU)' },
+    { src: `${BASE}images/camh/cyu location.jpeg`, caption: 'Location of the CYU' },
+  ]
+
+  const gifStats = `${BASE}images/camh/camhnumbers.gif`
+
+  const conf = [
+    `${BASE}images/camh/IMG_3283.jpeg`,
+    `${BASE}images/camh/IMG_3236.jpeg`,
+    `${BASE}images/camh/IMG_3265.jpeg`,
+    `${BASE}images/camh/IMG_3238.jpeg`,
+    `${BASE}images/camh/IMG_5720.jpeg`,
+    `${BASE}images/camh/IMG_5726.jpeg`,
+  ]
+
+  return (
+    <section className="max-w-6xl mx-auto px-6 md:px-8 py-12">
+      {/* -------------------- HERO -------------------- */}
+      <div className="rounded-3xl p-8 md:p-10 bg-gradient-to-br from-indigo-700/25 via-fuchsia-600/20 to-cyan-500/20 ring-1 ring-white/10">
+        <h1 className="text-3xl md:text-5xl font-semibold tracking-tight text-slate-50">
+          CAMH Public Health & Policy Work
+        </h1>
+
+        <div className="mt-2 text-xl md:text-3xl text-indigo-200">
+          Advancing{' '}
+          <span className="text-fuchsia-200 font-semibold">
+            <RotatingWord
+              words={[
+                'harm reduction',
+                'equity',
+                'youth-centered design',
+                'dignity',
+              ]}
+            />
+          </span>{' '}
+          in care
+        </div>
+
+        <div className="mt-5 flex flex-wrap gap-2">
+          <Pill>Ongoing</Pill>
+          <Pill>Public health & policy advisory</Pill>
+          <Pill>Harm reduction</Pill>
+          <Pill>Health equity</Pill>
         </div>
       </div>
 
       {/* -------------------- OVERVIEW -------------------- */}
-      <div className="mt-10 grid md:grid-cols-12 gap-6 items-start">
-        <div className="md:col-span-8 space-y-4">
-          <h3 className="text-xl md:text-2xl font-semibold text-slate-50">
-            What I did at the Centre for Addiction and Mental Health
-          </h3>
-          <Card>
-            <p className="leading-relaxed text-slate-200/90">
-              At CAMH—the largest mental-health teaching hospital in Canada—I worked in a{' '}
-              <span className="font-medium text-slate-50">public-health / policy advisory</span>{' '}
-              capacity focused on youth-centred harm reduction and culturally responsive care. My role
-              bridged lived experience with program design: reviewing policies, pressure-testing implementation
-              with front-line teams, and translating evidence into practical tools people would actually use.
+      <div className="mt-10 grid lg:grid-cols-12 gap-6">
+        <div className="lg:col-span-8 space-y-6">
+          <div>
+            <h2 className="text-2xl md:text-3xl font-semibold text-slate-50">
+              What I did at the Centre for Addiction and Mental Health
+            </h2>
+            <p className="mt-3 text-slate-100/80 leading-relaxed">
+              At CAMH—the largest mental-health teaching hospital in Canada—I served in a{' '}
+              <span className="font-medium text-slate-50">public-health / policy advisory</span> capacity
+              focused on youth-centred harm reduction and culturally responsive care. My role blended
+              lived experience with program design: reviewing policies, pressure-testing
+              implementation with front-line teams, and translating evidence into practical tools
+              people would actually use.
             </p>
-          </Card>
+          </div>
 
           <Card>
-            <h4 className="font-semibold text-slate-50">Contributions</h4>
-            <ul className="mt-3 space-y-2 text-slate-200/90">
+            <h3 className="font-semibold text-slate-50">Contributions</h3>
+            <ul className="mt-3 space-y-2 text-slate-100/85">
               <li>• Input on harm-reduction education & campus-to-clinic pathways for youth.</li>
               <li>• Policy & communications feedback through a health-equity lens.</li>
               <li>• Usability checks: signage, referral language, and resource accessibility.</li>
               <li>• Connecting student communities with CAMH programs and events.</li>
             </ul>
           </Card>
+
+          <div className="space-y-3">
+            <h3 className="font-semibold text-slate-50">Populations I helped reach</h3>
+            {/* GIF with no frame per request */}
+            <img
+              src={gifStats}
+              alt="Populations served at CAMH (animated chart)"
+              className="h-56 md:h-64 w-auto"
+            />
+          </div>
         </div>
 
-        {/* At a glance + brand */}
-        <aside className="md:col-span-4">
+        {/* right column: at a glance (with logos) */}
+        <aside className="lg:col-span-4 space-y-6">
           <Card>
-            <div className="flex items-center gap-3">
-              <img src={CAMH_LOGO} alt="CAMH" className="h-7 w-auto object-contain" />
-              <img src={CAMH_RESEARCH} alt="CAMH Research" className="h-6 w-auto object-contain opacity-80" />
-            </div>
-            <div className="mt-4 text-sm space-y-2 text-slate-200/90">
-              <div><span className="text-slate-400">Org:</span> Centre for Addiction and Mental Health (CAMH)</div>
+            <h3 className="font-semibold text-slate-50">At a glance</h3>
+            <div className="mt-3 grid gap-2 text-sm text-slate-100/85">
+              <div><span className="text-slate-400">Org:</span> CAMH — Centre for Addiction and Mental Health</div>
               <div><span className="text-slate-400">Focus:</span> Youth harm reduction, equitable access, policy feedback</div>
-              <div><span className="text-slate-400">Role:</span> Public health & policy advisory</div>
-              <div><span className="text-slate-400">Outputs:</span> Language/signage reviews, outreach support, program input</div>
+              <div><span className="text-slate-400">Outputs:</span> Language & signage reviews, outreach support, program input</div>
+            </div>
+            <div className="mt-4 flex items-center gap-4">
+              {logos.map((src, i) => (
+                <img
+                  key={i}
+                  src={src}
+                  alt="CAMH logo"
+                  className="h-9 w-auto object-contain"
+                />
+              ))}
             </div>
           </Card>
         </aside>
       </div>
 
-      {/* -------------------- CYU PROJECT -------------------- */}
+      {/* -------------------- CYU HIGHLIGHT -------------------- */}
       <div className="mt-12">
-        <div className="mb-3 text-xs tracking-wider text-slate-400">PROJECT HIGHLIGHT</div>
-        <h3 className="text-2xl md:text-3xl font-semibold text-slate-50">
-          Community Youth Unit (CYU): opening a youth-first service
+        <div className="text-xs tracking-wide text-slate-400">PROJECT HIGHLIGHT</div>
+        <h3 className="text-2xl md:text-3xl font-semibold text-slate-50 mt-1">
+          Community Youth Unit (CYU): meeting young people where they are
         </h3>
-        <Card className="mt-4">
-          <p className="leading-relaxed text-slate-200/90">
-            Supporting the launch of CAMH’s brand-new <span className="font-medium text-slate-50">Community Youth Unit (CYU)</span>{' '}
-            was a rare chance to integrate policy, public health, and paediatric care. We worked through details
-            that shape lived experience—from wall colours and wayfinding to consent flow and privacy language—so
-            young people keep their autonomy even in moments that can feel overwhelming. I also mapped where youth
-            actually spend time, simplified “next-step” referral pathways, and helped test messaging that feels
-            human rather than institutional.
-          </p>
-        </Card>
+        <p className="mt-3 text-slate-100/85 leading-relaxed">
+          The launch of the <span className="font-medium text-slate-50">Concurrent Youth Unit (CYU)</span> was
+          particularly meaningful. It brought together policy, public health, and paediatric care—
+          all the way from <em>environmental choices</em> (e.g., wall colours and wayfinding that feel
+          calming and familiar) to <em>procedures that protect autonomy</em>, even in moments that can feel
+          restrictive. I supported work that increased the visibility and reach of youth-friendly
+          services—mapping where young people actually spend time, clarifying referral pathways, and
+          testing language that feels human rather than institutional. The goal: make the “next step”
+          obvious and low-friction.
+        </p>
 
-        <div className="grid md:grid-cols-2 gap-6 mt-6">
-          <figure className="rounded-2xl overflow-hidden ring-1 ring-white/10 bg-white/5">
-            <img src={CYU_PHOTO} alt="Concurrent Youth Unit (CYU)" className="w-full h-auto object-cover" />
-            <figcaption className="px-4 py-3 text-sm text-slate-300/90">Concurrent Youth Unit – opening day</figcaption>
-          </figure>
-          <figure className="rounded-2xl overflow-hidden ring-1 ring-white/10 bg-white/5">
-            <img src={CYU_MAP} alt="CYU location map" className="w-full h-auto object-cover" />
-            <figcaption className="px-4 py-3 text-sm text-slate-300/90">Location of CYU</figcaption>
-          </figure>
+        <div className="mt-6 grid md:grid-cols-2 gap-6">
+          {cyuPhotos.map(({ src, caption }) => (
+            <figure key={src} className="rounded-2xl overflow-hidden ring-1 ring-white/10 bg-white/5">
+              <img src={src} alt={caption} className="w-full h-72 md:h-[22rem] object-cover" />
+              <figcaption className="px-4 py-2 text-sm text-slate-400">{caption}</figcaption>
+            </figure>
+          ))}
         </div>
       </div>
 
-      {/* -------------------- POPULATION SNAPSHOT (gif, frameless) -------------------- */}
+      {/* -------------------- CONFERENCE (masonry) -------------------- */}
       <div className="mt-12">
-        <h3 className="text-lg font-semibold text-slate-50 mb-3">Who this work touches</h3>
-        <div className="flex items-center justify-center">
-          <img
-            src={POP_GIF}
-            alt="Population snapshot"
-            className="max-h-72 w-auto object-contain"
-          />
+        <div className="text-xs tracking-wide text-slate-400">CONFERENCE</div>
+        <h3 className="text-2xl md:text-3xl font-semibold text-slate-50 mt-1">
+          Research Conference: connecting policy to people
+        </h3>
+        <p className="mt-3 text-slate-100/85 leading-relaxed">
+          Attending the CAMH Research Conference tied the threads together—science upstream, services
+          midstream, people at the centre. It sharpened my sense of what “good” looks like: rigorous,
+          open, and usable outside the lab.
+        </p>
+
+        {/* Masonry that fills width, with nice breathing room */}
+        <div className="mt-6 columns-1 sm:columns-2 lg:columns-3 gap-5 [column-fill:balance]">
+          {conf.map((src, i) => (
+            <a
+              key={src}
+              href={src}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mb-5 block rounded-2xl overflow-hidden ring-1 ring-white/10 bg-white/5 break-inside-avoid group"
+            >
+              <img
+                src={src}
+                alt={`CAMH Research Conference photo ${i + 1}`}
+                className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+              />
+            </a>
+          ))}
         </div>
       </div>
-
-  {/* -------------------- CONFERENCE (replace this whole block) -------------------- */}
-<div className="mt-12">
-  <div className="mb-3 text-xs tracking-wider text-slate-400">CONFERENCE</div>
-  <h3 className="text-2xl md:text-3xl font-semibold text-slate-50">
-    Research Conference: connecting policy to people
-  </h3>
-  <p className="mt-2 text-slate-200/90">
-    Attending the CAMH Research Conference tied the threads together—science upstream,
-    services midstream, people at the centre. It sharpened my sense of what “good”
-    looks like: rigorous, open, and usable outside the lab.
-  </p>
-
-  {/* Clean, full-width grid (fills screen nicely, consistent cards) */}
-  <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-    {CONF.map((src, i) => (
-      <a
-        key={src}
-        href={src}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group block rounded-2xl overflow-hidden ring-1 ring-white/10 bg-white/5"
-      >
-        {/* Uniform card height so the grid looks balanced */}
-        <img
-          src={src}
-          alt={`Conference photo ${i + 1}`}
-          className="w-full h-64 md:h-72 object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-        />
-      </a>
-    ))}
-  </div>
-</div>
+    </section>
+  )
+}
