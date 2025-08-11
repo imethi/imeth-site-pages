@@ -99,12 +99,9 @@ export default function CAMHPage() {
               What I did at the Centre for Addiction and Mental Health
             </h2>
             <p className="mt-3 text-slate-100/80 leading-relaxed">
-              At CAMH—the largest mental-health teaching hospital in Canada—I served in a{' '}
-              <span className="font-medium text-slate-50">public-health / policy advisory</span> capacity
-              focused on youth-centred harm reduction and culturally responsive care. My role blended
-              lived experience with program design: reviewing policies, pressure-testing
-              implementation with front-line teams, and translating evidence into practical tools
-              people would actually use.
+            At CAMH—the largest mental-health teaching hospital in Canada—I served in a public-health and policy advisory role focused on youth-centred harm reduction and culturally safe care. Day to day, I blended lived experience with systems thinking: mapping service pathways; auditing forms, signage, and referral language for clarity and stigma; and co-designing improvements with clinicians, youth peers, and program leads. I reviewed policy drafts for feasibility, trauma-informed practice, and equity impacts; ran “table-top” simulations with front-line teams to pressure-test new workflows; and translated evidence into plain-language tools that could survive a busy clinic—one-pagers, checklists, and decision trees that removed guesswork.
+
+My work also emphasized implementation quality. I set up feedback loops and lightweight evaluation plans (e.g., uptake, time-to-service, successful warm handoffs), advised on low-barrier access (drop-in hours, self-referral, confidentiality safeguards), and helped build training materials that elevate autonomy and consent for minors and emerging adults. Particular attention went to populations facing the steepest barriers—racialized and newcomer youth, 2SLGBTQIA+ students, and those navigating housing or substance-use challenges. The throughline was making policy usable: aligning what the literature recommends with what a young person actually sees, understands, and can act on in the moment they need help.
             </p>
           </div>
 
