@@ -1,11 +1,16 @@
 // src/journey/NaloxonePage.jsx
 import React from 'react'
+import { motion } from 'framer-motion'
 import { Card, Pill } from '../ui/brand.jsx'
 
 /* ======================= Config: media paths ======================= */
 const BASE = import.meta.env.BASE_URL || '/'
+
+// Hero media used later (not at the very top)
 const FEATURED_IMG = `${BASE}images/naloxone/featured.jpg`          // you + kit
 const VIDEO_SRC    = `${BASE}videos/naloxone/placement.mp4`         // short loop
+const SPRAY_IMG    = `${BASE}images/naloxone/naloxonespray.png`     // nasal spray
+
 const GALLERY_FILES = [
   // Add/remove as needed – these will render in a responsive grid
   'kit-doorsign.jpg',
@@ -108,13 +113,13 @@ function NaloxoneMap() {
 
   React.useEffect(() => {
     if (!mapRef.current) return
-    const t = setTimeout(() => mapRef.current.invalidateSize(), 250)
+    const t = setTimeout(() => mapRef.current.invalidateSize(), 200)
     return () => clearTimeout(t)
   }, [expanded])
 
   return (
     <div className={`relative ${expanded ? 'fixed inset-0 z-[70] p-4 bg-slate-950/95' : ''}`}>
-      <div id="naloxone-map" className={`w-full ${expanded ? 'h-[calc(100vh-2rem)]' : 'h-[440px]'} rounded-2xl overflow-hidden ring-1 ring-white/10`} />
+      <div id="naloxone-map" className={`w-full ${expanded ? 'h-[calc(100vh-2rem)]' : 'h-[460px]'} rounded-2xl overflow-hidden ring-1 ring-white/10`} />
       <div className="absolute top-3 right-3 flex gap-2">
         <button onClick={() => setExpanded(v => !v)} className="rounded-lg px-3 py-1 text-xs bg-white/10 text-white hover:bg-white/15 ring-1 ring-white/15">
           {expanded ? 'Close' : 'Expand'}
@@ -129,51 +134,91 @@ function NaloxoneMap() {
 }
 
 /* ============================= Page ============================= */
+
+const Section = ({ id, title, children, kicker }) => (
+  <section id={id} className="scroll-mt-28">
+    <div className="mb-3 text-xs uppercase tracking-wide text-slate-200/60">{kicker}</div>
+    <h2 className="text-2xl md:text-[28px] font-semibold text-slate-50">{title}</h2>
+    <div className="mt-3 leading-relaxed text-slate-200/90">{children}</div>
+  </section>
+)
+
 export default function NaloxonePage() {
   return (
-    <section className="max-w-6xl mx-auto px-6 md:px-8 py-10 space-y-10">
-      {/* Title row */}
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-3xl md:text-4xl font-semibold text-slate-50">
-            The Naloxone Project: Saving Lives on Campus
+    <div className="max-w-6xl mx-auto px-6 md:px-8 py-12 space-y-12">
+      {/* HERO */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="relative overflow-hidden rounded-3xl ring-1 ring-white/10 bg-gradient-to-br from-indigo-900/30 via-slate-900/40 to-emerald-900/20"
+      >
+        <div className="absolute -top-28 -left-24 h-64 w-64 rounded-full bg-indigo-500/20 blur-3xl" />
+        <div className="absolute -bottom-28 -right-24 h-72 w-72 rounded-full bg-emerald-500/20 blur-3xl" />
+
+        <div className="relative px-6 md:px-10 py-8 md:py-10">
+          <h1 className="text-3xl md:text-5xl font-semibold leading-tight">
+            <span className="block text-slate-100">The Naloxone Project</span>
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-sky-300 to-emerald-300">
+              Saving Lives on Campus
+            </span>
           </h1>
-          <div className="mt-2 flex flex-wrap gap-2">
+
+          <div className="mt-4 flex flex-wrap gap-2">
             <Pill>2024–2025</Pill>
             <Pill>32+ kits</Pill>
             <Pill>Harm reduction</Pill>
             <Pill>Student safety</Pill>
           </div>
+
+          {/* Quick jump links */}
+          <div className="mt-4 flex flex-wrap gap-2">
+            <a href="#about-naloxone" className="text-sm rounded-lg px-3 py-1 bg-white/10 text-white ring-1 ring-white/10 hover:bg-white/15">About naloxone</a>
+            <a href="#story"           className="text-sm rounded-lg px-3 py-1 bg-white/10 text-white ring-1 ring-white/10 hover:bg-white/15">Project story</a>
+            <a href="#map"             className="text-sm rounded-lg px-3 py-1 bg-white/10 text-white ring-1 ring-white/10 hover:bg-white/15">Interactive map</a>
+            <a href="#gallery"         className="text-sm rounded-lg px-3 py-1 bg-white/10 text-white ring-1 ring-white/10 hover:bg-white/15">Gallery</a>
+          </div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Hero media (photo + loop video) */}
-      <div className="grid lg:grid-cols-2 gap-5">
-        <Card className="p-0 overflow-hidden">
-          <img
-            src={FEATURED_IMG}
-            alt="Imeth holding an emergency naloxone kit"
-            className="w-full h-full max-h-[420px] object-cover"
-            onError={(e) => { e.currentTarget.style.opacity = 0.3 }}
-          />
-        </Card>
-        <Card className="p-0 overflow-hidden">
-          <video
-            className="w-full h-full max-h-[420px] object-cover"
-            src={VIDEO_SRC}
-            autoPlay
-            muted
-            loop
-            playsInline
-            aria-label="Placing a naloxone kit on campus"
-          />
-        </Card>
-      </div>
+      {/* What is naloxone? */}
+      <Section id="about-naloxone" kicker="context" title="Naloxone on campus—why it matters">
+        <div className="grid md:grid-cols-5 gap-6 items-center">
+          <div className="md:col-span-3">
+            <p>
+              Naloxone is a safe medication that can rapidly reverse an opioid overdose by
+              displacing opioids from their receptors. The nasal-spray formulation is designed
+              for bystanders—no needles, minimal training, and very low risk if given to
+              someone who isn’t actually overdosing.
+            </p>
+            <ul className="mt-3 list-disc pl-5 space-y-2">
+              <li><span className="font-medium">Fast &amp; simple:</span> ready to use, with step-by-step instructions on the device.</li>
+              <li><span className="font-medium">Safe to administer:</span> no effect on someone without opioids on board.</li>
+              <li><span className="font-medium">Good Samaritan protections:</span> encourage students to act while EMS is en route.</li>
+            </ul>
+            <p className="mt-3">
+              On a university campus, seconds matter. Residences, bathrooms, libraries,
+              gyms, and the edges of campus where on-campus meets off-campus housing are
+              all places where a public, visible kit can shorten response time and save a life.
+            </p>
+          </div>
+          <div className="md:col-span-2">
+            <Card className="p-4 grid place-items-center bg-white/5">
+              <img
+                src={SPRAY_IMG}
+                alt="Naloxone nasal spray"
+                className="w-full max-w-[240px] h-auto object-contain drop-shadow"
+                onError={(e) => { e.currentTarget.style.opacity = 0.35 }}
+              />
+              <div className="mt-2 text-xs text-slate-300/70">Nasal spray naloxone (4 mg)</div>
+            </Card>
+          </div>
+        </div>
+      </Section>
 
-      {/* Narrative sections */}
-      <Card>
-        <h2 className="text-xl font-semibold text-slate-50">A year in the making</h2>
-        <p className="mt-2 text-slate-200/90 leading-relaxed">
+      {/* Story sections */}
+      <Section id="story" kicker="story" title="A year in the making">
+        <p>
           This project looks simple on the wall, but it was a year in the making. It started with
           a question—how do we make overdose response fast, visible, and stigma-free on campus?
           From there, I met with university health &amp; safety leadership, facilities, student affairs,
@@ -183,47 +228,58 @@ export default function NaloxonePage() {
           liability is handled under existing provincial protections and university policy. The administrative
           work was slow and necessary—and it made the rollout real, not just symbolic.
         </p>
-      </Card>
+      </Section>
 
-      <Card>
-        <h2 className="text-xl font-semibold text-slate-50">Fieldwork &amp; placement strategy</h2>
-        <p className="mt-2 text-slate-200/90 leading-relaxed">
+      <Section title="Fieldwork & placement strategy">
+        <p>
           I spent hours running the campus—literally—logging GPS coordinates, timing walking routes,
           and watching student traffic patterns. Residences and the areas where on-campus blends into
           off-campus housing emerged as higher-risk zones, especially during evening hours. We prioritized
-          coverage in the eastern, western, and southern edges of campus to create overlapping “safety
-          rings,” while still anchoring kits in central hubs like libraries, athletics, and transit
-          corridors. The map below reflects that strategy: short travel time to a kit almost anywhere,
-          with clear signage and repeat exposure so students know what they’re seeing before they ever
-          need it.
+          coverage in the eastern, western, and southern edges of campus to create overlapping “safety rings,”
+          while still anchoring kits in central hubs like libraries, athletics, and transit corridors.
+          The goal: short travel time to a kit almost anywhere, with clear signage and repeat exposure so
+          students recognize the kit before they ever need it.
         </p>
-      </Card>
+      </Section>
 
-      {/* Map */}
-      <section>
-        <h3 className="text-xl font-semibold text-slate-50 mb-3">Interactive kit map</h3>
-        <NaloxoneMap />
-        <p className="mt-2 text-xs text-slate-200/70">
-          Base map © OpenStreetMap contributors. Locations approximate; check on-site signage for the exact kit.
-        </p>
-      </section>
-
-      <Card>
-        <h2 className="text-xl font-semibold text-slate-50">Building a team: McMaster SHIELD</h2>
-        <p className="mt-2 text-slate-200/90 leading-relaxed">
+      <Section title="Building a team: McMaster SHIELD">
+        <p>
           Alongside the rollout, I founded <span className="font-semibold">McMaster SHIELD</span>—a student team focused
           on harm reduction, peer education, and practical emergency readiness. SHIELD helped with advocacy,
           wayfinding campaigns, and training sign-ups, and made the project visible beyond installation day.
           The goal wasn’t just to put boxes on walls; it was to build a culture where students recognize the kit,
           feel permitted to use it, and can act with confidence while help is on the way.
         </p>
-      </Card>
+      </Section>
 
-      {/* Context gallery */}
-      {GALLERY_FILES.length > 0 && (
-        <section>
-          <h3 className="text-xl font-semibold text-slate-50 mb-3">Context gallery</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      {/* Media (photo + loop) */}
+      <section id="gallery" className="scroll-mt-28">
+        <h2 className="text-2xl md:text-[28px] font-semibold text-slate-50">In the field</h2>
+        <div className="mt-4 grid lg:grid-cols-2 gap-5">
+          <Card className="p-0 overflow-hidden">
+            <img
+              src={FEATURED_IMG}
+              alt="Imeth holding an emergency naloxone kit"
+              className="w-full h-full max-h-[420px] object-cover"
+              onError={(e) => { e.currentTarget.style.opacity = 0.3 }}
+            />
+          </Card>
+          <Card className="p-0 overflow-hidden">
+            <video
+              className="w-full h-full max-h-[420px] object-cover"
+              src={VIDEO_SRC}
+              autoPlay
+              muted
+              loop
+              playsInline
+              aria-label="Placing a naloxone kit on campus"
+            />
+          </Card>
+        </div>
+
+        {/* Optional gallery grid */}
+        {GALLERY_FILES.length > 0 && (
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {GALLERY_FILES.map((src, i) => (
               <div key={src + i} className="rounded-2xl overflow-hidden ring-1 ring-white/10 bg-white/5">
                 <img
@@ -235,8 +291,22 @@ export default function NaloxonePage() {
               </div>
             ))}
           </div>
-        </section>
-      )}
-    </section>
+        )}
+      </section>
+
+      {/* Map */}
+      <section id="map" className="scroll-mt-28">
+        <h2 className="text-2xl md:text-[28px] font-semibold text-slate-50">Interactive kit map</h2>
+        <p className="mt-2 text-slate-200/85">
+          Explore placements across campus. Click a marker to view the spot; use the “Expand” button for a full-screen view.
+        </p>
+        <div className="mt-4">
+          <NaloxoneMap />
+        </div>
+        <p className="mt-2 text-xs text-slate-300/70">
+          Base map © OpenStreetMap contributors. Locations approximate; check on-site signage for the exact kit.
+        </p>
+      </section>
+    </div>
   )
 }
