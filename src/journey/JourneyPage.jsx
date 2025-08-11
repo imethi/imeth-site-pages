@@ -1,4 +1,16 @@
-import PixelImeth from '../ui/PixelImeth.jsx'
+import AnimatedPortrait from '../ui/AnimatedPortrait.jsx'
+
+/* inside AnimatedHero right column */
+<div className="md:col-span-5 grid place-items-center">
+  <AnimatedPortrait
+    src={'images/imeth-scrubs-portrait.png'}
+    width={280}
+    skin="#C58C5C"          // eyelid color; tweak to match your tone
+    // optional: fine-tune eye hitboxes if needed
+    // eyeL={{ x: 36, y: 34.5, w: 8.5, h: 7.5 }}
+    // eyeR={{ x: 63.5, y: 34.5, w: 8.5, h: 7.5 }}
+  />
+</div>
 
 // ...
 <div className="md:col-span-5 grid place-items-center">
