@@ -1,6 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import AnimatedPortrait from '../ui/AnimatedPortrait.jsx'
+import AnimatedWavePortrait from '../ui/AnimatedWavePortrait.jsx'
 import { Card } from '../ui/brand.jsx'
 import stories from './data/featuredStories.js'
 
@@ -69,24 +69,9 @@ const timeline = [
   {
     year: 'Earlier',
     items: [
-      {
-        title: 'Founder & Director — SHIELD',
-        org: 'McMaster University',
-        summary: 'Prevention-first health literacy; workshops and peer training.',
-        tags: ['Prevention', 'Leadership'],
-      },
-      {
-        title: 'Oncology Department Staff',
-        org: 'HHS • Juravinski Cancer Centre',
-        summary: 'Clinical ops exposure: multidisciplinary teams and safety culture.',
-        tags: ['Clinical ops'],
-      },
-      {
-        title: 'Sports Med Rehab Assistant (Intern)',
-        org: 'McMaster DB Sports Med & Rehab',
-        summary: 'Rehab & movement foundations that still shape my lens.',
-        tags: ['Rehab', 'Movement'],
-      },
+      { title: 'Founder & Director — SHIELD', org: 'McMaster University', summary: 'Prevention-first health literacy; workshops and peer training.', tags: ['Prevention', 'Leadership'] },
+      { title: 'Oncology Department Staff', org: 'HHS • Juravinski Cancer Centre', summary: 'Clinical ops exposure: multidisciplinary teams and safety culture.', tags: ['Clinical ops'] },
+      { title: 'Sports Med Rehab Assistant (Intern)', org: 'McMaster DB Sports Med & Rehab', summary: 'Rehab & movement foundations that still shape my lens.', tags: ['Rehab', 'Movement'] },
     ],
   },
 ]
@@ -112,9 +97,7 @@ const ItemCard = ({ item }) => (
               <span key={t} className="text-[11px] px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-300 ring-1 ring-indigo-500/20">{t}</span>
             ))}
           </div>
-          {item.link && (
-            <a href={item.link} className="mt-3 inline-flex text-sm text-indigo-300 hover:underline">View →</a>
-          )}
+          {item.link && <a href={item.link} className="mt-3 inline-flex text-sm text-indigo-300 hover:underline">View →</a>}
         </div>
       </div>
     </Card>
@@ -135,23 +118,17 @@ const Timeline = ({ groups }) => (
   </div>
 )
 
-/* ---------- Animated Hero (with portrait) ---------- */
+/* ---------- Animated Hero (with waving portrait) ---------- */
 function AnimatedHero() {
   return (
     <div className="relative overflow-hidden rounded-3xl ring-1 ring-white/10 bg-gradient-to-b from-slate-900/0 to-slate-900/20">
       {/* aurora blobs */}
       <motion.div className="pointer-events-none absolute -top-10 -left-10 h-56 w-56 rounded-full blur-3xl bg-indigo-500/30"
-        animate={{ x: [0, 10, -10, 0], y: [0, -10, 10, 0] }}
-        transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
-      />
+        animate={{ x: [0, 10, -10, 0], y: [0, -10, 10, 0] }} transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }} />
       <motion.div className="pointer-events-none absolute -bottom-12 left-1/2 h-56 w-56 rounded-full blur-3xl bg-fuchsia-500/25"
-        animate={{ x: [0, -12, 12, 0], y: [0, 10, -10, 0] }}
-        transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
-      />
+        animate={{ x: [0, -12, 12, 0], y: [0, 10, -10, 0] }} transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }} />
       <motion.div className="pointer-events-none absolute -right-12 top-1/3 h-56 w-56 rounded-full blur-3xl bg-cyan-500/25"
-        animate={{ x: [0, 8, -8, 0], y: [0, -12, 12, 0] }}
-        transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
-      />
+        animate={{ x: [0, 8, -8, 0], y: [0, -12, 12, 0] }} transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }} />
 
       <div className="relative z-10 p-6 md:p-10 grid md:grid-cols-12 gap-6 items-center">
         <div className="md:col-span-7">
@@ -169,12 +146,16 @@ function AnimatedHero() {
           </motion.a>
         </div>
 
-        {/* Animated portrait */}
+        {/* Waving portrait — no frame, no crop */}
         <div className="md:col-span-5 grid place-items-center">
-          <AnimatedPortrait
-            src={'images/imeth-scrubs-portrait.png'}  // place file under public/images/
-            width={280}
+          <AnimatedWavePortrait
+            src={'images/imeth-wave.png'}   // put file in public/images/
+            width={320}
+            ratio="2/3"
             skin="#C58C5C"
+            // If the wave pivot or mask needs a tiny nudge on deploy, tweak armClip / pivot here
+            // armClip="polygon(6% 33%, 25% 33%, 28% 57%, 22% 78%, 9% 78%, 6% 65%)"
+            // pivot="22% 43%"
           />
         </div>
       </div>
