@@ -1,6 +1,5 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import AnimatedWavePortrait from '../ui/AnimatedWavePortrait.jsx'
 import { Card } from '../ui/brand.jsx'
 import stories from './data/featuredStories.js'
 
@@ -118,7 +117,7 @@ const Timeline = ({ groups }) => (
   </div>
 )
 
-/* ---------- Animated Hero (with waving portrait) ---------- */
+/* ---------- Animated Hero (uses pre-rendered WebP/GIF) ---------- */
 function AnimatedHero() {
   return (
     <div className="relative overflow-hidden rounded-3xl ring-1 ring-white/10 bg-gradient-to-b from-slate-900/0 to-slate-900/20">
@@ -146,17 +145,21 @@ function AnimatedHero() {
           </motion.a>
         </div>
 
-        {/* Waving portrait — no frame, no crop */}
+        {/* Waving portrait — pre-rendered animation, no frame/crop */}
         <div className="md:col-span-5 grid place-items-center">
-          <AnimatedWavePortrait
-            src={'images/imeth-wave.png'}   // put file in public/images/
-            width={320}
-            ratio="2/3"
-            skin="#C58C5C"
-            // If the wave pivot or mask needs a tiny nudge on deploy, tweak armClip / pivot here
-            // armClip="polygon(6% 33%, 25% 33%, 28% 57%, 22% 78%, 9% 78%, 6% 65%)"
-            // pivot="22% 43%"
-          />
+          <picture>
+            <source
+              srcSet={`${BASE}images/imeth-wave-transparent.webp`}
+              type="image/webp"
+            />
+            <img
+              src={`${BASE}images/imeth-wave-transparent.gif`} // fallback
+              alt="Imeth waving"
+              className="w-[320px] h-auto object-contain select-none"
+              loading="eager"
+              draggable={false}
+            />
+          </picture>
         </div>
       </div>
     </div>
