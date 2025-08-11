@@ -6,7 +6,7 @@ import { Card, Pill } from '../ui/brand.jsx'
 /* ======================= Paths ======================= */
 const BASE = import.meta.env.BASE_URL || '/'
 
-const FEATURED_IMG = `${BASE}images/naloxone/featured.jpg`
+const FEATURED_IMG = `${BASE}images/naloxone/nalox.gif`
 const VIDEO_SRC    = `${BASE}videos/naloxone/placement.mp4`
 const SPRAY_IMG    = `${BASE}images/naloxone/naloxonespray.png`
 
