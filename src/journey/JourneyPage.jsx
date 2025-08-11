@@ -14,6 +14,48 @@ function usePreloadImages(srcs) {
 }
 const onErr = (e) => { e.currentTarget.src = FALLBACK }
 
+/* ---------- Animated Title ---------- */
+function AnimatedTitle({ text }) {
+  const letters = text.split('')
+  const letterVariants = {
+    hidden: { y: 18, opacity: 0 },
+    show: (i) => ({
+      y: 0,
+      opacity: 1,
+      transition: { delay: 0.03 * i, duration: 0.4, ease: 'easeOut' }
+    })
+  }
+  return (
+    <div className="relative inline-block">
+      {/* gradient text */}
+      <h1 className="text-3xl md:text-5xl font-semibold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-200 via-white to-indigo-200">
+        {letters.map((ch, i) => (
+          <motion.span
+            key={i}
+            custom={i}
+            variants={letterVariants}
+            initial="hidden"
+            animate="show"
+            className="inline-block"
+          >
+            {ch === ' ' ? '\u00A0' : ch}
+          </motion.span>
+        ))}
+      </h1>
+
+      {/* sweep underline */}
+      <motion.span
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
+        transition={{ delay: 0.45, duration: 0.6, ease: 'easeOut' }}
+        className="block h-[3px] mt-2 origin-left rounded-full bg-gradient-to-r from-indigo-400/80 via-fuchsia-400/80 to-cyan-400/80"
+      />
+      {/* soft glow */}
+      <div className="absolute -inset-x-4 -bottom-2 blur-xl opacity-25 bg-gradient-to-r from-indigo-500/60 via-fuchsia-500/60 to-cyan-500/60 rounded-full" />
+    </div>
+  )
+}
+
 /* ---------- timeline data ---------- */
 const timeline = [
   {
@@ -117,55 +159,6 @@ const Timeline = ({ groups }) => (
   </div>
 )
 
-/* ---------- Animated Hero (uses pre-rendered WebP/GIF) ---------- */
-function AnimatedHero() {
-  return (
-    <div className="relative overflow-hidden rounded-3xl ring-1 ring-white/10 bg-gradient-to-b from-slate-900/0 to-slate-900/20">
-      {/* aurora blobs */}
-      <motion.div className="pointer-events-none absolute -top-10 -left-10 h-56 w-56 rounded-full blur-3xl bg-indigo-500/30"
-        animate={{ x: [0, 10, -10, 0], y: [0, -10, 10, 0] }} transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }} />
-      <motion.div className="pointer-events-none absolute -bottom-12 left-1/2 h-56 w-56 rounded-full blur-3xl bg-fuchsia-500/25"
-        animate={{ x: [0, -12, 12, 0], y: [0, 10, -10, 0] }} transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }} />
-      <motion.div className="pointer-events-none absolute -right-12 top-1/3 h-56 w-56 rounded-full blur-3xl bg-cyan-500/25"
-        animate={{ x: [0, 8, -8, 0], y: [0, -12, 12, 0] }} transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }} />
-
-      <div className="relative z-10 p-6 md:p-10 grid md:grid-cols-12 gap-6 items-center">
-        <div className="md:col-span-7">
-          <motion.h1 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
-            className="text-3xl md:text-4xl font-semibold text-slate-50">My Journey</motion.h1>
-          <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
-            className="mt-3 text-slate-100/90 max-w-2xl">
-            A deeper look at projects, teams, and ideas that shaped how I think about
-            prevention-first medicine, imaging, and public health.
-          </motion.p>
-          <motion.a href="#featured" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
-            className="mt-6 inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-indigo-600 text-white hover:opacity-90">
-            Explore Featured Stories
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
-          </motion.a>
-        </div>
-
-        {/* Waving portrait — pre-rendered animation, no frame/crop */}
-        <div className="md:col-span-5 grid place-items-center">
-          <picture>
-            <source
-              srcSet={`${BASE}images/imeth-wave-transparent.webp`}
-              type="image/webp"
-            />
-            <img
-              src={`${BASE}images/imeth-wave-transparent.gif`} // fallback
-              alt="Imeth waving"
-              className="w-[320px] h-auto object-contain select-none"
-              loading="eager"
-              draggable={false}
-            />
-          </picture>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 /* ---------- Featured Stories: infinite marquee with smart image fit ---------- */
 const extraFeatured = [
   {
@@ -231,13 +224,73 @@ function FeaturedMarquee({ items, speed = 40 }) {
   )
 }
 
+/* ---------- Hero (static portrait, smaller) ---------- */
+function Hero() {
+  return (
+    <div className="relative overflow-hidden rounded-3xl ring-1 ring-white/10 bg-gradient-to-b from-slate-900/0 to-slate-900/20">
+      {/* aurora blobs */}
+      <motion.div className="pointer-events-none absolute -top-10 -left-10 h-56 w-56 rounded-full blur-3xl bg-indigo-500/30"
+        animate={{ x: [0, 10, -10, 0], y: [0, -10, 10, 0] }} transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }} />
+      <motion.div className="pointer-events-none absolute -bottom-12 left-1/2 h-56 w-56 rounded-full blur-3xl bg-fuchsia-500/25"
+        animate={{ x: [0, -12, 12, 0], y: [0, 10, -10, 0] }} transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }} />
+      <motion.div className="pointer-events-none absolute -right-12 top-1/3 h-56 w-56 rounded-full blur-3xl bg-cyan-500/25"
+        animate={{ x: [0, 8, -8, 0], y: [0, -12, 12, 0] }} transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }} />
+
+      <div className="relative z-10 p-6 md:p-10 grid md:grid-cols-12 gap-6 items-center">
+        <div className="md:col-span-7">
+          <AnimatedTitle text="My Journey" />
+          <motion.p
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35, duration: 0.5, ease: 'easeOut' }}
+            className="mt-4 text-slate-100/90 max-w-2xl leading-relaxed"
+          >
+            I’ve been chasing one question from different angles: <em>how do we catch risk
+            earlier and care more humanly</em>? That thread pulled me from movement science
+            and rehab into harm-reduction on campus, mental-health equity, and now molecular
+            imaging with multi-omics for prevention-first medicine. This page is a living
+            notebook of experiments, teams, and useful failures—plus the ideas I keep
+            returning to: curiosity, access, and turning evidence into systems that work.
+          </motion.p>
+
+          <motion.a
+            href="#featured"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.5, ease: 'easeOut' }}
+            className="mt-6 inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-indigo-600 text-white hover:opacity-90"
+          >
+            Explore Featured Stories
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
+          </motion.a>
+        </div>
+
+        {/* Static portrait — smaller, never cropped */}
+        <div className="md:col-span-5 grid place-items-center">
+          <img
+            src={`${BASE}images/imeth-wave.png`}  // use any static PNG/JPG here
+            alt="Imeth in scrubs"
+            className="w-[240px] sm:w-[280px] h-auto object-contain select-none"
+            loading="eager"
+            draggable={false}
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 /* ---------- Page ---------- */
 export default function JourneyPage() {
-  usePreloadImages(FEATURED_STORIES.map(s => s.img))
+  const extraImgs = [
+    `${BASE}images/journey-featured/jcc.jpg`,
+    `${BASE}images/journey-featured/mcmaster-medicine.jpg`,
+  ]
+  usePreloadImages([...FEATURED_STORIES.map(s => s.img), ...extraImgs])
 
   return (
     <section className="max-w-6xl mx-auto px-6 md:px-8 py-10 md:py-12">
-      <AnimatedHero />
+      <Hero />
 
       {/* Featured Stories */}
       <div id="featured" className="mt-10 md:mt-12">
@@ -252,7 +305,8 @@ export default function JourneyPage() {
       <div className="mt-12">
         <h2 className="text-2xl md:text-3xl font-semibold text-slate-50">Trend over time</h2>
         <p className="mt-2 text-slate-100/90 max-w-3xl">
-          A rough chronology showing the arc from movement & prevention → harm reduction & policy → imaging + multi-omics for earlier detection.
+          A rough chronology showing the arc from movement & prevention → harm reduction & policy →
+          imaging + multi-omics for earlier detection.
         </p>
         <Timeline groups={timeline} />
       </div>
