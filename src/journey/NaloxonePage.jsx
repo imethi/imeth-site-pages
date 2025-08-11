@@ -2,39 +2,47 @@
 import React from 'react'
 import { Card, Pill } from '../ui/brand.jsx'
 
-/* ---------------------- Map (Leaflet via CDN) ---------------------- */
+/* ======================= Config: media paths ======================= */
+const BASE = import.meta.env.BASE_URL || '/'
+const FEATURED_IMG = `${BASE}images/naloxone/featured.jpg`          // you + kit
+const VIDEO_SRC    = `${BASE}videos/naloxone/placement.mp4`         // short loop
+const GALLERY_FILES = [
+  // Add/remove as needed – these will render in a responsive grid
+  'kit-doorsign.jpg',
+  'kit-wall-cabinet.jpg',
+  'residence-lobby.jpg',
+  'gym-corridor.jpg',
+  'library-foyer.jpg',
+  'offcampus-interface.jpg',
+].map(f => `${BASE}images/naloxone/${f}`)
+
+/* =================== Leaflet loader via CDN (no npm) =================== */
 function useLeaflet() {
   const [L, setL] = React.useState(() => (typeof window !== 'undefined' ? window.L : null))
-
   React.useEffect(() => {
     if (window.L) { setL(window.L); return }
 
-    // Inject CSS
-    const cssId = 'leaflet-css'
-    if (!document.getElementById(cssId)) {
+    // CSS
+    if (!document.getElementById('leaflet-css')) {
       const link = document.createElement('link')
-      link.id = cssId
+      link.id = 'leaflet-css'
       link.rel = 'stylesheet'
       link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
       document.head.appendChild(link)
     }
-
-    // Inject JS
-    const jsId = 'leaflet-js'
-    if (!document.getElementById(jsId)) {
+    // JS
+    if (!document.getElementById('leaflet-js')) {
       const script = document.createElement('script')
-      script.id = jsId
+      script.id = 'leaflet-js'
       script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
       script.async = true
       script.onload = () => setL(window.L)
       document.body.appendChild(script)
     } else {
-      // if it exists but not loaded yet, wait for load
-      const el = document.getElementById(jsId)
+      const el = document.getElementById('leaflet-js')
       if (el && !window.L) el.addEventListener('load', () => setL(window.L), { once: true })
     }
   }, [])
-
   return L
 }
 
@@ -73,43 +81,31 @@ const NALOXONE_COORDS = [
 function NaloxoneMap() {
   const L = useLeaflet()
   const mapRef = React.useRef(null)
-  const containerRef = React.useRef(null)
   const [expanded, setExpanded] = React.useState(false)
 
-  // init map
   React.useEffect(() => {
     if (!L || mapRef.current) return
-    const center = [43.2637, -79.9193] // campus-ish
+    const center = [43.2637, -79.9193]
     const map = L.map('naloxone-map', {
-      center,
-      zoom: 15,
-      scrollWheelZoom: true,
-      zoomControl: false,
+      center, zoom: 15, scrollWheelZoom: true, zoomControl: false
     })
     mapRef.current = map
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors',
-      maxZoom: 20,
+      attribution: '&copy; OpenStreetMap contributors', maxZoom: 20
     }).addTo(map)
 
     L.control.zoom({ position: 'bottomright' }).addTo(map)
 
-    // markers
     const markers = NALOXONE_COORDS.map((latlng, i) =>
       L.marker(latlng).bindPopup(`<b>Naloxone Kit</b><br/>Location #${i + 1}`)
     )
     const group = L.featureGroup(markers).addTo(map)
-
-    // fit bounds
-    try {
-      map.fitBounds(group.getBounds().pad(0.15))
-    } catch { /* no-op */ }
+    try { map.fitBounds(group.getBounds().pad(0.15)) } catch {}
 
     return () => map.remove()
   }, [L])
 
-  // when expanding, fix sizing after transition
   React.useEffect(() => {
     if (!mapRef.current) return
     const t = setTimeout(() => mapRef.current.invalidateSize(), 250)
@@ -117,24 +113,14 @@ function NaloxoneMap() {
   }, [expanded])
 
   return (
-    <div ref={containerRef} className={`relative ${expanded ? 'fixed inset-0 z-[70] p-4 bg-slate-950/95' : ''}`}>
-      <div
-        id="naloxone-map"
-        className={`w-full ${expanded ? 'h-[calc(100vh-2rem)]' : 'h-[440px]'} rounded-2xl overflow-hidden ring-1 ring-white/10`}
-      />
+    <div className={`relative ${expanded ? 'fixed inset-0 z-[70] p-4 bg-slate-950/95' : ''}`}>
+      <div id="naloxone-map" className={`w-full ${expanded ? 'h-[calc(100vh-2rem)]' : 'h-[440px]'} rounded-2xl overflow-hidden ring-1 ring-white/10`} />
       <div className="absolute top-3 right-3 flex gap-2">
-        <button
-          onClick={() => setExpanded((v) => !v)}
-          className="rounded-lg px-3 py-1 text-xs bg-white/10 text-white hover:bg-white/15 ring-1 ring-white/15"
-        >
+        <button onClick={() => setExpanded(v => !v)} className="rounded-lg px-3 py-1 text-xs bg-white/10 text-white hover:bg-white/15 ring-1 ring-white/15">
           {expanded ? 'Close' : 'Expand'}
         </button>
-        <a
-          href="https://www.openstreetmap.org/#map=16/43.2637/-79.9193"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="rounded-lg px-3 py-1 text-xs bg-white/10 text-white hover:bg-white/15 ring-1 ring-white/15"
-        >
+        <a href="https://www.openstreetmap.org/#map=16/43.2637/-79.9193" target="_blank" rel="noopener noreferrer"
+           className="rounded-lg px-3 py-1 text-xs bg-white/10 text-white hover:bg-white/15 ring-1 ring-white/15">
           Open in OSM
         </a>
       </div>
@@ -142,29 +128,78 @@ function NaloxoneMap() {
   )
 }
 
-/* ---------------------- Page ---------------------- */
+/* ============================= Page ============================= */
 export default function NaloxonePage() {
   return (
     <section className="max-w-6xl mx-auto px-6 md:px-8 py-10 space-y-10">
-      <div className="flex items-baseline justify-between gap-4">
-        <h1 className="text-3xl md:text-4xl font-semibold text-slate-50">
-          The Naloxone Project: Saving Lives on Campus
-        </h1>
-        <div className="hidden md:flex gap-2">
-          <Pill>2024–2025</Pill>
-          <Pill>Harm reduction</Pill>
-          <Pill>Campus safety</Pill>
+      {/* Title row */}
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-semibold text-slate-50">
+            The Naloxone Project: Saving Lives on Campus
+          </h1>
+          <div className="mt-2 flex flex-wrap gap-2">
+            <Pill>2024–2025</Pill>
+            <Pill>32+ kits</Pill>
+            <Pill>Harm reduction</Pill>
+            <Pill>Student safety</Pill>
+          </div>
         </div>
       </div>
 
+      {/* Hero media (photo + loop video) */}
+      <div className="grid lg:grid-cols-2 gap-5">
+        <Card className="p-0 overflow-hidden">
+          <img
+            src={FEATURED_IMG}
+            alt="Imeth holding an emergency naloxone kit"
+            className="w-full h-full max-h-[420px] object-cover"
+            onError={(e) => { e.currentTarget.style.opacity = 0.3 }}
+          />
+        </Card>
+        <Card className="p-0 overflow-hidden">
+          <video
+            className="w-full h-full max-h-[420px] object-cover"
+            src={VIDEO_SRC}
+            autoPlay
+            muted
+            loop
+            playsInline
+            aria-label="Placing a naloxone kit on campus"
+          />
+        </Card>
+      </div>
+
+      {/* Narrative sections */}
       <Card>
-        <h2 className="font-semibold text-slate-50">About the project</h2>
+        <h2 className="text-xl font-semibold text-slate-50">A year in the making</h2>
         <p className="mt-2 text-slate-200/90 leading-relaxed">
-          We placed 32+ emergency naloxone kits across McMaster to strengthen overdose response and empower bystanders.
-          The map below shows current kit locations. Click markers to see details; expand to explore the area in full.
+          This project looks simple on the wall, but it was a year in the making. It started with
+          a question—how do we make overdose response fast, visible, and stigma-free on campus?
+          From there, I met with university health &amp; safety leadership, facilities, student affairs,
+          and campus security to turn an idea into policy. We worked through procurement and maintenance
+          plans, signage standards, reporting and refilling workflows, and the legal details that make
+          a life-saving tool usable: where kits can be installed, who is responsible for checks, and how
+          liability is handled under existing provincial protections and university policy. The administrative
+          work was slow and necessary—and it made the rollout real, not just symbolic.
         </p>
       </Card>
 
+      <Card>
+        <h2 className="text-xl font-semibold text-slate-50">Fieldwork &amp; placement strategy</h2>
+        <p className="mt-2 text-slate-200/90 leading-relaxed">
+          I spent hours running the campus—literally—logging GPS coordinates, timing walking routes,
+          and watching student traffic patterns. Residences and the areas where on-campus blends into
+          off-campus housing emerged as higher-risk zones, especially during evening hours. We prioritized
+          coverage in the eastern, western, and southern edges of campus to create overlapping “safety
+          rings,” while still anchoring kits in central hubs like libraries, athletics, and transit
+          corridors. The map below reflects that strategy: short travel time to a kit almost anywhere,
+          with clear signage and repeat exposure so students know what they’re seeing before they ever
+          need it.
+        </p>
+      </Card>
+
+      {/* Map */}
       <section>
         <h3 className="text-xl font-semibold text-slate-50 mb-3">Interactive kit map</h3>
         <NaloxoneMap />
@@ -172,7 +207,36 @@ export default function NaloxonePage() {
           Base map © OpenStreetMap contributors. Locations approximate; check on-site signage for the exact kit.
         </p>
       </section>
+
+      <Card>
+        <h2 className="text-xl font-semibold text-slate-50">Building a team: McMaster SHIELD</h2>
+        <p className="mt-2 text-slate-200/90 leading-relaxed">
+          Alongside the rollout, I founded <span className="font-semibold">McMaster SHIELD</span>—a student team focused
+          on harm reduction, peer education, and practical emergency readiness. SHIELD helped with advocacy,
+          wayfinding campaigns, and training sign-ups, and made the project visible beyond installation day.
+          The goal wasn’t just to put boxes on walls; it was to build a culture where students recognize the kit,
+          feel permitted to use it, and can act with confidence while help is on the way.
+        </p>
+      </Card>
+
+      {/* Context gallery */}
+      {GALLERY_FILES.length > 0 && (
+        <section>
+          <h3 className="text-xl font-semibold text-slate-50 mb-3">Context gallery</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {GALLERY_FILES.map((src, i) => (
+              <div key={src + i} className="rounded-2xl overflow-hidden ring-1 ring-white/10 bg-white/5">
+                <img
+                  src={src}
+                  alt="Naloxone kit placement context"
+                  className="w-full h-56 object-cover"
+                  onError={(e) => { e.currentTarget.style.opacity = 0.3 }}
+                />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </section>
   )
 }
-
