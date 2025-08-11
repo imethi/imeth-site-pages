@@ -488,6 +488,7 @@ export default function App() {
       {route === 'publications' && <PublicationsPage />}
       {route === 'contact' && <ContactPage />}
       {route === 'journey/naloxone' && <NaloxonePage />}
+      {route === 'journey/camh' && <CAMHPage />}
 
       <footer className="border-t border-white/10">
         <div className="max-w-6xl mx-auto px-6 md:px-8 py-10 text-sm text-slate-200/80 flex flex-col md:flex-row items-center justify-between gap-3">
