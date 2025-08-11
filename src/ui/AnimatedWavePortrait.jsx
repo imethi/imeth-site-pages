@@ -2,35 +2,23 @@ import React from 'react'
 import { motion } from 'framer-motion'
 
 /**
- * AnimatedWavePortrait
- * - Uses your single PNG/JPG and creates a waving effect by layering the same image:
- *   base image + clipped arm layer that rotates around an elbow pivot
- * - Gentle bob, glasses shine, and blinking eyelids
- *
- * Props:
- *   src     : image path (relative to public/) or absolute URL
- *   alt     : string alt
- *   width   : rendered width in px (height auto via aspect)
- *   ratio   : CSS aspect-ratio string (e.g. '2/3' for 768x1152). Default '2/3'
- *   skin    : eyelid color hex
- *   eyeL/R  : { x, y, w, h } in % of container for eyelid positioning
- *   armClip : CSS clip-path polygon for the waving arm (in %). Tweak to fit other crops.
- *   pivot   : transform-origin for the arm layer (e.g., '22% 42%')
- *   waveDeg : amplitude of wave rotation (deg)
+ * AnimatedWavePortrait (glitch-free)
+ * - One bobbing container for ALL layers (base, arm, shine, eyelids) to avoid sub-pixel drift.
+ * - GPU hints to keep it smooth.
  */
 export default function AnimatedWavePortrait({
   src,
   alt = 'Waving portrait',
   width = 320,
-  ratio = '2/3',                 // your 768x1152 image ≈ 2:3
+  ratio = '2/3',                 // your 768x1152 ≈ 2:3
   skin = '#C58C5C',
-  // Defaults tuned for the “hand-up” image you sent. Nudge if needed.
   eyeL = { x: 46, y: 31, w: 10, h: 6.5 },
   eyeR = { x: 63, y: 31, w: 10, h: 6.5 },
-  // Approx mask around the raised LEFT arm/hand (in % of the whole image)
   armClip = 'polygon(6% 33%, 25% 33%, 28% 57%, 22% 78%, 9% 78%, 6% 65%)',
-  pivot = '22% 43%',             // elbow-ish pivot for rotation
-  waveDeg = 14                   // +/- degrees
+  pivot = '22% 43%',
+  waveDeg = 14,
+  bobAmount = 3,                  // px
+  duration = 3.2                  // seconds for a full neutral→wave→neutral
 }) {
   const BASE = import.meta.env.BASE_URL || '/'
   const resolvedSrc = src?.startsWith('http') ? src : `${BASE}${src || ''}`
@@ -42,19 +30,25 @@ export default function AnimatedWavePortrait({
       aria-label="Animated waving portrait"
     >
       <style>{`
-        @keyframes blink { 0%, 86%, 100% { transform: scaleY(0) } 92%, 94% { transform: scaleY(1) } }
+        .layer { position: absolute; inset: 0; }
+        .gpu { will-change: transform; transform: translateZ(0); backface-visibility: hidden; }
+
+        /* Blink (brief, near the end of each cycle so it feels natural) */
+        @keyframes blink { 0%, 84%, 100% { transform: scaleY(0) } 90%, 92% { transform: scaleY(1) } }
+
+        /* Shine across glasses */
         @keyframes shine { 0% { background-position: 120% 0 } 100% { background-position: -20% 0 } }
-        /* Wave cycle: neutral(0-30%) -> wave(30-60%) -> neutral(60-100%) */
+
+        /* Wave cycle: neutral -> wave -> neutral (holds at ends) */
         @keyframes waveCycle {
           0%   { transform: rotate(0deg) }
-          20%  { transform: rotate(0deg) }
-          30%  { transform: rotate(${waveDeg}deg) }
-          40%  { transform: rotate(${-waveDeg * 0.7}deg) }
-          50%  { transform: rotate(${waveDeg * 0.6}deg) }
-          60%  { transform: rotate(0deg) }
+          22%  { transform: rotate(0deg) }
+          35%  { transform: rotate(${waveDeg}deg) }
+          48%  { transform: rotate(${-waveDeg * 0.75}deg) }
+          60%  { transform: rotate(${waveDeg * 0.6}deg) }
+          78%  { transform: rotate(0deg) }
           100% { transform: rotate(0deg) }
         }
-        @keyframes bob { 0%{ transform: translateY(0px) } 50%{ transform: translateY(-3px) } 100%{ transform: translateY(0px) } }
 
         @media (prefers-reduced-motion: reduce) {
           .awp-bob, .awp-shine, .awp-eye, .awp-arm { animation: none !important; }
@@ -65,7 +59,7 @@ export default function AnimatedWavePortrait({
           transform: scaleY(0);
           transform-origin: 50% 0%;
           border-radius: 9999px;
-          animation: blink 4.8s steps(1,end) infinite;
+          animation: blink ${duration}s steps(1,end) infinite;
           pointer-events: none;
         }
         .awp-shine {
@@ -78,66 +72,68 @@ export default function AnimatedWavePortrait({
           clip-path: ellipse(40% 16% at 56% 33%);
         }
         .awp-arm {
-          position: absolute; inset: 0; pointer-events: none;
           clip-path: ${armClip};
           transform-origin: ${pivot};
-          animation: waveCycle 3.2s ease-in-out infinite;
+          animation: waveCycle ${duration}s ease-in-out infinite;
+          pointer-events: none;
         }
       `}</style>
 
-      {/* base: gentle bob */}
+      {/* ONE bobbing wrapper for every layer to keep them perfectly aligned */}
       <motion.div
-        className="absolute inset-0 awp-bob"
+        className="layer gpu awp-bob"
         initial={{ y: 0, rotate: 0 }}
-        animate={{ y: [0, -2, 0], rotate: [0, -0.3, 0.3, 0] }}
+        animate={{ y: [0, -bobAmount, 0], rotate: [0, -0.25, 0.25, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
       >
-        {/* Base image (no frame, no ring, contain to avoid crop) */}
+        {/* Base image (no frame/crop) */}
         <img
+          draggable={false}
+          loading="eager"
           src={resolvedSrc}
           alt={alt}
-          className="absolute inset-0 w-full h-full object-contain"
+          className="layer object-contain gpu"
           onError={(e) => { e.currentTarget.style.opacity = 0.4 }}
         />
-      </motion.div>
 
-      {/* Arm layer (same image, clipped & animated). Slightly above base. */}
-      <div className="awp-arm">
-        <img
-          src={resolvedSrc}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-contain"
+        {/* Arm overlay (same image, clipped & animated) */}
+        <div className="layer gpu awp-arm">
+          <img
+            draggable={false}
+            src={resolvedSrc}
+            alt=""
+            aria-hidden="true"
+            className="layer object-contain gpu"
+          />
+        </div>
+
+        {/* Glasses shine */}
+        <div className="awp-shine layer" />
+
+        {/* Eyelids (blink) */}
+        <div
+          className="awp-eye"
+          style={{
+            left: `${eyeL.x - eyeL.w / 2}%`,
+            top: `${eyeL.y}%`,
+            width: `${eyeL.w}%`,
+            height: `${eyeL.h}%`,
+            background: skin,
+            animationDelay: `${duration * 0.05}s`,
+          }}
         />
-      </div>
-
-      {/* Glasses shine */}
-      <div className="awp-shine" />
-
-      {/* Eyelids for blink */}
-      <div
-        className="awp-eye"
-        style={{
-          left: `${eyeL.x - eyeL.w / 2}%`,
-          top: `${eyeL.y}%`,
-          width: `${eyeL.w}%`,
-          height: `${eyeL.h}%`,
-          background: skin,
-          animationDelay: '0.15s',
-        }}
-      />
-      <div
-        className="awp-eye"
-        style={{
-          left: `${eyeR.x - eyeR.w / 2}%`,
-          top: `${eyeR.y}%`,
-          width: `${eyeR.w}%`,
-          height: `${eyeR.h}%`,
-          background: skin,
-          animationDelay: '2.0s',
-        }}
-      />
+        <div
+          className="awp-eye"
+          style={{
+            left: `${eyeR.x - eyeR.w / 2}%`,
+            top: `${eyeR.y}%`,
+            width: `${eyeR.w}%`,
+            height: `${eyeR.h}%`,
+            background: skin,
+            animationDelay: `${duration * 0.45}s`,
+          }}
+        />
+      </motion.div>
     </div>
   )
 }
-
