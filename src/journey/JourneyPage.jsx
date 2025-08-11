@@ -1,4 +1,9 @@
 import PixelImeth from '../ui/PixelImeth.jsx'
+
+// ...
+<div className="md:col-span-5 grid place-items-center">
+  <PixelImeth size={210} direction="right" />
+</div>
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Card } from '../ui/brand.jsx'
