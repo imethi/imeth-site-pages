@@ -88,6 +88,71 @@ const TwoLineCarousel = ({ items }) => {
   )
 }
 
+/* ---------- Journey dropdown in header ---------- */
+function useHoverDisclosure() {
+  const [open, setOpen] = React.useState(false)
+  const ref = React.useRef(null)
+  const onBlur = (e) => {
+    if (!ref.current) return
+    if (!ref.current.contains(e.relatedTarget)) setOpen(false)
+  }
+  return { open, setOpen, ref, onBlur }
+}
+
+function JourneyMenu({ open, onClose }) {
+  const base =
+    'absolute left-1/2 top-full -translate-x-1/2 mt-2 z-[60] w-[680px] max-w-[92vw] rounded-2xl backdrop-blur bg-slate-900/90 ring-1 ring-white/10 shadow-xl'
+  return (
+    <motion.div
+      initial={false}
+      animate={open ? { opacity: 1, y: 0, pointerEvents: 'auto' } : { opacity: 0, y: -4, pointerEvents: 'none' }}
+      transition={{ duration: 0.16, ease: 'easeOut' }}
+      className={base}
+      role="menu"
+      aria-label="Featured stories"
+      onMouseLeave={onClose}
+    >
+      <div className="p-3 border-b border-white/10">
+        <div className="text-xs uppercase tracking-wide text-indigo-300">Featured Stories</div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 p-2">
+        {stories.map((s) => (
+          <a
+            key={s.title}
+            href={s.link || '#/journey'}
+            className="group flex items-start gap-3 rounded-xl px-3 py-2 hover:bg-white/5 focus:bg-white/5 outline-none"
+            role="menuitem"
+          >
+            <img
+              src={s.img}
+              alt=""
+              onError={(e) => (e.currentTarget.style.opacity = 0.2)}
+              className="w-12 h-12 rounded-lg object-cover ring-1 ring-white/10 flex-shrink-0"
+            />
+            <div className="min-w-0">
+              <div className="text-sm font-medium text-slate-50 truncate group-hover:text-white">
+                {s.title}
+              </div>
+              <div className="text-[11px] text-indigo-300/90">{s.year || ''}</div>
+              <div className="text-[12px] text-slate-300/80 line-clamp-2">{s.desc}</div>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <div className="p-2 border-t border-white/10">
+        <a
+          href="#/journey"
+          className="block text-center text-sm rounded-lg px-3 py-2 bg-indigo-600 text-white hover:opacity-90"
+        >
+          View all on My Journey →
+        </a>
+      </div>
+    </motion.div>
+  )
+}
+
 /* ---------- pages ---------- */
 function ContactPage() {
   const FORMSPREE_ID = 'your_form_id_here'
@@ -118,7 +183,6 @@ function OrcidIcon({ className = 'w-4 h-4' }) { return (<svg viewBox="0 0 256 25
 function PublicationsPage() {
   const BASE = import.meta.env.BASE_URL
 
-  // Use your exact filenames + nice display names for titles
   const LOGOS = [
     { file: 'healthydebate.png',     name: 'Healthy Debate' },
     { file: 'jack.org.png',          name: 'Jack.org' },
@@ -138,11 +202,9 @@ function PublicationsPage() {
     linkedin: 'https://www.linkedin.com/in/imeth-illamperuma-3a734a193/details/publications/',
   }
 
-  // Split into two rows (evens / odds)
   const ROW_A = LOGOS.filter((_, i) => i % 2 === 0)
   const ROW_B = LOGOS.filter((_, i) => i % 2 === 1)
 
-  // Local row component with infinite marquee
   const LogoRow = ({ files, direction = 'left', speed = 30 }) => {
     const anim = direction === 'left' ? 'animate-marquee' : 'animate-marquee-reverse'
     return (
@@ -175,7 +237,6 @@ function PublicationsPage() {
       <h1 className="text-3xl font-semibold text-slate-950 dark:text-slate-50">Writing Published In</h1>
       <p className="mt-2 text-slate-900 dark:text-slate-100/90">A selection of outlets featuring my work.</p>
 
-      {/* links strip */}
       <div className="mt-6 rounded-2xl bg-white/5 ring-1 ring-black/10 dark:ring-white/10 p-4">
         <div className="flex flex-wrap items-center gap-3">
           <a href={LINKS.scholar} target="_blank" rel="noopener noreferrer"
@@ -193,7 +254,6 @@ function PublicationsPage() {
         </div>
       </div>
 
-      {/* infinitely rotating logo rows */}
       <div className="mt-8 space-y-4">
         <LogoRow files={ROW_A} direction="left"  speed={28} />
         <LogoRow files={ROW_B} direction="right" speed={34} />
@@ -248,6 +308,9 @@ export default function App() {
     return () => window.removeEventListener('hashchange', onHash)
   }, [])
 
+  // Journey dropdown state for header
+  const jm = useHoverDisclosure()
+
   return (
     <div className={`${brand.bg} min-h-screen`}>
       <header className="sticky top-0 z-40 backdrop-blur bg-white/80 dark:bg-slate-900/80 border-b border-black/5 dark:border-white/10">
@@ -259,7 +322,31 @@ export default function App() {
 
           <nav className="hidden md:flex items-center gap-6 text-slate-900 dark:text-slate-100">
             <a href="#/" className="hover:opacity-80">Home</a>
-            <a href="#/journey" className="hover:opacity-80">My Journey</a>
+
+            {/* My Journey with hover/click menu */}
+            <div
+              className="relative"
+              ref={jm.ref}
+              onMouseEnter={() => jm.setOpen(true)}
+              onMouseLeave={() => jm.setOpen(false)}
+              onBlur={jm.onBlur}
+            >
+              <button
+                type="button"
+                className="hover:opacity-80 outline-none"
+                onClick={() => jm.setOpen(v => !v)}
+                onKeyDown={(e) => {
+                  if (['ArrowDown','Enter',' '].includes(e.key)) { e.preventDefault(); jm.setOpen(true) }
+                  if (e.key === 'Escape') jm.setOpen(false)
+                }}
+                aria-haspopup="menu"
+                aria-expanded={jm.open}
+              >
+                My Journey
+              </button>
+              <JourneyMenu open={jm.open} onClose={() => jm.setOpen(false)} />
+            </div>
+
             <a href="#/publications" className="hover:opacity-80">Publications</a>
             <a href="#/contact" className="hover:opacity-80">Contact</a>
             <button
