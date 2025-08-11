@@ -88,7 +88,7 @@ const TwoLineCarousel = ({ items }) => {
   )
 }
 
-/* ---------- Journey dropdown in header ---------- */
+/* ---------- Journey dropdown in header (linear list) ---------- */
 function useHoverDisclosure() {
   const [open, setOpen] = React.useState(false)
   const ref = React.useRef(null)
@@ -98,20 +98,13 @@ function useHoverDisclosure() {
   }
   return { open, setOpen, ref, onBlur }
 }
-
 function JourneyMenu({ open, onClose }) {
-  // Left-aligned under the "My Journey" button (not centered)
   const base =
     'absolute left-0 top-full mt-2 z-[60] w-[520px] max-w-[92vw] rounded-2xl bg-slate-900/95 ring-1 ring-white/10 shadow-xl backdrop-blur'
-
   return (
     <motion.div
       initial={false}
-      animate={
-        open
-          ? { opacity: 1, y: 0, pointerEvents: 'auto' }
-          : { opacity: 0, y: -4, pointerEvents: 'none' }
-      }
+      animate={open ? { opacity: 1, y: 0, pointerEvents: 'auto' } : { opacity: 0, y: -4, pointerEvents: 'none' }}
       transition={{ duration: 0.16, ease: 'easeOut' }}
       className={base}
       role="menu"
@@ -119,12 +112,8 @@ function JourneyMenu({ open, onClose }) {
       onMouseLeave={onClose}
     >
       <div className="p-3 border-b border-white/10">
-        <div className="text-xs uppercase tracking-wide text-indigo-300">
-          Featured Stories
-        </div>
+        <div className="text-xs uppercase tracking-wide text-indigo-300">Featured Stories</div>
       </div>
-
-      {/* Linear (single column) list */}
       <ul className="divide-y divide-white/10">
         {stories.map((s) => (
           <li key={s.title}>
@@ -140,21 +129,14 @@ function JourneyMenu({ open, onClose }) {
                 className="w-12 h-12 rounded-lg object-cover ring-1 ring-white/10 flex-shrink-0"
               />
               <div className="min-w-0">
-                <div className="text-sm font-medium text-slate-50 truncate">
-                  {s.title}
-                </div>
-                <div className="text-[11px] text-indigo-300/90">
-                  {s.year || ''}
-                </div>
-                <div className="text-[12px] text-slate-300/80 line-clamp-1">
-                  {s.desc}
-                </div>
+                <div className="text-sm font-medium text-slate-50 truncate">{s.title}</div>
+                <div className="text-[11px] text-indigo-300/90">{s.year || ''}</div>
+                <div className="text-[12px] text-slate-300/80 line-clamp-1">{s.desc}</div>
               </div>
             </a>
           </li>
         ))}
       </ul>
-
       <div className="p-2 border-t border-white/10">
         <a
           href="#/journey"
@@ -167,114 +149,92 @@ function JourneyMenu({ open, onClose }) {
   )
 }
 
-/* ---------- pages ---------- */
-function ContactPage() {
-  const FORMSPREE_ID = 'your_form_id_here'
-  const action = `https://formspree.io/f/${FORMSPREE_ID}`
+/* ---------- About Me Page ---------- */
+function AboutPage() {
+  const A = ({ href, children }) => (
+    <a
+      className="text-indigo-400 hover:text-indigo-300 underline underline-offset-2"
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {children}
+    </a>
+  )
+
   return (
     <section className="max-w-3xl mx-auto px-6 md:px-8 py-14">
-      <h1 className="text-3xl font-semibold text-slate-950 dark:text-slate-50">Contact</h1>
-      <p className="mt-2 text-slate-900 dark:text-slate-100/90">
-        Reach out for collaborations in imaging, prevention, and public health.
+      <h1 className="text-3xl md:text-4xl font-semibold text-slate-950 dark:text-slate-50">
+        About Me
+      </h1>
+      <p className="mt-2 text-slate-900/80 dark:text-slate-100/80">
+        I’m Imeth Illamperuma, an undergraduate student at{' '}
+        <A href="https://www.mcmaster.ca/">McMaster University</A> pursuing a
+        degree in Kinesiology with a Secondary in Psychology and a Certificate
+        in Rehabilitation Science. My academic journey blends medicine, public
+        health, and computer science, with a focus on using emerging
+        technologies to improve prevention, diagnosis, and equitable healthcare
+        delivery.
       </p>
 
-      <form action={action} method="POST" className="mt-8 grid gap-4">
-        <input name="name" required placeholder="Your name" className="rounded-xl px-4 py-3 ring-1 ring-black/10 bg-white dark:bg-slate-900 dark:text-slate-50"/>
-        <input name="email" type="email" required placeholder="you@example.com" className="rounded-xl px-4 py-3 ring-1 ring-black/10 bg-white dark:bg-slate-900 dark:text-slate-50"/>
-        <textarea name="message" required placeholder="How can I help?" className="rounded-xl px-4 py-3 h-36 ring-1 ring-black/10 bg-white dark:bg-slate-900 dark:text-slate-50"/>
-        <button className="bg-indigo-600 text-white rounded-xl px-5 py-3 w-fit hover:opacity-90">Send</button>
-      </form>
+      <p className="mt-4 text-slate-900/80 dark:text-slate-100/80">
+        My research spans multiple domains: I have worked with the{' '}
+        <A href="https://med.stanford.edu/">Stanford University School of Medicine</A>{' '}
+        as a 2025 Molecular Imaging Fellow at the{' '}
+        <A href="https://med.stanford.edu/sci3.html">Stanford Center for Innovation in In Vivo Imaging (SCi3)</A>, exploring
+        brain–gut axis biomarkers for the early detection of neurodegenerative
+        diseases. At McMaster University, I am currently conducting research into
+        artificial intelligence detection and the applications of large language
+        models (LLMs) in clinical and academic settings — bridging the gap
+        between machine learning innovation and medical practice. My work also
+        intersects with AI ethics, bias mitigation, and trustworthy AI in
+        healthcare.
+      </p>
 
-      <div className="mt-8 text-sm text-slate-900/80 dark:text-slate-100/80">
-        Or email me directly: <a className="underline" href="mailto:imperuma@gmail.com">imperuma@gmail.com</a>
-      </div>
-    </section>
-  )
-}
+      <p className="mt-4 text-slate-900/80 dark:text-slate-100/80">
+        I have collaborated with the{' '}
+        <A href="https://www.camh.ca/">Centre for Addiction and Mental Health (CAMH)</A>,{' '}
+        <A href="https://www.bumc.bu.edu/busm/">Boston University School of Medicine</A>, and{' '}
+        <A href="https://www.harvard.edu/">Harvard University</A> on projects
+        addressing harm reduction, health policy, and culturally competent care.
+        Beyond research, I am the Founder and President of{' '}
+        <A href="https://www.instagram.com/mac.shield/">SHIELD</A> and the Founder of{' '}
+        <A href="#/journey">The Naloxone Project</A>, one of Canada’s largest
+        student-led initiatives to install emergency naloxone kits on university
+        campuses.
+      </p>
 
-function ScholarIcon({ className = 'w-4 h-4' }) { return (<svg viewBox="0 0 24 24" className={className}><path fill="currentColor" d="M12 3L2 9l10 6 10-6-10-6Zm0 8.5L5.2 9 12 5.5 18.8 9 12 11.5Zm-7 3.2V15l7 4 7-4v-.3L12 16.7 5 14.7Z"/></svg>) }
-function OrcidIcon({ className = 'w-4 h-4' }) { return (<svg viewBox="0 0 256 256" className={className}><circle cx="128" cy="128" r="128" fill="#A6CE39"/><rect x="92" y="76" width="20" height="104" rx="3" fill="white"/><path fill="white" d="M150 76c-29 0-52 23-52 52s23 52 52 52 52-23 52-52-23-52-52-52zm0 20c18 0 32 14 32 32s-14 32-32 32-32-14-32-32 14-32 32-32z"/></svg>) }
-function PublicationsPage() {
-  const BASE = import.meta.env.BASE_URL
+      <p className="mt-4 text-slate-900/80 dark:text-slate-100/80">
+        At the core of my work is a vision to unite cutting-edge biomedical
+        science, AI-driven innovation, and community advocacy — developing tools
+        that not only detect disease earlier but also ensure interventions are
+        accessible, equitable, and impactful. Whether it’s using molecular
+        imaging to visualize hidden disease processes, or applying LLMs to
+        optimize clinical workflows, my mission is to advance a future where
+        healthcare is both technologically advanced and deeply human-centered.
+      </p>
 
-  const LOGOS = [
-    { file: 'healthydebate.png',     name: 'Healthy Debate' },
-    { file: 'jack.org.png',          name: 'Jack.org' },
-    { file: 'mac.png',               name: 'McMaster University' },
-    { file: 'mdpi.png',              name: 'MDPI' },
-    { file: 'MEDCITYNEWS.png',       name: 'MedCity News' },
-    { file: 'NIH.png',               name: 'National Institutes of Health' },
-    { file: 'OFID.png',              name: 'Open Forum Infectious Diseases' },
-    { file: 'plos.png',              name: 'PLOS' },
-    { file: 'sage.svg.png',          name: 'SAGE Publishing' },
-    { file: 'stanfordmed.gif.png',   name: 'Stanford Medicine' },
-  ]
-
-  const LINKS = {
-    scholar: 'https://scholar.google.com/citations?user=Pzwn3y0AAAAJ&hl=en',
-    orcid: 'https://orcid.org/0009-0007-3778-7635',
-    linkedin: 'https://www.linkedin.com/in/imeth-illamperuma-3a734a193/details/publications/',
-  }
-
-  const ROW_A = LOGOS.filter((_, i) => i % 2 === 0)
-  const ROW_B = LOGOS.filter((_, i) => i % 2 === 1)
-
-  const LogoRow = ({ files, direction = 'left', speed = 30 }) => {
-    const anim = direction === 'left' ? 'animate-marquee' : 'animate-marquee-reverse'
-    return (
-      <div className="overflow-hidden rounded-2xl ring-1 ring-black/10 dark:ring-white/10 bg-white/5">
-        <div
-          className={`inline-flex items-center whitespace-nowrap gap-10 will-change-transform ${anim}`}
-          style={{ width: 'max-content', animationDuration: `${speed}s` }}
+      <div className="mt-8 flex flex-wrap gap-3">
+        <a
+          href={`${BASE}Imeth-Illamperuma-CV.pdf`}
+          className="inline-flex items-center gap-2 rounded-xl px-4 py-2 ring-1 ring-black/10 hover:ring-black/20 bg-white dark:bg-slate-800 dark:text-slate-50"
         >
-          {[...files, ...files].map(({ file, name }, idx) => (
-            <div key={`${file}-${idx}`} className="px-6 py-5">
-              <img
-                src={`${BASE}pub-logos/${file}`}
-                alt={name}
-                title={name}
-                className="h-10 md:h-12 w-auto object-contain opacity-90 hover:opacity-100 transition"
-                onError={(e) => {
-                  e.currentTarget.style.opacity = 0.25
-                  e.currentTarget.title = `${name} (missing file)`
-                }}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    )
-  }
-
-  return (
-    <section className="max-w-6xl mx-auto px-6 md:px-8 py-14">
-      <h1 className="text-3xl font-semibold text-slate-950 dark:text-slate-50">Writing Published In</h1>
-      <p className="mt-2 text-slate-900 dark:text-slate-100/90">A selection of outlets featuring my work.</p>
-
-      <div className="mt-6 rounded-2xl bg-white/5 ring-1 ring-black/10 dark:ring-white/10 p-4">
-        <div className="flex flex-wrap items-center gap-3">
-          <a href={LINKS.scholar} target="_blank" rel="noopener noreferrer"
-             className="inline-flex items-center gap-2 rounded-xl px-3 py-2 bg-white/10 hover:bg-white/20 text-slate-100 ring-1 ring-white/10">
-            🔎 Google Scholar
-          </a>
-          <a href={LINKS.orcid} target="_blank" rel="noopener noreferrer"
-             className="inline-flex items-center gap-2 rounded-xl px-3 py-2 bg-white/10 hover:bg-white/20 text-slate-100 ring-1 ring-white/10">
-            🟢 ORCID iD
-          </a>
-          <a href={LINKS.linkedin} target="_blank" rel="noopener noreferrer"
-             className="inline-flex items-center gap-2 rounded-xl px-3 py-2 bg-white/10 hover:bg-white/20 text-slate-100 ring-1 ring-white/10">
-            💼 LinkedIn Publications
-          </a>
-        </div>
-      </div>
-
-      <div className="mt-8 space-y-4">
-        <LogoRow files={ROW_A} direction="left"  speed={28} />
-        <LogoRow files={ROW_B} direction="right" speed={34} />
-      </div>
-
-      <div className="mt-6 text-[11px] text-slate-900/80 dark:text-slate-100/75">
-        Logos are for identification only and belong to their respective owners.
+          <FileDown className="w-4 h-4" /> Download CV
+        </a>
+        <a
+          href="#/contact"
+          className="bg-indigo-600 text-white inline-flex items-center gap-2 rounded-xl px-4 py-2 hover:opacity-90"
+        >
+          <Mail className="w-4 h-4" /> Get in touch
+        </a>
+        <a
+          href="https://www.linkedin.com/in/imeth-illamperuma-3a734a193/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded-xl px-4 py-2 ring-1 ring-black/10 hover:ring-black/20 bg-white dark:bg-slate-800 dark:text-slate-50"
+        >
+          <Linkedin className="w-4 h-4" /> LinkedIn
+        </a>
       </div>
     </section>
   )
@@ -322,7 +282,6 @@ export default function App() {
     return () => window.removeEventListener('hashchange', onHash)
   }, [])
 
-  // Journey dropdown state for header
   const jm = useHoverDisclosure()
 
   return (
@@ -361,6 +320,7 @@ export default function App() {
               <JourneyMenu open={jm.open} onClose={() => jm.setOpen(false)} />
             </div>
 
+            <a href="#/about" className="hover:opacity-80">About</a>
             <a href="#/publications" className="hover:opacity-80">Publications</a>
             <a href="#/contact" className="hover:opacity-80">Contact</a>
             <button
@@ -425,6 +385,7 @@ export default function App() {
         </section>
       )}
 
+      {route === 'about' && <AboutPage />}
       {route === 'journey' && <JourneyPage />}
       {route === 'journey/stanford' && <StoryPage story={StanfordStory} />}
       {route === 'publications' && <PublicationsPage />}
@@ -436,6 +397,7 @@ export default function App() {
           <div className="flex items-center gap-4">
             <a className="hover:underline" href="#/">Home</a>
             <a className="hover:underline" href="#/journey">My Journey</a>
+            <a className="hover:underline" href="#/about">About</a>
             <a className="hover:underline" href="#/publications">Publications</a>
             <a className="hover:underline" href="#/contact">Contact</a>
           </div>
