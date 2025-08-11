@@ -57,6 +57,7 @@ export default function CAMHPage() {
     `${BASE}images/camh/IMG_3238.jpeg`,
     `${BASE}images/camh/IMG_5720.jpeg`,
     `${BASE}images/camh/IMG_5726.jpeg`,
+    `${BASE}images/camh/casdf.jpg.webp`,
   ]
 
   return (
