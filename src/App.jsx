@@ -100,12 +100,18 @@ function useHoverDisclosure() {
 }
 
 function JourneyMenu({ open, onClose }) {
+  // Left-aligned under the "My Journey" button (not centered)
   const base =
-    'absolute left-1/2 top-full -translate-x-1/2 mt-2 z-[60] w-[680px] max-w-[92vw] rounded-2xl backdrop-blur bg-slate-900/90 ring-1 ring-white/10 shadow-xl'
+    'absolute left-0 top-full mt-2 z-[60] w-[520px] max-w-[92vw] rounded-2xl bg-slate-900/95 ring-1 ring-white/10 shadow-xl backdrop-blur'
+
   return (
     <motion.div
       initial={false}
-      animate={open ? { opacity: 1, y: 0, pointerEvents: 'auto' } : { opacity: 0, y: -4, pointerEvents: 'none' }}
+      animate={
+        open
+          ? { opacity: 1, y: 0, pointerEvents: 'auto' }
+          : { opacity: 0, y: -4, pointerEvents: 'none' }
+      }
       transition={{ duration: 0.16, ease: 'easeOut' }}
       className={base}
       role="menu"
@@ -113,33 +119,41 @@ function JourneyMenu({ open, onClose }) {
       onMouseLeave={onClose}
     >
       <div className="p-3 border-b border-white/10">
-        <div className="text-xs uppercase tracking-wide text-indigo-300">Featured Stories</div>
+        <div className="text-xs uppercase tracking-wide text-indigo-300">
+          Featured Stories
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 p-2">
+      {/* Linear (single column) list */}
+      <ul className="divide-y divide-white/10">
         {stories.map((s) => (
-          <a
-            key={s.title}
-            href={s.link || '#/journey'}
-            className="group flex items-start gap-3 rounded-xl px-3 py-2 hover:bg-white/5 focus:bg-white/5 outline-none"
-            role="menuitem"
-          >
-            <img
-              src={s.img}
-              alt=""
-              onError={(e) => (e.currentTarget.style.opacity = 0.2)}
-              className="w-12 h-12 rounded-lg object-cover ring-1 ring-white/10 flex-shrink-0"
-            />
-            <div className="min-w-0">
-              <div className="text-sm font-medium text-slate-50 truncate group-hover:text-white">
-                {s.title}
+          <li key={s.title}>
+            <a
+              href={s.link || '#/journey'}
+              className="flex items-center gap-3 px-3 py-3 hover:bg-white/5 focus:bg-white/5 outline-none"
+              role="menuitem"
+            >
+              <img
+                src={s.img}
+                alt=""
+                onError={(e) => (e.currentTarget.style.opacity = 0.2)}
+                className="w-12 h-12 rounded-lg object-cover ring-1 ring-white/10 flex-shrink-0"
+              />
+              <div className="min-w-0">
+                <div className="text-sm font-medium text-slate-50 truncate">
+                  {s.title}
+                </div>
+                <div className="text-[11px] text-indigo-300/90">
+                  {s.year || ''}
+                </div>
+                <div className="text-[12px] text-slate-300/80 line-clamp-1">
+                  {s.desc}
+                </div>
               </div>
-              <div className="text-[11px] text-indigo-300/90">{s.year || ''}</div>
-              <div className="text-[12px] text-slate-300/80 line-clamp-2">{s.desc}</div>
-            </div>
-          </a>
+            </a>
+          </li>
         ))}
-      </div>
+      </ul>
 
       <div className="p-2 border-t border-white/10">
         <a
