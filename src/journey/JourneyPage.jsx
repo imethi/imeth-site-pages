@@ -1,19 +1,79 @@
 // src/journey/JourneyPage.jsx
 import React from 'react'
-import { Search, Filter, ExternalLink, Beaker, Shield, BookOpen, MapPin } from 'lucide-react'
-import stories from './data/featuredStories.js'
 import { Card, Pill } from '../ui/brand.jsx'
+import stories from './data/featuredStories.js'
+import {
+  Beaker,
+  Shield,
+  BookOpen,
+  GraduationCap,
+  Hospital,
+  Microscope,
+} from 'lucide-react'
+
+const BASE = import.meta.env.BASE_URL
+const WAVE_IMG = `${BASE}images/imeth-wave.png`
 
 /* =========================
-   Featured Stories (top)
+   HERO
    ========================= */
+function JourneyHero() {
+  return (
+    <section className="max-w-6xl mx-auto px-6 md:px-8 pt-10">
+      <Card className="overflow-hidden p-0">
+        <div className="relative grid md:grid-cols-2 gap-6 items-center">
+          {/* Glow / backdrop */}
+          <div className="absolute -inset-6 bg-gradient-to-br from-indigo-600/10 via-fuchsia-500/10 to-emerald-500/10 blur-2xl pointer-events-none" />
 
+          {/* Copy */}
+          <div className="relative p-6 md:p-10">
+            <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-slate-950 dark:text-slate-50">
+              <span className="inline-block">My Journey</span>
+              <span className="block h-[3px] w-28 mt-3 rounded-full bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-emerald-500" />
+            </h1>
+            <p className="mt-4 text-slate-900 dark:text-slate-100/90">
+              I’ve been chasing one question from different angles: <em>how do we catch risk earlier and care more humanly?</em> That thread pulled me from movement science and rehab into harm-reduction on campus, mental-health equity, and now molecular imaging with multi-omics for prevention-first medicine. This page is a living notebook of experiments, teams, and useful failures—plus the ideas I keep returning to: curiosity, access, and turning evidence into systems that work.
+            </p>
+            <a
+              href="#featured"
+              className="mt-6 inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-indigo-600 text-white hover:opacity-90 transition"
+            >
+              Explore Featured Stories →
+            </a>
+          </div>
+
+          {/* Character */}
+          <div className="relative p-6 md:p-10">
+            <div className="mx-auto max-w-[360px]">
+              <img
+                src={WAVE_IMG}
+                alt="Doctor illustration"
+                className="w-full h-auto object-contain select-none"
+              />
+            </div>
+          </div>
+        </div>
+      </Card>
+    </section>
+  )
+}
+
+/* =========================
+   FEATURED STORIES
+   ========================= */
 function FeaturedStories() {
   return (
-    <section className="max-w-6xl mx-auto px-6 md:px-8 py-10">
+    <section id="featured" className="max-w-6xl mx-auto px-6 md:px-8 py-12">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl md:text-3xl font-semibold text-slate-950 dark:text-slate-50">Featured Stories</h2>
-        <a href="#/journey" className="text-sm text-indigo-700 dark:text-indigo-300 hover:underline">Chronological</a>
+        <h2 className="text-2xl md:text-3xl font-semibold text-slate-950 dark:text-slate-50">
+          Featured Stories
+        </h2>
+        <a
+          href="#timeline"
+          className="text-sm text-indigo-700 dark:text-indigo-300 hover:underline"
+        >
+          Jump to timeline
+        </a>
       </div>
 
       <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -28,14 +88,22 @@ function FeaturedStories() {
                 />
               </div>
               <div className="p-4">
-                <div className="text-xs text-slate-900/70 dark:text-slate-100/70">{s.when}</div>
-                <h3 className="mt-1 font-semibold text-slate-950 dark:text-slate-50">{s.title}</h3>
-                <p className="mt-2 text-sm text-slate-900/85 dark:text-slate-100/85">{s.summary}</p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {s.chips?.slice(0, 4).map(c => <Pill key={c}>{c}</Pill>)}
+                <div className="text-xs text-slate-900/70 dark:text-slate-100/70">
+                  {s.when}
                 </div>
-                <div className="mt-3 text-sm text-indigo-700 dark:text-indigo-300 inline-flex items-center gap-1">
-                  Read More <ExternalLink className="w-4 h-4" />
+                <h3 className="mt-1 font-semibold text-slate-950 dark:text-slate-50">
+                  {s.title}
+                </h3>
+                <p className="mt-2 text-sm text-slate-900/85 dark:text-slate-100/85">
+                  {s.summary}
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {s.chips?.slice(0, 4).map((c) => (
+                    <Pill key={c}>{c}</Pill>
+                  ))}
+                </div>
+                <div className="mt-3 text-sm text-indigo-700 dark:text-indigo-300">
+                  Read more →
                 </div>
               </div>
             </Card>
@@ -47,271 +115,170 @@ function FeaturedStories() {
 }
 
 /* =========================
-   Directory (“Everything…”)
+   TIMELINE
    ========================= */
-
-const DIR_ITEMS = [
+const TIMELINE = [
   {
-    title: 'Stanford Fellowship: Molecular Imaging of the Brain–Gut Axis',
-    when: '2025',
+    year: '2025',
+    title: 'Molecular Imaging Fellowship',
+    org: 'Stanford Radiology',
     summary:
-      'Investigating how PET/MRI + multi-omics can surface early gut–brain biomarkers linked to dementia risk.',
-    chips: ['Research', 'Imaging', 'Prevention-first', 'Brain–gut'],
+      'PET/MRI + multi-omics for early biomarkers along the brain–gut axis.',
+    chips: ['Imaging', 'Prevention-first', 'Brain–gut'],
+    icon: Beaker,
     href: '#/journey/stanford',
-    icon: <Beaker className="w-4 h-4" />
+    thumbnail: stories.find((s) => s.href?.includes('stanford'))?.image,
   },
   {
-    title: 'The Naloxone Project: Saving Lives on Campus',
-    when: '2024–2025',
+    year: '2024–2025',
+    title: 'The Naloxone Project',
+    org: 'McMaster University',
     summary:
-      'Placed 32 emergency naloxone kits across McMaster to strengthen overdose response.',
-    chips: ['Policy', 'Campus', 'Harm reduction', 'Operations'],
+      'Placed 32 emergency naloxone kits; training and response workflows.',
+    chips: ['Harm reduction', 'Operations', 'Policy'],
+    icon: Shield,
     href: '#/journey/naloxone',
-    icon: <Shield className="w-4 h-4" />
+    thumbnail: stories.find((s) => s.href?.includes('naloxone'))?.image,
   },
   {
-    title: 'CAMH Public Health & Policy Work',
-    when: 'Ongoing',
-    summary:
-      'Youth-centred harm reduction + culturally responsive, equitable access; policy feedback & program input.',
-    chips: ['Policy', 'Health equity', 'Mental health'],
-    href: '#/journey/camh',
-    icon: <BookOpen className="w-4 h-4" />
-  },
-  {
+    year: '2024',
     title: 'Paediatric Research (INGAUGE Lab)',
-    when: '2024',
+    org: 'University of Manitoba — Dr. Roberta Woodgate',
     summary:
-      'Child/youth navigation of complex care; inclusion-centred design with Dr. Roberta Woodgate.',
-    chips: ['Research', 'Child health', 'Equity', 'Qualitative'],
+      'Child/youth navigation of complex care; inclusion-centred design.',
+    chips: ['Qualitative', 'Equity', 'Child health'],
+    icon: Microscope,
     href: '#/journey/ingauge',
-    icon: <Beaker className="w-4 h-4" />
   },
   {
-    title: 'Juravinski Cancer Centre (HHS)',
-    when: 'Earlier',
+    year: 'Ongoing',
+    title: 'CAMH Public Health Research',
+    org: 'Centre for Addiction and Mental Health',
     summary:
-      'Clinical operations across multidisciplinary safety culture and patient-care workflows.',
+      'Harm-reduction + culturally informed models for equitable access.',
+    chips: ['Mental health', 'Equity', 'Policy'],
+    icon: BookOpen,
+    href: '#/journey/camh',
+    thumbnail: stories.find((s) => s.href?.includes('camh'))?.image,
+  },
+  {
+    year: 'Earlier',
+    title: 'Founder & Director — SHIELD',
+    org: 'McMaster University',
+    summary:
+      'Prevention-first health literacy; workshops and peer training.',
+    chips: ['Prevention', 'Leadership'],
+    icon: GraduationCap,
+    href: '#/journey/shield',
+  },
+  {
+    year: 'Earlier',
+    title: 'Oncology Department Staff',
+    org: 'HHS — Juravinski Cancer Centre',
+    summary:
+      'Clinical ops exposure: multidisciplinary teams and safety culture.',
     chips: ['Clinical ops', 'Oncology'],
+    icon: Hospital,
     href: '#/journey/jcc',
-    icon: <MapPin className="w-4 h-4" />
   },
-  {
-    title: 'McMaster Department of Medicine Research',
-    when: '2025–present',
-    summary:
-      'AI/LLM applications in clinical & academic environments; trustworthy, usable, bias-aware tooling.',
-    chips: ['Research', 'AI/LLM', 'Trustworthy AI'],
-    href: '#/journey/mcmaster-dom',
-    icon: <Beaker className="w-4 h-4" />
-  },
-  {
-    title: 'Publications',
-    when: 'Selected outlets',
-    summary:
-      'Logos + links: MDPI, PLOS, SAGE, MedCity News, NIH, Stanford Medicine, and more.',
-    chips: ['Writing', 'Impact'],
-    href: '#/publications',
-    icon: <ExternalLink className="w-4 h-4" />
-  },
-  {
-    title: 'About Me',
-    when: 'Background',
-    summary:
-      'Kinesiology + Psychology + Rehab Science; prevention-first medicine with imaging and policy.',
-    chips: ['Profile'],
-    href: '#/about',
-    icon: <ExternalLink className="w-4 h-4" />
-  },
-  {
-    title: 'Contact',
-    when: 'Collaborate',
-    summary:
-      'Research collabs, policy projects, talks/workshops, or campus harm-reduction support.',
-    chips: ['Connect'],
-    href: '#/contact',
-    icon: <ExternalLink className="w-4 h-4" />
-  }
 ]
 
-const DIR_TAGS = [
-  'Research',
-  'Policy',
-  'Imaging',
-  'Campus',
-  'Health equity',
-  'AI/LLM',
-  'Child health',
-  'Clinical ops'
-]
-
-const DirectoryContext = React.createContext(null)
-
-function JourneyDirectoryControls() {
-  const [query, setQuery] = React.useState('')
-  const [tags, setTags] = React.useState([])
-  const [limit, setLimit] = React.useState(9)
-
-  const value = React.useMemo(
-    () => ({ query, setQuery, tags, setTags, limit, setLimit }),
-    [query, tags, limit]
-  )
-
+function TimelineItem({ item, last }) {
+  const Icon = item.icon || Beaker
   return (
-    <DirectoryContext.Provider value={value}>
-      <div className="px-5 md:px-6 py-4 border-b border-black/5 dark:border-white/10 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-        {/* Search */}
-        <label className="relative flex-1 max-w-xl">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-900/60 dark:text-slate-100/60" />
-          <input
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            placeholder="Search titles, summaries, or tags…"
-            className="w-full pl-9 pr-3 py-2 rounded-xl bg-white dark:bg-slate-900 ring-1 ring-black/10 dark:ring-white/10 text-slate-900 dark:text-slate-50"
-          />
-        </label>
+    <div className="relative pl-8">
+      {/* line */}
+      <span className="absolute left-3 top-0 bottom-0 w-[2px] rounded bg-slate-300/50 dark:bg-slate-700/60" />
+      {/* dot */}
+      <span className="absolute left-[9px] top-2 w-3 h-3 rounded-full bg-indigo-500 ring-4 ring-indigo-500/20" />
 
-        {/* Filters */}
-        <div className="flex flex-wrap gap-2">
-          <span className="inline-flex items-center gap-2 text-xs text-slate-900/70 dark:text-slate-100/70">
-            <Filter className="w-4 h-4" /> Filter
-          </span>
-          {DIR_TAGS.map(t => {
-            const active = tags.includes(t)
-            return (
-              <button
-                key={t}
-                onClick={() =>
-                  active
-                    ? setTags(tags.filter(x => x !== t))
-                    : setTags([...tags, t])
-                }
-                className={`px-3 py-1 rounded-full text-sm ring-1 transition ${
-                  active
-                    ? 'bg-indigo-600 text-white ring-indigo-600'
-                    : 'bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50 ring-black/10 dark:ring-white/10'
-                }`}
-              >
-                {t}
-              </button>
-            )
-          })}
-          {(tags.length > 0 || query) && (
-            <button
-              onClick={() => { setTags([]); setQuery('') }}
-              className="px-3 py-1 rounded-full text-sm bg-white/60 dark:bg-slate-800/60 text-slate-900 dark:text-slate-50 ring-1 ring-black/10 dark:ring-white/10"
-            >
-              Clear
-            </button>
-          )}
-        </div>
+      <div className="text-xs text-slate-900/70 dark:text-slate-100/70">
+        {item.year}
       </div>
-    </DirectoryContext.Provider>
+
+      <Card className="mt-2 p-0 overflow-hidden">
+        <div className="grid md:grid-cols-[120px_1fr] gap-4 p-4">
+          {/* thumb (optional) */}
+          <div className="hidden md:block">
+            {item.thumbnail ? (
+              <div className="aspect-[4/3] rounded-lg overflow-hidden bg-slate-200/40 dark:bg-slate-800/40">
+                <img
+                  src={item.thumbnail}
+                  alt=""
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ) : (
+              <div className="aspect-[4/3] rounded-lg grid place-items-center bg-slate-200/40 dark:bg-slate-800/40">
+                <Icon className="w-6 h-6 text-slate-500" />
+              </div>
+            )}
+          </div>
+
+          {/* content */}
+          <div>
+            <div className="flex items-center gap-2 text-slate-950 dark:text-slate-50">
+              <Icon className="w-4 h-4 opacity-70" />
+              <h3 className="font-semibold">{item.title}</h3>
+            </div>
+            <div className="mt-1 text-xs text-slate-900/70 dark:text-slate-100/70">
+              {item.org}
+            </div>
+            <p className="mt-2 text-sm text-slate-900 dark:text-slate-100/90">
+              {item.summary}
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {item.chips?.map((c) => (
+                <Pill key={c}>{c}</Pill>
+              ))}
+            </div>
+            {item.href && (
+              <a
+                href={item.href}
+                className="mt-3 inline-block text-sm text-indigo-700 dark:text-indigo-300 hover:underline"
+              >
+                View →
+              </a>
+            )}
+          </div>
+        </div>
+      </Card>
+
+      {!last && <div className="h-6" />}
+    </div>
   )
 }
 
-function JourneyDirectoryGrid() {
-  const ctx = React.useContext(DirectoryContext) || {}
-  const { query = '', tags = [], limit = 9, setLimit = () => {} } = ctx
-
-  const q = query.trim().toLowerCase()
-
-  const filtered = React.useMemo(() => {
-    return DIR_ITEMS.filter(it => {
-      const hay = [
-        it.title.toLowerCase(),
-        it.summary.toLowerCase(),
-        ...(it.chips || []).map(c => c.toLowerCase())
-      ].join(' ')
-      const matchesQ = q ? hay.includes(q) : true
-      const matchesTags = tags.length ? tags.every(t => it.chips?.includes(t)) : true
-      return matchesQ && matchesTags
-    })
-  }, [q, tags])
-
-  const showing = filtered.slice(0, limit)
-
+function JourneyTimeline() {
   return (
-    <>
-      <div className="px-5 md:px-6 py-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {showing.map((it, i) => (
-          <a
-            key={`${it.title}-${i}`}
-            href={it.href}
-            className="group rounded-2xl ring-1 ring-black/10 dark:ring-white/10 bg-white/60 dark:bg-slate-900/60 p-4 hover:shadow-sm hover:ring-black/20 transition"
-          >
-            <div className="flex items-center gap-2 text-slate-900 dark:text-slate-50">
-              <span className="opacity-70">{it.icon}</span>
-              <div className="font-semibold">{it.title}</div>
-            </div>
-            <div className="mt-1 text-xs text-slate-900/60 dark:text-slate-100/60">{it.when}</div>
-            <p className="mt-2 text-sm leading-relaxed text-slate-900 dark:text-slate-100/90">{it.summary}</p>
-            <div className="mt-3 flex flex-wrap gap-2">{it.chips?.map(c => <Pill key={c}>{c}</Pill>)}</div>
-            <div className="mt-3 text-sm text-indigo-700 dark:text-indigo-300 inline-flex items-center gap-1">
-              Open <ExternalLink className="w-4 h-4" />
-            </div>
-          </a>
+    <section id="timeline" className="max-w-6xl mx-auto px-6 md:px-8 pb-14">
+      <h2 className="text-2xl md:text-3xl font-semibold text-slate-950 dark:text-slate-50">
+        Trend over time
+      </h2>
+      <p className="mt-2 text-sm text-slate-900/80 dark:text-slate-100/80">
+        A rough chronology showing the arc from movement &amp; prevention → harm
+        reduction &amp; policy → imaging + multi-omics for earlier detection.
+      </p>
+
+      <div className="mt-6">
+        {TIMELINE.map((it, i) => (
+          <TimelineItem key={i} item={it} last={i === TIMELINE.length - 1} />
         ))}
       </div>
-
-      <div className="px-5 md:px-6 pb-6">
-        {filtered.length > limit ? (
-          <button
-            onClick={() => setLimit(limit + 9)}
-            className="rounded-xl px-4 py-2 bg-white dark:bg-slate-800 ring-1 ring-black/10 dark:ring-white/10 text-slate-900 dark:text-slate-50 hover:opacity-90"
-          >
-            Show more ({filtered.length - limit} more)
-          </button>
-        ) : filtered.length > 9 && limit > 9 ? (
-          <button
-            onClick={() => setLimit(9)}
-            className="rounded-xl px-4 py-2 bg-white dark:bg-slate-800 ring-1 ring-black/10 dark:ring-white/10 text-slate-900 dark:text-slate-50 hover:opacity-90"
-          >
-            Collapse
-          </button>
-        ) : null}
-      </div>
-    </>
+    </section>
   )
 }
 
 /* =========================
-   Page
+   PAGE
    ========================= */
 
 export default function JourneyPage() {
   return (
     <div className="pb-8">
-      {/* Hero Blurb */}
-      <section className="max-w-6xl mx-auto px-6 md:px-8 pt-10">
-        <Card className="p-6 md:p-8 bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-emerald-500/10">
-          <div className="md:w-3/4">
-            <h1 className="text-3xl md:text-4xl font-semibold text-slate-950 dark:text-slate-50">My Journey</h1>
-            <p className="mt-3 text-slate-900 dark:text-slate-100/90">
-              A deeper look at projects, teams, and ideas that shaped how I think about prevention-first medicine,
-              imaging, and public health.
-            </p>
-          </div>
-        </Card>
-      </section>
-
-      {/* Featured */}
+      <JourneyHero />
       <FeaturedStories />
-
-      {/* Directory */}
-      <section id="journey-directory" className="max-w-6xl mx-auto px-6 md:px-8 py-8">
-        <Card className="p-0 overflow-hidden">
-          <div className="px-5 md:px-6 py-5 border-b border-black/5 dark:border-white/10 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-emerald-500/5">
-            <h2 className="text-xl md:text-2xl font-semibold text-slate-950 dark:text-slate-50">Everything in one place</h2>
-            <p className="mt-1 text-slate-900/80 dark:text-slate-100/80">
-              Browse all projects, research, and pages. Use search and filters to jump straight to what you’re after.
-            </p>
-          </div>
-
-          <JourneyDirectoryControls />
-          <JourneyDirectoryGrid />
-        </Card>
-      </section>
+      <JourneyTimeline />
     </div>
   )
 }
