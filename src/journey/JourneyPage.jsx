@@ -2,6 +2,9 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { Card } from '../ui/brand.jsx'
 import stories from './data/featuredStories.js'
+import { Search, Filter, ExternalLink, Beaker, Shield, BookOpen, MapPin } from 'lucide-react'
+import { Card, Pill } from '../ui/brand.jsx'
+
 
 const BASE = import.meta.env.BASE_URL
 const FALLBACK = `${BASE}images/journey-featured/_fallback.jpg`
