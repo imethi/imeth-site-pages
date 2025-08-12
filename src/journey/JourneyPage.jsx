@@ -14,6 +14,19 @@ import {
 const BASE = import.meta.env.BASE_URL
 const WAVE_IMG = `${BASE}images/imeth-wave.png`
 
+const FALLBACK =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="#c7d2fe"/><stop offset="100%" stop-color="#fbcfe8"/></linearGradient></defs><rect width="400" height="300" fill="url(#g)"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="system-ui,Segoe UI,Roboto,Helvetica,Arial" font-size="16" fill="#0f172a">image</text></svg>`
+  )
+
+function srcUrl(path) {
+  if (!path) return FALLBACK
+  if (path.startsWith('http')) return path
+  if (path.startsWith(BASE)) return path
+  return BASE + path.replace(/^\/+/, '')
+}
+
 /* =========================
    HERO
    ========================= */
@@ -22,10 +35,7 @@ function JourneyHero() {
     <section className="max-w-6xl mx-auto px-6 md:px-8 pt-10">
       <Card className="overflow-hidden p-0">
         <div className="relative grid md:grid-cols-2 gap-6 items-center">
-          {/* Glow / backdrop */}
           <div className="absolute -inset-6 bg-gradient-to-br from-indigo-600/10 via-fuchsia-500/10 to-emerald-500/10 blur-2xl pointer-events-none" />
-
-          {/* Copy */}
           <div className="relative p-6 md:p-10">
             <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-slate-950 dark:text-slate-50">
               <span className="inline-block">My Journey</span>
@@ -41,14 +51,13 @@ function JourneyHero() {
               Explore Featured Stories →
             </a>
           </div>
-
-          {/* Character */}
           <div className="relative p-6 md:p-10">
             <div className="mx-auto max-w-[360px]">
               <img
                 src={WAVE_IMG}
                 alt="Doctor illustration"
                 className="w-full h-auto object-contain select-none"
+                onError={(e) => (e.currentTarget.src = FALLBACK)}
               />
             </div>
           </div>
@@ -59,9 +68,48 @@ function JourneyHero() {
 }
 
 /* =========================
-   FEATURED STORIES
+   FEATURED STORIES – INFINITE CAROUSEL
    ========================= */
+function FeaturedCarouselItem({ s }) {
+  return (
+    <a href={s.href} className="group block">
+      <Card className="p-0 overflow-hidden w-[320px] md:w-[360px] h-[380px] md:h-[400px]">
+        <div className="aspect-[4/3] bg-slate-200/40 dark:bg-slate-800/40 overflow-hidden">
+          <img
+            src={srcUrl(s.image)}
+            alt={s.title}
+            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
+            onError={(e) => (e.currentTarget.src = FALLBACK)}
+          />
+        </div>
+        <div className="p-4">
+          <div className="text-xs text-slate-900/70 dark:text-slate-100/70">
+            {s.when}
+          </div>
+          <h3 className="mt-1 font-semibold text-slate-950 dark:text-slate-50 line-clamp-2">
+            {s.title}
+          </h3>
+          <p className="mt-2 text-sm text-slate-900/85 dark:text-slate-100/85 line-clamp-3">
+            {s.summary}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {s.chips?.slice(0, 4).map((c) => (
+              <Pill key={c}>{c}</Pill>
+            ))}
+          </div>
+          <div className="mt-3 text-sm text-indigo-700 dark:text-indigo-300">
+            Read more →
+          </div>
+        </div>
+      </Card>
+    </a>
+  )
+}
+
 function FeaturedStories() {
+  // Duplicate list so the marquee loops cleanly
+  const list = [...stories, ...stories]
+
   return (
     <section id="featured" className="max-w-6xl mx-auto px-6 md:px-8 py-12">
       <div className="flex items-center justify-between">
@@ -76,46 +124,32 @@ function FeaturedStories() {
         </a>
       </div>
 
-      <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {stories.slice(0, 6).map((s, i) => (
-          <a key={i} href={s.href} className="group">
-            <Card className="p-0 overflow-hidden h-full">
-              <div className="aspect-[4/3] bg-slate-200/40 dark:bg-slate-800/40 overflow-hidden">
-                <img
-                  src={s.image}
-                  alt={s.title}
-                  className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
-                />
-              </div>
-              <div className="p-4">
-                <div className="text-xs text-slate-900/70 dark:text-slate-100/70">
-                  {s.when}
-                </div>
-                <h3 className="mt-1 font-semibold text-slate-950 dark:text-slate-50">
-                  {s.title}
-                </h3>
-                <p className="mt-2 text-sm text-slate-900/85 dark:text-slate-100/85">
-                  {s.summary}
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {s.chips?.slice(0, 4).map((c) => (
-                    <Pill key={c}>{c}</Pill>
-                  ))}
-                </div>
-                <div className="mt-3 text-sm text-indigo-700 dark:text-indigo-300">
-                  Read more →
-                </div>
-              </div>
-            </Card>
-          </a>
-        ))}
+      {/* Infinite marquee row */}
+      <div className="mt-6 overflow-hidden">
+        <div
+          className="inline-flex items-stretch gap-6 whitespace-nowrap will-change-transform animate-marquee motion-reduce:animate-none"
+          style={{ width: 'max-content', animationDuration: '38s' }}
+        >
+          {list.map((s, idx) => (
+            <FeaturedCarouselItem key={`${s.title}-${idx}`} s={s} />
+          ))}
+        </div>
+      </div>
+
+      {/* Accessible fallback for reduced motion users */}
+      <div className="sr-only">
+        <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {stories.map((s, i) => (
+            <FeaturedCarouselItem key={`fallback-${i}`} s={s} />
+          ))}
+        </div>
       </div>
     </section>
   )
 }
 
 /* =========================
-   TIMELINE
+   TIMELINE (restored)
    ========================= */
 const TIMELINE = [
   {
@@ -187,9 +221,7 @@ function TimelineItem({ item, last }) {
   const Icon = item.icon || Beaker
   return (
     <div className="relative pl-8">
-      {/* line */}
       <span className="absolute left-3 top-0 bottom-0 w-[2px] rounded bg-slate-300/50 dark:bg-slate-700/60" />
-      {/* dot */}
       <span className="absolute left-[9px] top-2 w-3 h-3 rounded-full bg-indigo-500 ring-4 ring-indigo-500/20" />
 
       <div className="text-xs text-slate-900/70 dark:text-slate-100/70">
@@ -198,14 +230,14 @@ function TimelineItem({ item, last }) {
 
       <Card className="mt-2 p-0 overflow-hidden">
         <div className="grid md:grid-cols-[120px_1fr] gap-4 p-4">
-          {/* thumb (optional) */}
           <div className="hidden md:block">
             {item.thumbnail ? (
               <div className="aspect-[4/3] rounded-lg overflow-hidden bg-slate-200/40 dark:bg-slate-800/40">
                 <img
-                  src={item.thumbnail}
+                  src={srcUrl(item.thumbnail)}
                   alt=""
                   className="w-full h-full object-cover"
+                  onError={(e) => (e.currentTarget.src = FALLBACK)}
                 />
               </div>
             ) : (
@@ -215,7 +247,6 @@ function TimelineItem({ item, last }) {
             )}
           </div>
 
-          {/* content */}
           <div>
             <div className="flex items-center gap-2 text-slate-950 dark:text-slate-50">
               <Icon className="w-4 h-4 opacity-70" />
