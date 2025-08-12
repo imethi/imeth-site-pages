@@ -304,15 +304,23 @@ export default function JourneyPage() {
         <FeaturedMarquee items={FEATURED_STORIES} />
       </div>
 
-      {/* Trend over time */}
-      <div className="mt-12">
-        <h2 className="text-2xl md:text-3xl font-semibold text-slate-50">Trend over time</h2>
-        <p className="mt-2 text-slate-100/90 max-w-3xl">
-          A rough chronology showing the arc from movement & prevention → harm reduction & policy →
-          imaging + multi-omics for earlier detection.
-        </p>
-        <Timeline groups={timeline} />
-      </div>
-    </section>
-  )
-}
+   {/* ---------- Journey Directory (replaces timeline) ---------- */}
+<section id="journey-directory" className="max-w-6xl mx-auto px-6 md:px-8 py-14">
+  <Card className="p-0 overflow-hidden">
+    {/* Header */}
+    <div className="px-5 md:px-6 py-5 border-b border-black/5 dark:border-white/10 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-emerald-500/5">
+      <h2 className="text-xl md:text-2xl font-semibold text-slate-950 dark:text-slate-50">
+        Everything in one place
+      </h2>
+      <p className="mt-1 text-slate-900/80 dark:text-slate-100/80">
+        Browse all projects, research, and pages. Use search and filters to jump straight to what you’re after.
+      </p>
+    </div>
+
+    {/* Controls */}
+    <JourneyDirectoryControls />
+
+    {/* Grid of items */}
+    <JourneyDirectoryGrid />
+  </Card>
+</section>
