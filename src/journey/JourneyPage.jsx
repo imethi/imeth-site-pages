@@ -324,3 +324,209 @@ export default function JourneyPage() {
     <JourneyDirectoryGrid />
   </Card>
 </section>
+
+// ---- DATA ----
+const DIR_ITEMS = [
+  {
+    title: 'Stanford Fellowship: Molecular Imaging of the Brain–Gut Axis',
+    when: '2025',
+    summary: 'Investigating how PET/MRI + multi-omics can surface early gut–brain biomarkers linked to dementia risk.',
+    chips: ['Research', 'Imaging', 'Prevention-first', 'Brain–gut'],
+    href: '#/journey/stanford',
+    icon: <Beaker className="w-4 h-4" />
+  },
+  {
+    title: 'The Naloxone Project: Saving Lives on Campus',
+    when: '2024–2025',
+    summary: 'Placed 32 emergency naloxone kits across McMaster to strengthen overdose response.',
+    chips: ['Policy', 'Campus', 'Harm reduction', 'Operations'],
+    href: '#/journey/naloxone',
+    icon: <Shield className="w-4 h-4" />
+  },
+  {
+    title: 'CAMH Public Health & Policy Work',
+    when: 'Ongoing',
+    summary: 'Youth-centred harm reduction + culturally responsive, equitable access; policy feedback & program input.',
+    chips: ['Policy', 'Health equity', 'Mental health'],
+    href: '#/journey/camh',
+    icon: <BookOpen className="w-4 h-4" />
+  },
+  {
+    title: 'Paediatric Research (INGAUGE Lab)',
+    when: '2024',
+    summary: 'Child/youth navigation of complex care; inclusion-centred design with Dr. Roberta Woodgate.',
+    chips: ['Research', 'Child health', 'Equity', 'Qualitative'],
+    href: '#/journey/ingauge',
+    icon: <Beaker className="w-4 h-4" />
+  },
+  {
+    title: 'Juravinski Cancer Centre (HHS)',
+    when: 'Earlier',
+    summary: 'Clinical operations across multidisciplinary safety culture and patient-care workflows.',
+    chips: ['Clinical ops', 'Oncology'],
+    href: '#/journey/jcc',
+    icon: <MapPin className="w-4 h-4" />
+  },
+  {
+    title: 'McMaster Department of Medicine Research',
+    when: '2025–present',
+    summary: 'AI/LLM applications in clinical & academic environments; trustworthy, usable, bias-aware tooling.',
+    chips: ['Research', 'AI/LLM', 'Trustworthy AI'],
+    href: '#/journey/mcmaster-dom',
+    icon: <Beaker className="w-4 h-4" />
+  },
+  {
+    title: 'Publications',
+    when: 'Selected outlets',
+    summary: 'Logos + links: MDPI, PLOS, SAGE, MedCity News, NIH, Stanford Medicine, and more.',
+    chips: ['Writing', 'Impact'],
+    href: '#/publications',
+    icon: <ExternalLink className="w-4 h-4" />
+  },
+  {
+    title: 'About Me',
+    when: 'Background',
+    summary: 'Kinesiology + Psychology + Rehab Science; prevention-first medicine with imaging and policy.',
+    chips: ['Profile'],
+    href: '#/about',
+    icon: <ExternalLink className="w-4 h-4" />
+  },
+  {
+    title: 'Contact',
+    when: 'Collaborate',
+    summary: 'Research collabs, policy projects, talks/workshops, or campus harm-reduction support.',
+    chips: ['Connect'],
+    href: '#/contact',
+    icon: <ExternalLink className="w-4 h-4" />
+  }
+]
+
+// You can tweak these to match your vibe
+const DIR_TAGS = ['Research', 'Policy', 'Imaging', 'Campus', 'Health equity', 'AI/LLM', 'Child health', 'Clinical ops']
+
+// ---- STATE (context via simple React state) ----
+const DirectoryContext = React.createContext(null)
+
+function JourneyDirectoryControls() {
+  const [query, setQuery] = React.useState('')
+  const [tags, setTags] = React.useState<string[]>([])
+  const [limit, setLimit] = React.useState(8)
+
+  const value = React.useMemo(() => ({ query, setQuery, tags, setTags, limit, setLimit }), [query, tags, limit])
+
+  return (
+    <DirectoryContext.Provider value={value}>
+      <div className="px-5 md:px-6 py-4 border-b border-black/5 dark:border-white/10 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+        {/* Search */}
+        <label className="relative flex-1 max-w-xl">
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-900/60 dark:text-slate-100/60" />
+          <input
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            placeholder="Search titles, summaries, or tags…"
+            className="w-full pl-9 pr-3 py-2 rounded-xl bg-white dark:bg-slate-900 ring-1 ring-black/10 dark:ring-white/10 text-slate-900 dark:text-slate-50"
+          />
+        </label>
+
+        {/* Tags */}
+        <div className="flex flex-wrap gap-2">
+          <span className="inline-flex items-center gap-2 text-xs text-slate-900/70 dark:text-slate-100/70">
+            <Filter className="w-4 h-4" /> Filter
+          </span>
+          {DIR_TAGS.map(t => (
+            <button
+              key={t}
+              onClick={() => setTags(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])}
+              className={`px-3 py-1 rounded-full text-sm ring-1 transition ${
+                tags.includes(t)
+                  ? 'bg-indigo-600 text-white ring-indigo-600'
+                  : 'bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50 ring-black/10 dark:ring-white/10'
+              }`}
+            >
+              {t}
+            </button>
+          ))}
+          {(tags.length > 0 || query) && (
+            <button
+              onClick={() => { setTags([]); setQuery(''); }}
+              className="px-3 py-1 rounded-full text-sm bg-white/60 dark:bg-slate-800/60 text-slate-900 dark:text-slate-50 ring-1 ring-black/10 dark:ring-white/10"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+      </div>
+    </DirectoryContext.Provider>
+  )
+}
+
+function JourneyDirectoryGrid() {
+  const ctx = React.useContext(DirectoryContext)
+  // If controls aren’t mounted yet
+  const { query = '', tags = [], limit = 8, setLimit = () => {} } = ctx || {}
+
+  const q = query.trim().toLowerCase()
+  const filtered = React.useMemo(() => {
+    return DIR_ITEMS.filter(it => {
+      const hay = [
+        it.title.toLowerCase(),
+        it.summary.toLowerCase(),
+        ...(it.chips || []).map(c => c.toLowerCase())
+      ].join(' ')
+      const matchesQ = q ? hay.includes(q) : true
+      const matchesTags = tags.length ? tags.every(t => it.chips?.includes(t)) : true
+      return matchesQ && matchesTags
+    })
+  }, [q, tags])
+
+  const showing = filtered.slice(0, limit)
+
+  return (
+    <>
+      <div className="px-5 md:px-6 py-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {showing.map((it, i) => (
+          <a
+            key={`${it.title}-${i}`}
+            href={it.href}
+            className="group rounded-2xl ring-1 ring-black/10 dark:ring-white/10 bg-white/60 dark:bg-slate-900/60 p-4 hover:shadow-sm hover:ring-black/20 transition"
+          >
+            <div className="flex items-center gap-2 text-slate-900 dark:text-slate-50">
+              <span className="opacity-70">{it.icon}</span>
+              <div className="font-semibold">{it.title}</div>
+            </div>
+            <div className="mt-1 text-xs text-slate-900/60 dark:text-slate-100/60">{it.when}</div>
+            <p className="mt-2 text-sm leading-relaxed text-slate-900 dark:text-slate-100/90">
+              {it.summary}
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {it.chips?.map(c => <Pill key={c}>{c}</Pill>)}
+            </div>
+            <div className="mt-3 text-sm text-indigo-700 dark:text-indigo-300 inline-flex items-center gap-1">
+              Open <ExternalLink className="w-4 h-4" />
+            </div>
+          </a>
+        ))}
+      </div>
+
+      {/* Footer controls */}
+      <div className="px-5 md:px-6 pb-6">
+        {filtered.length > limit ? (
+          <button
+            onClick={() => setLimit(limit + 9)}
+            className="rounded-xl px-4 py-2 bg-white dark:bg-slate-800 ring-1 ring-black/10 dark:ring-white/10 text-slate-900 dark:text-slate-50 hover:opacity-90"
+          >
+            Show more ({filtered.length - limit} more)
+          </button>
+        ) : filtered.length > 9 && limit > 9 ? (
+          <button
+            onClick={() => setLimit(9)}
+            className="rounded-xl px-4 py-2 bg-white dark:bg-slate-800 ring-1 ring-black/10 dark:ring-white/10 text-slate-900 dark:text-slate-50 hover:opacity-90"
+          >
+            Collapse
+          </button>
+        ) : null}
+      </div>
+    </>
+  )
+}
+
