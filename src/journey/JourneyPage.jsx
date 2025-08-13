@@ -1,23 +1,15 @@
-// src/journey/JourneyPage.jsx
 import React from 'react'
 import { Card, Pill } from '../ui/brand.jsx'
 import stories from './data/featuredStories.js'
-import {
-  Beaker,
-  Shield,
-  BookOpen,
-  GraduationCap,
-  Hospital,
-  Microscope,
-} from 'lucide-react'
 
 const BASE = import.meta.env.BASE_URL
 const WAVE_IMG = `${BASE}images/imeth-wave.png`
+const FEATURED_DIR = `${BASE}images/journey-featured/`
 
 const FALLBACK =
   'data:image/svg+xml;utf8,' +
   encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="#c7d2fe"/><stop offset="100%" stop-color="#fbcfe8"/></linearGradient></defs><rect width="400" height="300" fill="url(#g)"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="system-ui,Segoe UI,Roboto,Helvetica,Arial" font-size="16" fill="#0f172a">image</text></svg>`
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360"><defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="#c7d2fe"/><stop offset="100%" stop-color="#fbcfe8"/></linearGradient></defs><rect width="480" height="360" fill="url(#g)"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="system-ui,Segoe UI,Roboto,Helvetica,Arial" font-size="16" fill="#0f172a">image</text></svg>`
   )
 
 function srcUrl(path) {
@@ -27,9 +19,9 @@ function srcUrl(path) {
   return BASE + path.replace(/^\/+/, '')
 }
 
-/* =========================
+/* -----------------------------
    HERO
-   ========================= */
+----------------------------- */
 function JourneyHero() {
   return (
     <section className="max-w-6xl mx-auto px-6 md:px-8 pt-10">
@@ -42,7 +34,14 @@ function JourneyHero() {
               <span className="block h-[3px] w-28 mt-3 rounded-full bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-emerald-500" />
             </h1>
             <p className="mt-4 text-slate-900 dark:text-slate-100/90">
-              I’ve been chasing one question from different angles: <em>how do we catch risk earlier and care more humanly?</em> That thread pulled me from movement science and rehab into harm-reduction on campus, mental-health equity, and now molecular imaging with multi-omics for prevention-first medicine. This page is a living notebook of experiments, teams, and useful failures—plus the ideas I keep returning to: curiosity, access, and turning evidence into systems that work.
+              I’ve been chasing one question from different angles: <em>how do we
+              catch risk earlier and care more humanly?</em> That thread pulled me
+              from movement science and rehab into harm-reduction on campus,
+              mental-health equity, and now molecular imaging with multi-omics for
+              prevention-first medicine. This page is a living notebook of
+              experiments, teams, and useful failures—plus the ideas I keep
+              returning to: curiosity, access, and turning evidence into systems
+              that work.
             </p>
             <a
               href="#featured"
@@ -67,13 +66,67 @@ function JourneyHero() {
   )
 }
 
-/* =========================
-   FEATURED STORIES – INFINITE CAROUSEL
-   ========================= */
-function FeaturedCarouselItem({ s }) {
+/* -----------------------------
+   YOUR EXTRA SLIDES (images you sent)
+----------------------------- */
+const EXTRA_SLIDES = [
+  {
+    title: 'Stanford Fellowship: Molecular Imaging',
+    when: '2025',
+    teaser: 'See the fellowship notes & outputs →',
+    href: '#/journey/stanford',
+    image: `${FEATURED_DIR}stanford.jpg`,
+    chips: ['Imaging', 'Brain–gut', 'Prevention-first'],
+  },
+  {
+    title: 'The Naloxone Project',
+    when: '2024–2025',
+    teaser: 'How we placed 32+ kits & trained responders →',
+    href: '#/journey/naloxone',
+    image: `${FEATURED_DIR}naloxone.jpg`,
+    chips: ['Harm reduction', 'Operations', 'Policy'],
+  },
+  {
+    title: 'CAMH: Public Health & Policy',
+    when: 'Ongoing',
+    teaser: 'Advisory work for equitable access & language →',
+    href: '#/journey/camh',
+    image: `${FEATURED_DIR}camh.jpg`,
+    chips: ['Mental health', 'Equity'],
+  },
+  {
+    title: 'Paediatric Research (INGAUGE Lab)',
+    when: '2024',
+    teaser: 'Child/youth navigation of complex care →',
+    href: '#/journey/ingauge',
+    image: `${FEATURED_DIR}manitoba.jpg`,
+    chips: ['Qualitative', 'Child health'],
+  },
+  {
+    title: 'McMaster Department of Medicine Research',
+    when: '2025—present',
+    teaser: 'Clinical AI & research workflows in practice →',
+    href: '#/journey/mcmaster-med',
+    image: `${FEATURED_DIR}mcmaster-medicine.jpg`,
+    chips: ['Clinical AI', 'Research'],
+  },
+  {
+    title: 'Juravinski Cancer Centre',
+    when: 'Earlier',
+    teaser: 'Multidisciplinary teams & safety culture →',
+    href: '#/journey/jcc',
+    image: `${FEATURED_DIR}jcc.jpg`,
+    chips: ['Oncology', 'Clinical ops'],
+  },
+]
+
+/* -----------------------------
+   FEATURED – INFINITE CAROUSEL
+----------------------------- */
+function FeaturedCard({ s }) {
   return (
-    <a href={s.href} className="group block">
-      <Card className="p-0 overflow-hidden w-[320px] md:w-[360px] h-[380px] md:h-[400px]">
+    <a href={s.href || '#/journey'} className="group block">
+      <Card className="p-0 overflow-hidden w-[320px] md:w-[360px] h-[400px]">
         <div className="aspect-[4/3] bg-slate-200/40 dark:bg-slate-800/40 overflow-hidden">
           <img
             src={srcUrl(s.image)}
@@ -83,22 +136,36 @@ function FeaturedCarouselItem({ s }) {
           />
         </div>
         <div className="p-4">
-          <div className="text-xs text-slate-900/70 dark:text-slate-100/70">
-            {s.when}
-          </div>
+          {s.when && (
+            <div className="text-xs text-slate-900/70 dark:text-slate-100/70">
+              {s.when}
+            </div>
+          )}
           <h3 className="mt-1 font-semibold text-slate-950 dark:text-slate-50 line-clamp-2">
             {s.title}
           </h3>
-          <p className="mt-2 text-sm text-slate-900/85 dark:text-slate-100/85 line-clamp-3">
-            {s.summary}
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {s.chips?.slice(0, 4).map((c) => (
-              <Pill key={c}>{c}</Pill>
-            ))}
-          </div>
+
+          {/* Priming line to encourage clicking */}
+          {s.teaser ? (
+            <p className="mt-2 text-sm italic text-indigo-700 dark:text-indigo-300">
+              {s.teaser}
+            </p>
+          ) : s.summary ? (
+            <p className="mt-2 text-sm text-slate-900/85 dark:text-slate-100/85 line-clamp-2">
+              {s.summary}
+            </p>
+          ) : null}
+
+          {s.chips?.length ? (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {s.chips.slice(0, 4).map((c) => (
+                <Pill key={c}>{c}</Pill>
+              ))}
+            </div>
+          ) : null}
+
           <div className="mt-3 text-sm text-indigo-700 dark:text-indigo-300">
-            Read more →
+            Open story →
           </div>
         </div>
       </Card>
@@ -107,8 +174,16 @@ function FeaturedCarouselItem({ s }) {
 }
 
 function FeaturedStories() {
-  // Duplicate list so the marquee loops cleanly
-  const list = [...stories, ...stories]
+  // Merge your existing stories with the six extra image slides
+  // De-dupe by title to avoid doubles if data overlaps.
+  const byTitle = new Map()
+  ;[...EXTRA_SLIDES, ...stories].forEach((s) => {
+    if (!byTitle.has(s.title)) byTitle.set(s.title, s)
+  })
+  const slides = Array.from(byTitle.values())
+
+  // Duplicate for seamless marquee
+  const loop = [...slides, ...slides]
 
   return (
     <section id="featured" className="max-w-6xl mx-auto px-6 md:px-8 py-12">
@@ -116,31 +191,27 @@ function FeaturedStories() {
         <h2 className="text-2xl md:text-3xl font-semibold text-slate-950 dark:text-slate-50">
           Featured Stories
         </h2>
-        <a
-          href="#timeline"
-          className="text-sm text-indigo-700 dark:text-indigo-300 hover:underline"
-        >
-          Jump to timeline
-        </a>
+        <span className="text-sm text-slate-900/70 dark:text-slate-100/70">
+          Scroll sideways • hover to pause
+        </span>
       </div>
 
-      {/* Infinite marquee row */}
       <div className="mt-6 overflow-hidden">
         <div
           className="inline-flex items-stretch gap-6 whitespace-nowrap will-change-transform animate-marquee motion-reduce:animate-none"
           style={{ width: 'max-content', animationDuration: '38s' }}
         >
-          {list.map((s, idx) => (
-            <FeaturedCarouselItem key={`${s.title}-${idx}`} s={s} />
+          {loop.map((s, idx) => (
+            <FeaturedCard key={`${s.title}-${idx}`} s={s} />
           ))}
         </div>
       </div>
 
-      {/* Accessible fallback for reduced motion users */}
+      {/* Reduced motion fallback */}
       <div className="sr-only">
         <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {stories.map((s, i) => (
-            <FeaturedCarouselItem key={`fallback-${i}`} s={s} />
+          {slides.map((s, i) => (
+            <FeaturedCard key={`fallback-${i}`} s={s} />
           ))}
         </div>
       </div>
@@ -148,168 +219,14 @@ function FeaturedStories() {
   )
 }
 
-/* =========================
-   TIMELINE (restored)
-   ========================= */
-const TIMELINE = [
-  {
-    year: '2025',
-    title: 'Molecular Imaging Fellowship',
-    org: 'Stanford Radiology',
-    summary:
-      'PET/MRI + multi-omics for early biomarkers along the brain–gut axis.',
-    chips: ['Imaging', 'Prevention-first', 'Brain–gut'],
-    icon: Beaker,
-    href: '#/journey/stanford',
-    thumbnail: stories.find((s) => s.href?.includes('stanford'))?.image,
-  },
-  {
-    year: '2024–2025',
-    title: 'The Naloxone Project',
-    org: 'McMaster University',
-    summary:
-      'Placed 32 emergency naloxone kits; training and response workflows.',
-    chips: ['Harm reduction', 'Operations', 'Policy'],
-    icon: Shield,
-    href: '#/journey/naloxone',
-    thumbnail: stories.find((s) => s.href?.includes('naloxone'))?.image,
-  },
-  {
-    year: '2024',
-    title: 'Paediatric Research (INGAUGE Lab)',
-    org: 'University of Manitoba — Dr. Roberta Woodgate',
-    summary:
-      'Child/youth navigation of complex care; inclusion-centred design.',
-    chips: ['Qualitative', 'Equity', 'Child health'],
-    icon: Microscope,
-    href: '#/journey/ingauge',
-  },
-  {
-    year: 'Ongoing',
-    title: 'CAMH Public Health Research',
-    org: 'Centre for Addiction and Mental Health',
-    summary:
-      'Harm-reduction + culturally informed models for equitable access.',
-    chips: ['Mental health', 'Equity', 'Policy'],
-    icon: BookOpen,
-    href: '#/journey/camh',
-    thumbnail: stories.find((s) => s.href?.includes('camh'))?.image,
-  },
-  {
-    year: 'Earlier',
-    title: 'Founder & Director — SHIELD',
-    org: 'McMaster University',
-    summary:
-      'Prevention-first health literacy; workshops and peer training.',
-    chips: ['Prevention', 'Leadership'],
-    icon: GraduationCap,
-    href: '#/journey/shield',
-  },
-  {
-    year: 'Earlier',
-    title: 'Oncology Department Staff',
-    org: 'HHS — Juravinski Cancer Centre',
-    summary:
-      'Clinical ops exposure: multidisciplinary teams and safety culture.',
-    chips: ['Clinical ops', 'Oncology'],
-    icon: Hospital,
-    href: '#/journey/jcc',
-  },
-]
-
-function TimelineItem({ item, last }) {
-  const Icon = item.icon || Beaker
-  return (
-    <div className="relative pl-8">
-      <span className="absolute left-3 top-0 bottom-0 w-[2px] rounded bg-slate-300/50 dark:bg-slate-700/60" />
-      <span className="absolute left-[9px] top-2 w-3 h-3 rounded-full bg-indigo-500 ring-4 ring-indigo-500/20" />
-
-      <div className="text-xs text-slate-900/70 dark:text-slate-100/70">
-        {item.year}
-      </div>
-
-      <Card className="mt-2 p-0 overflow-hidden">
-        <div className="grid md:grid-cols-[120px_1fr] gap-4 p-4">
-          <div className="hidden md:block">
-            {item.thumbnail ? (
-              <div className="aspect-[4/3] rounded-lg overflow-hidden bg-slate-200/40 dark:bg-slate-800/40">
-                <img
-                  src={srcUrl(item.thumbnail)}
-                  alt=""
-                  className="w-full h-full object-cover"
-                  onError={(e) => (e.currentTarget.src = FALLBACK)}
-                />
-              </div>
-            ) : (
-              <div className="aspect-[4/3] rounded-lg grid place-items-center bg-slate-200/40 dark:bg-slate-800/40">
-                <Icon className="w-6 h-6 text-slate-500" />
-              </div>
-            )}
-          </div>
-
-          <div>
-            <div className="flex items-center gap-2 text-slate-950 dark:text-slate-50">
-              <Icon className="w-4 h-4 opacity-70" />
-              <h3 className="font-semibold">{item.title}</h3>
-            </div>
-            <div className="mt-1 text-xs text-slate-900/70 dark:text-slate-100/70">
-              {item.org}
-            </div>
-            <p className="mt-2 text-sm text-slate-900 dark:text-slate-100/90">
-              {item.summary}
-            </p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {item.chips?.map((c) => (
-                <Pill key={c}>{c}</Pill>
-              ))}
-            </div>
-            {item.href && (
-              <a
-                href={item.href}
-                className="mt-3 inline-block text-sm text-indigo-700 dark:text-indigo-300 hover:underline"
-              >
-                View →
-              </a>
-            )}
-          </div>
-        </div>
-      </Card>
-
-      {!last && <div className="h-6" />}
-    </div>
-  )
-}
-
-function JourneyTimeline() {
-  return (
-    <section id="timeline" className="max-w-6xl mx-auto px-6 md:px-8 pb-14">
-      <h2 className="text-2xl md:text-3xl font-semibold text-slate-950 dark:text-slate-50">
-        Trend over time
-      </h2>
-      <p className="mt-2 text-sm text-slate-900/80 dark:text-slate-100/80">
-        A rough chronology showing the arc from movement &amp; prevention → harm
-        reduction &amp; policy → imaging + multi-omics for earlier detection.
-      </p>
-
-      <div className="mt-6">
-        {TIMELINE.map((it, i) => (
-          <TimelineItem key={i} item={it} last={i === TIMELINE.length - 1} />
-        ))}
-      </div>
-    </section>
-  )
-}
-
-/* =========================
-   PAGE
-   ========================= */
-
+/* -----------------------------
+   PAGE (timeline removed)
+----------------------------- */
 export default function JourneyPage() {
   return (
-    <div className="pb-8">
+    <div className="pb-10">
       <JourneyHero />
       <FeaturedStories />
-      <JourneyTimeline />
     </div>
   )
 }
