@@ -1,171 +1,114 @@
+// src/journey/JourneyPage.jsx
 import React from 'react'
+import stories from './data/featuredStories.js' // your existing featured stories (objects with title, image, href, summary)
 import { Card, Pill } from '../ui/brand.jsx'
-import stories from './data/featuredStories.js'
 
 const BASE = import.meta.env.BASE_URL
-const WAVE_IMG = `${BASE}images/imeth-wave.png`
-const FEATURED_DIR = `${BASE}images/journey-featured/`
 
-const FALLBACK =
-  'data:image/svg+xml;utf8,' +
-  encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360"><defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="#c7d2fe"/><stop offset="100%" stop-color="#fbcfe8"/></linearGradient></defs><rect width="480" height="360" fill="url(#g)"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="system-ui,Segoe UI,Roboto,Helvetica,Arial" font-size="16" fill="#0f172a">image</text></svg>`
-  )
+// ---- convenience to build image urls from your folder ----
+const IMG = (name) => `${BASE}images/journey-featured/${name}`
 
-function srcUrl(path) {
-  if (!path) return FALLBACK
-  if (path.startsWith('http')) return path
-  if (path.startsWith(BASE)) return path
-  return BASE + path.replace(/^\/+/, '')
-}
-
-/* -----------------------------
-   HERO
------------------------------ */
-function JourneyHero() {
-  return (
-    <section className="max-w-6xl mx-auto px-6 md:px-8 pt-10">
-      <Card className="overflow-hidden p-0">
-        <div className="relative grid md:grid-cols-2 gap-6 items-center">
-          <div className="absolute -inset-6 bg-gradient-to-br from-indigo-600/10 via-fuchsia-500/10 to-emerald-500/10 blur-2xl pointer-events-none" />
-          <div className="relative p-6 md:p-10">
-            <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-slate-950 dark:text-slate-50">
-              <span className="inline-block">My Journey</span>
-              <span className="block h-[3px] w-28 mt-3 rounded-full bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-emerald-500" />
-            </h1>
-            <p className="mt-4 text-slate-900 dark:text-slate-100/90">
-              I’ve been chasing one question from different angles: <em>how do we
-              catch risk earlier and care more humanly?</em> That thread pulled me
-              from movement science and rehab into harm-reduction on campus,
-              mental-health equity, and now molecular imaging with multi-omics for
-              prevention-first medicine. This page is a living notebook of
-              experiments, teams, and useful failures—plus the ideas I keep
-              returning to: curiosity, access, and turning evidence into systems
-              that work.
-            </p>
-            <a
-              href="#featured"
-              className="mt-6 inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-indigo-600 text-white hover:opacity-90 transition"
-            >
-              Explore Featured Stories →
-            </a>
-          </div>
-          <div className="relative p-6 md:p-10">
-            <div className="mx-auto max-w-[360px]">
-              <img
-                src={WAVE_IMG}
-                alt="Doctor illustration"
-                className="w-full h-auto object-contain select-none"
-                onError={(e) => (e.currentTarget.src = FALLBACK)}
-              />
-            </div>
-          </div>
-        </div>
-      </Card>
-    </section>
-  )
-}
-
-/* -----------------------------
-   YOUR EXTRA SLIDES (images you sent)
------------------------------ */
+// ---- extra slides you asked to include in the featured carousel ----
 const EXTRA_SLIDES = [
   {
-    title: 'Stanford Fellowship: Molecular Imaging',
-    when: '2025',
-    teaser: 'See the fellowship notes & outputs →',
+    title: 'Stanford Fellowship: Molecular Imaging of the Brain–Gut Axis',
+    image: IMG('stanford.jpg'),
     href: '#/journey/stanford',
-    image: `${FEATURED_DIR}stanford.jpg`,
-    chips: ['Imaging', 'Brain–gut', 'Prevention-first'],
+    summary:
+      'Investigating PET/MRI + multi-omics for early biomarkers along the brain–gut axis.',
   },
   {
-    title: 'The Naloxone Project',
-    when: '2024–2025',
-    teaser: 'How we placed 32+ kits & trained responders →',
+    title: 'The Naloxone Project: Saving Lives on Campus',
+    image: IMG('naloxone.jpg'),
     href: '#/journey/naloxone',
-    image: `${FEATURED_DIR}naloxone.jpg`,
-    chips: ['Harm reduction', 'Operations', 'Policy'],
+    summary:
+      'Placed 32+ emergency naloxone kits across McMaster to strengthen overdose response.',
   },
   {
-    title: 'CAMH: Public Health & Policy',
-    when: 'Ongoing',
-    teaser: 'Advisory work for equitable access & language →',
+    title: 'CAMH Public Health Research',
+    image: IMG('camh.jpg'),
     href: '#/journey/camh',
-    image: `${FEATURED_DIR}camh.jpg`,
-    chips: ['Mental health', 'Equity'],
+    summary:
+      'Policy & public-health advisory focused on youth harm reduction and equitable access.',
   },
   {
-    title: 'Paediatric Research (INGAUGE Lab)',
-    when: '2024',
-    teaser: 'Child/youth navigation of complex care →',
-    href: '#/journey/ingauge',
-    image: `${FEATURED_DIR}manitoba.jpg`,
-    chips: ['Qualitative', 'Child health'],
+    title: 'University of Manitoba — Paediatric Research (INGAUGE Lab)',
+    image: IMG('manitoba.jpg'),
+    href: '#/journey/manitoba',
+    summary:
+      'Child/youth navigation of complex care; inclusion-centred design with Dr. Woodgate.',
+  },
+  {
+    title: 'HHS — Juravinski Cancer Centre',
+    image: IMG('jcc.jpg'),
+    href: '#/journey/jcc',
+    summary:
+      'Clinical operations: multidisciplinary teams, safety culture, and patient-flow practice.',
   },
   {
     title: 'McMaster Department of Medicine Research',
-    when: '2025—present',
-    teaser: 'Clinical AI & research workflows in practice →',
-    href: '#/journey/mcmaster-med',
-    image: `${FEATURED_DIR}mcmaster-medicine.jpg`,
-    chips: ['Clinical AI', 'Research'],
-  },
-  {
-    title: 'Juravinski Cancer Centre',
-    when: 'Earlier',
-    teaser: 'Multidisciplinary teams & safety culture →',
-    href: '#/journey/jcc',
-    image: `${FEATURED_DIR}jcc.jpg`,
-    chips: ['Oncology', 'Clinical ops'],
+    image: IMG('mcmaster-medicine.jpg'),
+    href: '#/journey/mcmaster-medicine',
+    summary:
+      'AI in healthcare and research operations; making tools usable in real clinical settings.',
   },
 ]
 
-/* -----------------------------
-   FEATURED – INFINITE CAROUSEL
------------------------------ */
+// ---------- utilities ----------
+function canonKey(s = {}) {
+  const t = (s.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '')
+  const h = (s.href || '').toLowerCase()
+  const img = ((s.image || '').split('/').pop() || '').toLowerCase()
+  return `${h}|${t}|${img}`
+}
+
+const onImgErr = (e) => {
+  // soften broken images instead of throwing
+  e.currentTarget.style.opacity = 0.25
+  e.currentTarget.alt = 'image'
+}
+
+// ---------- small UI helpers ----------
+function Kicker({ children }) {
+  return (
+    <div className="text-xs uppercase tracking-wider font-semibold text-indigo-400">
+      {children}
+    </div>
+  )
+}
+
 function FeaturedCard({ s }) {
   return (
-    <a href={s.href || '#/journey'} className="group block">
-      <Card className="p-0 overflow-hidden w-[320px] md:w-[360px] h-[400px]">
-        <div className="aspect-[4/3] bg-slate-200/40 dark:bg-slate-800/40 overflow-hidden">
+    <a
+      href={s.href || '#'}
+      className="group snap-start w-[86vw] sm:w-[420px] md:w-[520px] no-underline"
+    >
+      <Card className="h-full p-0 overflow-hidden hover:shadow-md transition-shadow">
+        <div className="relative aspect-[16/10] overflow-hidden">
           <img
-            src={srcUrl(s.image)}
+            src={s.image}
             alt={s.title}
-            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
-            onError={(e) => (e.currentTarget.src = FALLBACK)}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+            onError={onImgErr}
+            loading="lazy"
           />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-transparent" />
         </div>
-        <div className="p-4">
+
+        <div className="p-4 md:p-5">
           {s.when && (
-            <div className="text-xs text-slate-900/70 dark:text-slate-100/70">
-              {s.when}
-            </div>
+            <div className="text-indigo-300 text-sm mb-1">{s.when}</div>
           )}
-          <h3 className="mt-1 font-semibold text-slate-950 dark:text-slate-50 line-clamp-2">
+          <h3 className="text-lg md:text-xl font-semibold text-slate-50">
             {s.title}
           </h3>
-
-          {/* Priming line to encourage clicking */}
-          {s.teaser ? (
-            <p className="mt-2 text-sm italic text-indigo-700 dark:text-indigo-300">
-              {s.teaser}
-            </p>
-          ) : s.summary ? (
-            <p className="mt-2 text-sm text-slate-900/85 dark:text-slate-100/85 line-clamp-2">
+          {s.summary && (
+            <p className="mt-2 text-sm text-slate-200/80 leading-relaxed">
               {s.summary}
             </p>
-          ) : null}
-
-          {s.chips?.length ? (
-            <div className="mt-3 flex flex-wrap gap-2">
-              {s.chips.slice(0, 4).map((c) => (
-                <Pill key={c}>{c}</Pill>
-              ))}
-            </div>
-          ) : null}
-
-          <div className="mt-3 text-sm text-indigo-700 dark:text-indigo-300">
-            Open story →
+          )}
+          <div className="mt-3 text-indigo-300 text-sm inline-flex items-center gap-1">
+            Open story <span aria-hidden>→</span>
           </div>
         </div>
       </Card>
@@ -173,45 +116,40 @@ function FeaturedCard({ s }) {
   )
 }
 
+// ---------- main sections ----------
 function FeaturedStories() {
-  // Merge your existing stories with the six extra image slides
-  // De-dupe by title to avoid doubles if data overlaps.
-  const byTitle = new Map()
-  ;[...EXTRA_SLIDES, ...stories].forEach((s) => {
-    if (!byTitle.has(s.title)) byTitle.set(s.title, s)
-  })
-  const slides = Array.from(byTitle.values())
+  // Merge user-provided slides with your existing `stories`
+  const merged = [...EXTRA_SLIDES, ...stories]
+  // Hard de-dupe (accidental repeats removed)
+  const seen = new Set()
+  const unique = []
+  for (const s of merged) {
+    const k = canonKey(s)
+    if (!seen.has(k)) {
+      seen.add(k)
+      unique.push(s)
+    }
+  }
 
-  // Duplicate for seamless marquee
-  const loop = [...slides, ...slides]
+  // One intentional duplication to enable a seamless marquee
+  const loop = [...unique, ...unique]
 
   return (
-    <section id="featured" className="max-w-6xl mx-auto px-6 md:px-8 py-12">
+    <section id="featured" className="max-w-6xl mx-auto px-6 md:px-8 py-10">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl md:text-3xl font-semibold text-slate-950 dark:text-slate-50">
+        <h2 className="text-2xl md:text-3xl font-semibold text-slate-50">
           Featured Stories
         </h2>
-        <span className="text-sm text-slate-900/70 dark:text-slate-100/70">
-          Scroll sideways • hover to pause
-        </span>
+        <span className="text-sm text-slate-300/80">Scroll • hover to pause</span>
       </div>
 
-      <div className="mt-6 overflow-hidden">
+      <div className="mt-6 overflow-x-hidden">
         <div
-          className="inline-flex items-stretch gap-6 whitespace-nowrap will-change-transform animate-marquee motion-reduce:animate-none"
+          className="inline-flex items-stretch gap-6 whitespace-nowrap will-change-transform animate-marquee hover:[animation-play-state:paused] motion-reduce:animate-none"
           style={{ width: 'max-content', animationDuration: '38s' }}
         >
           {loop.map((s, idx) => (
-            <FeaturedCard key={`${s.title}-${idx}`} s={s} />
-          ))}
-        </div>
-      </div>
-
-      {/* Reduced motion fallback */}
-      <div className="sr-only">
-        <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {slides.map((s, i) => (
-            <FeaturedCard key={`fallback-${i}`} s={s} />
+            <FeaturedCard key={`${canonKey(s)}-${idx}`} s={s} />
           ))}
         </div>
       </div>
@@ -219,14 +157,93 @@ function FeaturedStories() {
   )
 }
 
-/* -----------------------------
-   PAGE (timeline removed)
------------------------------ */
+function AllLinks() {
+  // Build a clean unique list for the link directory as well
+  const merged = [...EXTRA_SLIDES, ...stories]
+  const seen = new Set()
+  const items = []
+  for (const s of merged) {
+    const k = canonKey(s)
+    if (!seen.has(k)) {
+      seen.add(k)
+      items.push(s)
+    }
+  }
+
+  return (
+    <section id="all-links" className="max-w-6xl mx-auto px-6 md:px-8 pb-16">
+      <div className="mb-3">
+        <Kicker>Quick access</Kicker>
+        <h2 className="text-xl md:text-2xl font-semibold text-slate-50">
+          All stories & projects
+        </h2>
+      </div>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {items.map((s, i) => (
+          <a
+            key={`dir-${canonKey(s)}-${i}`}
+            href={s.href || '#'}
+            className="group rounded-xl px-4 py-3 ring-1 ring-white/10 bg-white/5 hover:bg-white/[0.08] text-slate-100 no-underline"
+          >
+            <div className="flex items-center gap-3">
+              <div className="shrink-0 w-12 h-12 rounded-lg overflow-hidden ring-1 ring-black/10 dark:ring-white/10 bg-white/10">
+                <img
+                  src={s.image}
+                  alt=""
+                  className="w-full h-full object-cover"
+                  onError={onImgErr}
+                  loading="lazy"
+                />
+              </div>
+              <div className="min-w-0">
+                <div className="font-medium truncate">{s.title}</div>
+                {s.summary && (
+                  <div className="text-xs text-slate-300/75 line-clamp-1">
+                    {s.summary}
+                  </div>
+                )}
+              </div>
+              <div className="ml-auto text-indigo-300 opacity-0 group-hover:opacity-100 transition">
+                →
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+// ---------- page ----------
 export default function JourneyPage() {
   return (
-    <div className="pb-10">
-      <JourneyHero />
+    <section id="journey-page" className="pb-10">
+      {/* Page header / hero */}
+      <div className="max-w-6xl mx-auto px-6 md:px-8 pt-10 md:pt-12">
+        <div className="rounded-2xl bg-gradient-to-b from-indigo-500/10 via-slate-900/10 to-slate-900/0 ring-1 ring-white/10 p-6 md:p-8">
+          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-slate-50">
+            My Journey
+          </h1>
+          <p className="mt-3 max-w-3xl text-slate-200/90 leading-relaxed">
+            A deeper look at projects, teams, and ideas that shaped how I think
+            about prevention-first medicine, imaging, and public health. Below
+            you’ll find a rotating set of highlights—tap any card to dive into a
+            full story—and a quick directory of links if you want the fast path.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Pill>Prevention-first</Pill>
+            <Pill>Imaging</Pill>
+            <Pill>Equity</Pill>
+            <Pill>Policy</Pill>
+          </div>
+        </div>
+      </div>
+
+      {/* Featured marquee */}
       <FeaturedStories />
-    </div>
+
+      {/* Simple link directory */}
+      <AllLinks />
+    </section>
   )
 }
