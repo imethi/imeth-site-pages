@@ -1,14 +1,12 @@
 // src/journey/JourneyPage.jsx
 import React from 'react'
-import stories from './data/featuredStories.js' // your existing featured stories (objects with title, image, href, summary)
+import stories from './data/featuredStories.js'
 import { Card, Pill } from '../ui/brand.jsx'
 
 const BASE = import.meta.env.BASE_URL
-
-// ---- convenience to build image urls from your folder ----
 const IMG = (name) => `${BASE}images/journey-featured/${name}`
 
-// ---- extra slides you asked to include in the featured carousel ----
+// Extra slides to ensure all your featured images show up
 const EXTRA_SLIDES = [
   {
     title: 'Stanford Fellowship: Molecular Imaging of the Brain–Gut Axis',
@@ -54,8 +52,8 @@ const EXTRA_SLIDES = [
   },
 ]
 
-// ---------- utilities ----------
-function canonKey(s = {}) {
+// ---------- helpers ----------
+const keyOf = (s = {}) => {
   const t = (s.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '')
   const h = (s.href || '').toLowerCase()
   const img = ((s.image || '').split('/').pop() || '').toLowerCase()
@@ -63,20 +61,11 @@ function canonKey(s = {}) {
 }
 
 const onImgErr = (e) => {
-  // soften broken images instead of throwing
   e.currentTarget.style.opacity = 0.25
   e.currentTarget.alt = 'image'
 }
 
-// ---------- small UI helpers ----------
-function Kicker({ children }) {
-  return (
-    <div className="text-xs uppercase tracking-wider font-semibold text-indigo-400">
-      {children}
-    </div>
-  )
-}
-
+// ---------- small UI ----------
 function FeaturedCard({ s }) {
   return (
     <a
@@ -116,22 +105,21 @@ function FeaturedCard({ s }) {
   )
 }
 
-// ---------- main sections ----------
+// ---------- sections ----------
 function FeaturedStories() {
-  // Merge user-provided slides with your existing `stories`
+  // merge and de-dupe against any duplicates from data file
   const merged = [...EXTRA_SLIDES, ...stories]
-  // Hard de-dupe (accidental repeats removed)
   const seen = new Set()
   const unique = []
   for (const s of merged) {
-    const k = canonKey(s)
+    const k = keyOf(s)
     if (!seen.has(k)) {
       seen.add(k)
       unique.push(s)
     }
   }
 
-  // One intentional duplication to enable a seamless marquee
+  // duplicate once to create seamless marquee
   const loop = [...unique, ...unique]
 
   return (
@@ -149,66 +137,9 @@ function FeaturedStories() {
           style={{ width: 'max-content', animationDuration: '38s' }}
         >
           {loop.map((s, idx) => (
-            <FeaturedCard key={`${canonKey(s)}-${idx}`} s={s} />
+            <FeaturedCard key={`${keyOf(s)}-${idx}`} s={s} />
           ))}
         </div>
-      </div>
-    </section>
-  )
-}
-
-function AllLinks() {
-  // Build a clean unique list for the link directory as well
-  const merged = [...EXTRA_SLIDES, ...stories]
-  const seen = new Set()
-  const items = []
-  for (const s of merged) {
-    const k = canonKey(s)
-    if (!seen.has(k)) {
-      seen.add(k)
-      items.push(s)
-    }
-  }
-
-  return (
-    <section id="all-links" className="max-w-6xl mx-auto px-6 md:px-8 pb-16">
-      <div className="mb-3">
-        <Kicker>Quick access</Kicker>
-        <h2 className="text-xl md:text-2xl font-semibold text-slate-50">
-          All stories & projects
-        </h2>
-      </div>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {items.map((s, i) => (
-          <a
-            key={`dir-${canonKey(s)}-${i}`}
-            href={s.href || '#'}
-            className="group rounded-xl px-4 py-3 ring-1 ring-white/10 bg-white/5 hover:bg-white/[0.08] text-slate-100 no-underline"
-          >
-            <div className="flex items-center gap-3">
-              <div className="shrink-0 w-12 h-12 rounded-lg overflow-hidden ring-1 ring-black/10 dark:ring-white/10 bg-white/10">
-                <img
-                  src={s.image}
-                  alt=""
-                  className="w-full h-full object-cover"
-                  onError={onImgErr}
-                  loading="lazy"
-                />
-              </div>
-              <div className="min-w-0">
-                <div className="font-medium truncate">{s.title}</div>
-                {s.summary && (
-                  <div className="text-xs text-slate-300/75 line-clamp-1">
-                    {s.summary}
-                  </div>
-                )}
-              </div>
-              <div className="ml-auto text-indigo-300 opacity-0 group-hover:opacity-100 transition">
-                →
-              </div>
-            </div>
-          </a>
-        ))}
       </div>
     </section>
   )
@@ -218,7 +149,7 @@ function AllLinks() {
 export default function JourneyPage() {
   return (
     <section id="journey-page" className="pb-10">
-      {/* Page header / hero */}
+      {/* Header */}
       <div className="max-w-6xl mx-auto px-6 md:px-8 pt-10 md:pt-12">
         <div className="rounded-2xl bg-gradient-to-b from-indigo-500/10 via-slate-900/10 to-slate-900/0 ring-1 ring-white/10 p-6 md:p-8">
           <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-slate-50">
@@ -228,7 +159,7 @@ export default function JourneyPage() {
             A deeper look at projects, teams, and ideas that shaped how I think
             about prevention-first medicine, imaging, and public health. Below
             you’ll find a rotating set of highlights—tap any card to dive into a
-            full story—and a quick directory of links if you want the fast path.
+            full story.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             <Pill>Prevention-first</Pill>
@@ -239,11 +170,8 @@ export default function JourneyPage() {
         </div>
       </div>
 
-      {/* Featured marquee */}
+      {/* Featured marquee only (directory removed) */}
       <FeaturedStories />
-
-      {/* Simple link directory */}
-      <AllLinks />
     </section>
   )
 }
