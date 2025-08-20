@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import Typewriter from 'typewriter-effect'
 import { Mail, FileDown } from 'lucide-react'
 
+
 // shared UI
 import { brand, Pill, Card } from './ui/brand.jsx'
 
@@ -12,6 +13,9 @@ import JourneyPage from './journey/JourneyPage.jsx'
 import StoryPage from './journey/StoryPage.jsx'
 import StanfordStory from './journey/data/stanford.jsx'
 import AboutPage from './AboutPage.jsx'
+import CAMHPage from './journey/CAMHPage.jsx'
+import NaloxonePage from './journey/NaloxonePage.jsx'
+
 
 /* ---------- tiny hash router ---------- */
 const getRoute = () => (location.hash.replace(/^#\/?/, '') || 'home')
@@ -237,6 +241,8 @@ export default function App() {
       {route === 'journey' && <JourneyPage />}
       {route === 'journey/stanford' && <StoryPage story={StanfordStory} />}
       {route === 'about' && <AboutPage />}
+      {route === 'journey/camh' && <CAMHPage />}
+{route === 'journey/naloxone' && <NaloxonePage />}
       {route === 'publications' && <div className="max-w-6xl mx-auto px-6 md:px-8 py-14 text-slate-900 dark:text-slate-100/90">Publications page coming back…</div>}
       {route === 'contact' && (
         <section className="max-w-3xl mx-auto px-6 md:px-8 py-14">
