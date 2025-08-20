@@ -2,6 +2,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import Typewriter from 'typewriter-effect'
 import { Mail, FileDown } from 'lucide-react'
+import AboutPage from './about/AboutPage.jsx'
 
 /* shared UI */
 import { brand, Pill, Card } from './ui/brand.jsx'
@@ -288,6 +289,8 @@ export default function App () {
       {route === 'home' && <HomePage />}
       {route === 'journey' && <JourneyPage />}
       {route === 'about' && <AboutPage />}
+      {route === 'about' && <AboutPage />}
+
 
       {/* FOOTER */}
       <footer className="border-t border-black/5 dark:border-white/10">
