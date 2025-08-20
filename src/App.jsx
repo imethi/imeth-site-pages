@@ -3,6 +3,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { Mail, FileDown } from 'lucide-react'
 import Typewriter from 'typewriter-effect'
+import AboutPage from './about/AboutPage.jsx'
 
 // shared UI
 import { brand, Pill, Card } from './ui/brand.jsx'
@@ -328,6 +329,7 @@ export default function App() {
       {route === 'contact' && <ContactPage />}
       {route === 'journey/naloxone' && <NaloxonePage />}
 {route === 'journey/camh' && <CAMHPage />}
+      {route === 'about' && <AboutPage />}
 
       <footer className="border-t border-black/5 dark:border-white/10">
         <div className="max-w-6xl mx-auto px-6 md:px-8 py-10 text-sm text-slate-900/80 dark:text-slate-100/80 flex flex-col md:flex-row items-center justify-between gap-3">
