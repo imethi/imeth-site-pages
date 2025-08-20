@@ -1,176 +1,212 @@
-// src/journey/JourneyPage.jsx
 import React from 'react'
-import { Card, Pill } from '../ui/brand.jsx'
-import stories from './data/featuredStories.js'
+import { Card } from '../ui/brand.jsx'
 
-const BASE = import.meta.env.BASE_URL
+const BASE = import.meta.env.BASE_URL || '/'
 
-/* ---------- image sources ---------- */
-// Covers you said live in: public/images/journey-featured/
-const FEATURED_COVERS = [
+/* hero collage: uses your covers from /public/images/journey-featured */
+const HERO_FILES = [
   'stanford.jpg',
   'naloxone.jpg',
   'camh.jpg',
   'manitoba.jpg',
   'mcmaster-medicine.jpg',
-  'jcc.jpg',
-].map(f => `${BASE}images/journey-featured/${f}`)
+  'jcc.jpg'
+]
 
-// Optional “moments” line (keep or trim) from: public/images/journey-images/
-const MOMENTS = [
-  'IMG_2962.png',
-  'IMG_3664.png',
-  'IMG_5720.png',
-  'IMG_5726.png',
-  'IMG_8893.png',
-].map(f => `${BASE}images/journey-images/${f}`)
+/* featured + list metadata */
+const STORIES = [
+  {
+    slug: 'stanford',
+    title: 'Stanford Fellowship: Molecular Imaging of the Brain–Gut Axis',
+    cover: 'stanford.jpg',
+    summary:
+      'How molecular imaging and multi-omics can reveal early gut–brain biomarkers linked to dementia risk.',
+    tags: ['Imaging', 'Brain–gut']
+  },
+  {
+    slug: 'naloxone',
+    title: 'The Naloxone Project: Saving Lives on Campus',
+    cover: 'naloxone.jpg',
+    summary:
+      '32+ emergency naloxone kits placed across McMaster to strengthen overdose response.',
+    tags: ['Harm reduction', 'Student safety']
+  },
+  {
+    slug: 'camh',
+    title: 'CAMH Public Health Research',
+    cover: 'camh.jpg',
+    summary:
+      'Harm-reduction + culturally informed models for more equitable mental health strategies.',
+    tags: ['Policy', 'Equity']
+  },
+  {
+    slug: 'manitoba',
+    title: 'University of Manitoba Paediatric Research (INGAUGE Lab)',
+    cover: 'manitoba.jpg',
+    summary:
+      'Child/youth navigation of complex care; inclusion-centred design and qualitative methods.',
+    tags: ['Child health', 'Qualitative']
+  },
+  {
+    slug: 'mcmaster-medicine',
+    title: 'McMaster Department of Medicine — Research Student',
+    cover: 'mcmaster-medicine.jpg',
+    summary:
+      'Early detection and prevention-first approaches within clinical and academic settings.',
+    tags: ['Prevention', 'Operations']
+  },
+  {
+    slug: 'jcc',
+    title: 'HHS — Juravinski Cancer Centre',
+    cover: 'jcc.jpg',
+    summary:
+      'Clinical operations exposure: multidisciplinary teams, safety culture, and patient flow.',
+    tags: ['Clinical ops']
+  }
+]
 
-/* Map story keys -> cover images for the list below */
-const COVER_BY_KEY = {
-  stanford: `${BASE}images/journey-featured/stanford.jpg`,
-  naloxone: `${BASE}images/journey-featured/naloxone.jpg`,
-  camh: `${BASE}images/journey-featured/camh.jpg`,
-  manitoba: `${BASE}images/journey-featured/manitoba.jpg`,
-  jcc: `${BASE}images/journey-featured/jcc.jpg`,
-  mcmasterMed: `${BASE}images/journey-featured/mcmaster-medicine.jpg`,
-}
-
-/* ---------- tiny utility ---------- */
-function Img({ src, alt = '', className = '', ...rest }) {
+export default function JourneyPage () {
   return (
-    <img
-      src={src}
-      alt={alt}
-      className={className}
-      onError={e => {
-        e.currentTarget.style.opacity = 0.25
-        e.currentTarget.alt = 'image'
-      }}
-      {...rest}
-    />
-  )
-}
+    <main className='max-w-6xl mx-auto px-6 md:px-8 py-12'>
+      {/* local marquee styles so we don’t rely on global css */}
+      <style>{`
+        @keyframes marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+        @keyframes marqueeRev { from { transform: translateX(-50%) } to { transform: translateX(0) } }
+      `}</style>
 
-/* ---------- marquee strip ---------- */
-function MarqueeStrip({ images, height = 176, duration = 30 }) {
-  // In case your global CSS doesn’t have .animate-marquee, inject a fallback.
-  const keyframes = `
-@keyframes jm-marquee { 
-  0% { transform: translateX(0); } 
-  100% { transform: translateX(-50%); } 
-}
-.jm-marquee {
-  animation: jm-marquee ${duration}s linear infinite;
-  will-change: transform;
-}
-`
-  return (
-    <div className="overflow-hidden rounded-2xl ring-1 ring-black/10 dark:ring-white/10 bg-white/3">
-      <style dangerouslySetInnerHTML={{ __html: keyframes }} />
-      <div className="relative">
-        <div
-          className="inline-flex gap-4 jm-marquee"
-          style={{ width: 'max-content' }}
-        >
-          {[...images, ...images].map((src, i) => (
-            <Img
-              key={`${src}-${i}`}
-              src={src}
-              alt=""
-              className="h-40 md:h-44 w-auto object-cover rounded-xl ring-1 ring-black/5 dark:ring-white/10"
-              style={{ height }}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-/* ---------- page ---------- */
-export default function JourneyPage() {
-  React.useEffect(() => window.scrollTo(0, 0), [])
-
-  // filter out any “empty”/repeat stories (no title or no href)
-  const cleanStories = stories.filter(s => s?.title && s?.href)
-
-  return (
-    <section className="max-w-6xl mx-auto px-6 md:px-8 py-12 md:py-16">
       {/* HERO */}
-      <div className="grid md:grid-cols-2 gap-10 items-center">
+      <section className='grid md:grid-cols-2 gap-10 items-center'>
         <div>
-          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-slate-50">
+          <h1 className='text-4xl md:text-5xl font-semibold text-slate-950 dark:text-slate-50'>
             My Journey
           </h1>
-          <p className="mt-4 text-lg md:text-xl text-slate-100/85">
+          <p className='mt-4 text-lg text-slate-900 dark:text-slate-100/90 max-w-2xl'>
             A living notebook of experiments, teams, and ideas that shaped how I
             think about prevention-first medicine, imaging, and health equity.
           </p>
+
           <a
-            href="#/journey"
-            className="mt-6 inline-flex items-center gap-2 rounded-xl px-5 py-3 bg-indigo-600 text-white hover:opacity-90 transition"
-            title="Open all stories"
+            href='#journey-featured'
+            className='mt-6 inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-indigo-600 text-white hover:opacity-90 transition'
           >
-            Explore Featured Stories
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
+            Explore Featured Stories →
           </a>
         </div>
 
-        <Card className="p-4">
-          {/* line 1: covers */}
-          <MarqueeStrip images={FEATURED_COVERS} duration={26} />
-          {/* line 2: candid moments */}
-          <div className="mt-3">
-            <MarqueeStrip images={MOMENTS} duration={34} />
+        <Card className='p-4 overflow-hidden'>
+          <div className='space-y-3'>
+            {[0, 1, 2].map((row) => {
+              const reverse = row % 2 === 1
+              const files =
+                row === 0
+                  ? HERO_FILES
+                  : row === 1
+                  ? [...HERO_FILES].reverse()
+                  : HERO_FILES
+              const speed = 26 + row * 4
+              return (
+                <div
+                  key={row}
+                  className='inline-flex gap-3 whitespace-nowrap will-change-transform'
+                  style={{
+                    width: 'max-content',
+                    animation: `${reverse ? 'marqueeRev' : 'marquee'} ${speed}s linear infinite`
+                  }}
+                >
+                  {[...files, ...files].map((f, i) => (
+                    <img
+                      key={`${row}-${i}-${f}`}
+                      src={`${BASE}images/journey-featured/${f}`}
+                      alt=''
+                      className='h-28 md:h-32 w-auto rounded-xl ring-1 ring-black/5 dark:ring-white/10 object-cover'
+                    />
+                  ))}
+                </div>
+              )
+            })}
           </div>
-          <div className="mt-2 text-xs text-slate-100/70">Moments with teams and projects.</div>
+          <div className='mt-2 text-xs text-slate-900/80 dark:text-slate-100/75'>
+            Moments with teams and projects.
+          </div>
         </Card>
-      </div>
+      </section>
+
+      {/* FEATURED */}
+      <section id='journey-featured' className='mt-14'>
+        <div className='flex items-center justify-between'>
+          <h2 className='text-2xl md:text-3xl font-semibold text-slate-950 dark:text-slate-50'>
+            Featured Stories
+          </h2>
+          <div className='text-sm text-slate-900/80 dark:text-slate-100/80'>
+            Chronological
+          </div>
+        </div>
+
+        <div className='mt-6 grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
+          {STORIES.slice(0, 4).map((s) => (
+            <Card key={s.slug} className='overflow-hidden'>
+              <img
+                src={`${BASE}images/journey-featured/${s.cover}`}
+                alt={s.title}
+                className='h-44 w-full object-cover'
+              />
+              <div className='p-5'>
+                <h3 className='text-lg font-semibold text-slate-50'>{s.title}</h3>
+                <p className='mt-2 text-slate-100/80 text-sm'>{s.summary}</p>
+                <a
+                  href={`#/journey`} /* link to main for now; your deep pages can replace */
+                  className='mt-4 inline-flex items-center gap-2 text-indigo-300 hover:text-indigo-200'
+                >
+                  Open story →
+                </a>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </section>
 
       {/* ALL STORIES */}
-      <div className="mt-14">
-        <h2 className="text-2xl md:text-3xl font-semibold text-slate-50">All stories</h2>
+      <section className='mt-14'>
+        <h2 className='text-2xl md:text-3xl font-semibold text-slate-950 dark:text-slate-50'>
+          All stories
+        </h2>
 
-        <div className="mt-6 space-y-4">
-          {cleanStories.map((s, idx) => {
-            const cover =
-              s.cover ||
-              COVER_BY_KEY[s.key] ||
-              FEATURED_COVERS[idx % FEATURED_COVERS.length]
-
-            return (
-              <a
-                key={s.key || s.href || idx}
-                href={s.href}
-                className="block rounded-2xl ring-1 ring-black/10 dark:ring-white/10 bg-white/3 hover:bg-white/5 transition"
-              >
-                <div className="p-4 md:p-5 grid grid-cols-[72px_1fr] md:grid-cols-[92px_1fr] gap-4 items-center">
-                  <div className="h-16 w-16 md:h-[72px] md:w-[72px] rounded-xl overflow-hidden bg-slate-900/30 ring-1 ring-black/10 dark:ring-white/10 grid place-items-center">
-                    <Img src={cover} alt="" className="h-full w-full object-cover" />
+        <div className='mt-6 space-y-5'>
+          {STORIES.map((s) => (
+            <Card key={`list-${s.slug}`} className='p-4 md:p-5'>
+              <div className='flex items-start gap-4'>
+                <img
+                  src={`${BASE}images/journey-featured/${s.cover}`}
+                  alt=''
+                  className='w-16 h-16 rounded-xl object-cover ring-1 ring-black/10 dark:ring-white/10'
+                />
+                <div className='flex-1'>
+                  <div className='text-lg font-semibold text-slate-50'>
+                    {s.title}
                   </div>
-                  <div>
-                    <div className="text-lg md:text-xl font-semibold text-slate-50">
-                      {s.title}
-                    </div>
-                    {s.summary && (
-                      <div className="mt-1 text-slate-100/80">
-                        {s.summary}
-                      </div>
-                    )}
-                    {Array.isArray(s.tags) && s.tags.length > 0 && (
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {s.tags.map((t, i) => (
-                          <Pill key={i}>{t}</Pill>
-                        ))}
-                      </div>
-                    )}
+                  <div className='mt-1 text-slate-100/80'>{s.summary}</div>
+                  <div className='mt-3 flex flex-wrap gap-2'>
+                    {s.tags.map((t) => (
+                      <span
+                        key={t}
+                        className='px-2.5 py-1 rounded-full text-[11px] bg-white/10 text-white/90 ring-1 ring-white/10'
+                      >
+                        {t}
+                      </span>
+                    ))}
                   </div>
                 </div>
-              </a>
-            )
-          })}
+                <a
+                  href={`#/journey`} /* placeholder; hook to deep pages as you add them */
+                  className='text-indigo-300 hover:text-indigo-200 whitespace-nowrap'
+                >
+                  Read →
+                </a>
+              </div>
+            </Card>
+          ))}
         </div>
-      </div>
-    </section>
+      </section>
+    </main>
   )
 }
