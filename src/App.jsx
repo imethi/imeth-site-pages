@@ -12,6 +12,8 @@ import stories from './journey/data/featuredStories.js'
 import JourneyPage from './journey/JourneyPage.jsx'
 import StoryPage from './journey/StoryPage.jsx'
 import StanfordStory from './journey/data/stanford.jsx'
+import NaloxonePage from './journey/NaloxonePage.jsx'
+import CAMHPage from './journey/CAMHPage.jsx'
 
 /* ---------- tiny router + theme ---------- */
 const getRoute = () => (location.hash.replace(/^#\/?/, '') || 'home')
@@ -324,6 +326,8 @@ export default function App() {
       {route === 'publications' && <PublicationsPage />}
       {route === 'about' && <AboutPage />}
       {route === 'contact' && <ContactPage />}
+      {route === 'journey/naloxone' && <NaloxonePage />}
+{route === 'journey/camh' && <CAMHPage />}
 
       <footer className="border-t border-black/5 dark:border-white/10">
         <div className="max-w-6xl mx-auto px-6 md:px-8 py-10 text-sm text-slate-900/80 dark:text-slate-100/80 flex flex-col md:flex-row items-center justify-between gap-3">
