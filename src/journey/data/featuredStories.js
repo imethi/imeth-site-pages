@@ -1,7 +1,4 @@
 // src/journey/data/featuredStories.js
-// Single source of truth for the Journey "stories" shown in the hero carousel
-// and in the "All stories" directory.
-
 const BASE = import.meta.env.BASE_URL;
 const img = (f) => `${BASE}images/journey-featured/${f}`;
 
@@ -22,7 +19,7 @@ const stories = [
     when: '2024–2025',
     summary:
       '32+ emergency naloxone kits placed across McMaster; training and response workflows.',
-    href: '#/journey/naloxone',
+    href: '#/journey/naloxone',            // <— restored deep link
     cover: img('naloxone.jpg'),
     tags: ['Harm reduction', 'Student safety'],
   },
@@ -32,7 +29,7 @@ const stories = [
     when: 'Ongoing',
     summary:
       'Harm-reduction + culturally informed models for equitable access; policy & outreach.',
-    href: '#/journey/camh',
+    href: '#/journey/camh',                // <— restored deep link
     cover: img('camh.jpg'),
     tags: ['Policy', 'Equity'],
   },
