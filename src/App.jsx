@@ -212,3 +212,130 @@ function PublicationsPage() {
       </div>
     )
   }
+  const half = Math.ceil(LOGOS.length/2)
+  return (
+    <section className="max-w-6xl mx-auto px-6 md:px-8 py-14">
+      <h1 className="text-3xl font-semibold text-slate-950 dark:text-slate-50">Writing Published In</h1>
+      <p className="mt-2 text-slate-900 dark:text-slate-100/90">A selection of outlets featuring my work.</p>
+
+      <div className="mt-6 rounded-2xl bg-white/5 ring-1 ring-black/10 dark:ring-white/10 p-4">
+        <div className="flex flex-wrap items-center gap-3">
+          <a href={LINKS.scholar} className="inline-flex items-center gap-2 rounded-xl px-3 py-2 bg-white/10 hover:bg-white/20 text-slate-100 ring-1 ring-white/10">🔎 Google Scholar</a>
+          <a href={LINKS.orcid} className="inline-flex items-center gap-2 rounded-xl px-3 py-2 bg-white/10 hover:bg-white/20 text-slate-100 ring-1 ring-white/10">🟢 ORCID iD</a>
+          <a href={LINKS.linkedin} className="inline-flex items-center gap-2 rounded-xl px-3 py-2 bg-white/10 hover:bg-white/20 text-slate-100 ring-1 ring-white/10">💼 LinkedIn Publications</a>
+        </div>
+      </div>
+
+      <div className="mt-8 space-y-4">
+        <Row items={LOGOS.slice(0, half)} dir="left" speed={26}/>
+        <Row items={LOGOS.slice(half)} dir="right" speed={32}/>
+      </div>
+
+      <div className="mt-6 text-[11px] text-slate-900/80 dark:text-slate-100/75">Logos are for identification only and belong to their respective owners.</div>
+    </section>
+  )
+}
+
+/* ---------- App ---------- */
+export default function App() {
+  const [dark, setDark] = useDarkMode()
+  const [route, setRoute] = React.useState(getRoute())
+  React.useEffect(() => {
+    const fn = () => setRoute(getRoute())
+    window.addEventListener('hashchange', fn)
+    return () => window.removeEventListener('hashchange', fn)
+  }, [])
+
+  const handleImgError = (e) => { e.currentTarget.src = FALLBACK_HEADSHOT; e.currentTarget.onerror = null }
+
+  return (
+    <div className={`${brand.bg} min-h-screen`}>
+      {/* ****** DIRECT NAV (no popover) ****** */}
+      <header className="sticky top-0 z-40 backdrop-blur bg-white/80 dark:bg-slate-900/80 border-b border-black/5 dark:border-white/10">
+        <div className="max-w-6xl mx-auto flex items-center justify-between px-6 md:px-8 h-16">
+          <a href="#/" className="group inline-flex items-center gap-2">
+            <div className={`${brand.accentBg} text-white w-9 h-9 rounded-xl grid place-items-center font-semibold`}>ii</div>
+            <div className="font-medium tracking-tight text-slate-900 dark:text-slate-50 group-hover:opacity-90 transition">Imeth Illamperuma</div>
+          </a>
+
+          <nav className="hidden md:flex items-center gap-6 text-slate-900 dark:text-slate-100">
+            <a href="#/" className="hover:opacity-80">Home</a>
+            <a href="#/journey" className="hover:opacity-80">My Journey</a>
+            <a href="#/about" className="hover:opacity-80">About</a>
+            <a href="#/publications" className="hover:opacity-80">Publications</a>
+            <a href="#/contact" className="hover:opacity-80">Contact</a>
+            <button
+              onClick={() => setDark(v => !v)}
+              className="ml-2 rounded-lg px-3 py-1 ring-1 ring-black/10 dark:ring-white/10 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50"
+              title="Toggle theme"
+            >
+              {dark ? 'Light' : 'Dark'}
+            </button>
+          </nav>
+        </div>
+      </header>
+
+      {/* ROUTES */}
+      {route === 'home' && (
+        <section id="home" className="relative overflow-hidden">
+          <div className="max-w-6xl mx-auto px-6 md:px-8 py-16 md:py-20 flex flex-col gap-10">
+
+            {/* HERO */}
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="flex-shrink-0 relative">
+                <img src={HEADSHOT_PATH} onError={handleImgError} alt="Imeth Illamperuma" className="w-40 h-40 md:w-56 md:h-56 rounded-full object-cover shadow-lg ring-4 ring-white" />
+              </motion.div>
+              <div>
+                <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-4xl md:text-5xl font-semibold tracking-tight text-slate-950 dark:text-slate-50">
+                  Hey, I’m Imeth! I connect science, humanity, and innovation to shape the future of medicine.
+                </motion.h1>
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="mt-2 text-lg md:text-xl text-slate-900 dark:text-slate-100/90">
+                  <Typewriter options={{ strings: ['Student', 'Researcher', 'Preventative Medicine Advocate', 'Public Health Policy Advisor', 'Mentor'], autoStart: true, loop: true }} />
+                </motion.div>
+                <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="mt-4 max-w-3xl text-slate-900 dark:text-slate-100/90">
+                  Prevention-first thinking, imaging for early detection, and turning evidence into action—from campus overdose response to equitable clinical workflows.
+                </motion.p>
+                <div className="mt-6 flex flex-wrap gap-2">
+                  <Pill>HBSc, McMaster</Pill>
+                  <Pill>Stanford Radiology — Molecular Imaging Fellow</Pill>
+                  <Pill>Founder: SHIELD & The Naloxone Project</Pill>
+                </div>
+                <div className="mt-8 flex flex-wrap items-center gap-3">
+                  <a href="#/contact" className="bg-indigo-600 text-white inline-flex items-center gap-2 rounded-xl px-4 py-2 shadow-sm hover:opacity-90 transition"><Mail className="w-4 h-4" /> Contact</a>
+                  <a href={`${BASE}Imeth-Illamperuma-CV.pdf`} className="inline-flex items-center gap-2 rounded-xl px-4 py-2 ring-1 ring-black/10 hover:ring-black/20 bg-white dark:bg-slate-800 dark:text-slate-50"><FileDown className="w-4 h-4" /> Download CV</a>
+                </div>
+              </div>
+            </div>
+
+            {/* Logos */}
+            <div className="pt-4">
+              <TwoLineCarousel items={affiliations} />
+            </div>
+          </div>
+
+          {/* Journey teaser */}
+          <JourneyTeaser />
+
+        </section>
+      )}
+
+      {route === 'journey' && <JourneyPage />}
+      {route === 'journey/stanford' && <StoryPage story={StanfordStory} />}
+      {route === 'publications' && <PublicationsPage />}
+      {route === 'about' && <AboutPage />}
+      {route === 'contact' && <ContactPage />}
+
+      <footer className="border-t border-black/5 dark:border-white/10">
+        <div className="max-w-6xl mx-auto px-6 md:px-8 py-10 text-sm text-slate-900/80 dark:text-slate-100/80 flex flex-col md:flex-row items-center justify-between gap-3">
+          <div>© {new Date().getFullYear()} Imeth Illamperuma</div>
+          <div className="flex items-center gap-4">
+            <a className="hover:underline" href="#/">Home</a>
+            <a className="hover:underline" href="#/journey">My Journey</a>
+            <a className="hover:underline" href="#/publications">Publications</a>
+            <a className="hover:underline" href="#/contact">Contact</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
+}
