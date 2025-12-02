@@ -51,6 +51,12 @@ const FALLBACK_HEADSHOT = (() => {
 
 /* ---------- “places I work” (logos) ---------- */
 const affiliations = [
+  { 
+    org: 'Harvard Medical School', 
+    role: 'Research Collaborator', 
+    logo: `${BASE}logos/Harvard.png`,   // <- your Harvard.png file
+    link: 'https://hms.harvard.edu/' 
+  },
   { org: 'Stanford Department of Medicine', role: 'Molecular Imaging Fellow', logo: `${BASE}logos/stanford.png`, link: 'https://med.stanford.edu/radiology.html' },
   { org: 'McMaster University — Dept. of Medicine', role: 'Research Student', logo: `${BASE}logos/mcmaster-med.png`, link: 'https://medicine.healthsci.mcmaster.ca/' },
   { org: 'CAMH', role: 'Public-health / policy advisory', logo: `${BASE}logos/camh.png`, link: 'https://www.camh.ca/' },
