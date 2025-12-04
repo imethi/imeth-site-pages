@@ -3,11 +3,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import Typewriter from 'typewriter-effect'
 import { Mail, FileDown } from 'lucide-react'
-
-// shared UI
 import { brand, Pill, Card } from './ui/brand.jsx'
-
-// journey pages
 import JourneyPage from './journey/JourneyPage.jsx'
 import StoryPage from './journey/StoryPage.jsx'
 import StanfordStory from './journey/data/stanford.jsx'
@@ -15,10 +11,8 @@ import AboutPage from './AboutPage.jsx'
 import CAMHPage from './journey/CAMHPage.jsx'
 import NaloxonePage from './journey/NaloxonePage.jsx'
 
-/* ---------- tiny hash router ---------- */
 const getRoute = () => (location.hash.replace(/^#\/?/, '') || 'home')
 
-/* ---------- theme ---------- */
 function useDarkMode() {
   const [dark, setDark] = React.useState(() => localStorage.getItem('theme') === 'dark')
   React.useEffect(() => {
@@ -36,81 +30,31 @@ function useDarkMode() {
 
 /* ---------- assets ---------- */
 const BASE = import.meta.env.BASE_URL
-const HEADSHOT_PATH = `${BASE}images/imeth-profile1.png`
+const HEADSHOT_PATH = `${BASE}images/headshot1.png`
 
 const FALLBACK_HEADSHOT = (() => {
-  const svg = `
-    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'>
-      <defs><linearGradient id='g' x1='0' x2='1' y1='0' y2='1'>
-        <stop offset='0%' stop-color='#0f172a'/><stop offset='100%' stop-color='#4f46e5'/>
-      </linearGradient></defs>
-      <circle cx='128' cy='128' r='128' fill='url(#g)'/>
-      <text x='50%' y='54%' text-anchor='middle'
-        font-family='system-ui,Segoe UI,Roboto,Helvetica,Arial'
-        font-size='84' fill='#e5e7eb' dy='.35em'>II</text>
-    </svg>`
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'>
+  <defs><linearGradient id='g' x1='0' x2='1' y1='0' y2='1'>
+  <stop offset='0%' stop-color='#0f172a'/><stop offset='100%' stop-color='#4f46e5'/></linearGradient></defs>
+  <circle cx='128' cy='128' r='128' fill='url(#g)'/>
+  <text x='50%' y='54%' text-anchor='middle'
+  font-family='system-ui,Segoe UI,Roboto,Helvetica,Arial'
+  font-size='84' fill='#e5e7eb' dy='.35em'>II</text></svg>`
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
 })()
 
-/* ---------- “places I work” (logos) ---------- */
 const affiliations = [
-  {
-    org: 'Harvard Medical School',
-    role: 'Cardiometabolic Research Collaborator',
-    logo: `${BASE}logos/Harvard.png`,
-    link: 'https://hms.harvard.edu/'
-  },
-  {
-    org: 'Stanford Department of Medicine',
-    role: 'Molecular Imaging Fellow',
-    logo: `${BASE}logos/stanford.png`,
-    link: 'https://med.stanford.edu/radiology.html'
-  },
-  {
-    org: 'McMaster University — Dept. of Medicine',
-    role: 'Research Student',
-    logo: `${BASE}logos/mcmaster-med.png`,
-    link: 'https://medicine.healthsci.mcmaster.ca/'
-  },
-  {
-    org: 'CAMH',
-    role: 'Public-health / policy advisory',
-    logo: `${BASE}logos/camh.png`,
-    link: 'https://www.camh.ca/'
-  },
-  {
-    org: 'McMaster SHIELD',
-    role: 'Founder & Director',
-    logo: `${BASE}logos/shield.png`,
-    link: 'https://www.instagram.com/mac.shield/'
-  },
-  {
-    org: 'HHS — Juravinski Cancer Centre',
-    role: 'Oncology Department Staff',
-    logo: `${BASE}logos/hhs.png`,
-    link: 'https://www.hamiltonhealthsciences.ca/about-us/our-organization/our-locations/juravinski-cancer-centre/'
-  },
-  {
-    org: 'University of Manitoba — INGAUGE Lab',
-    role: 'Summer Research Student',
-    logo: `${BASE}logos/umanitoba.png`,
-    link: 'https://www.ingauge.ca/'
-  },
-  {
-    org: 'McMaster DB Sports Med & Rehab',
-    role: 'Rehab Assistant (Intern)',
-    logo: `${BASE}logos/mcmaster-sportsmed.png`,
-    link: 'https://sportmed.mcmaster.ca/'
-  },
-  {
-    org: 'LMC Healthcare',
-    role: 'MOA (Intern)',
-    logo: `${BASE}logos/lmc.png`,
-    link: 'https://www.lmc.ca/'
-  }
+  { org: 'Harvard Medical School', role: 'Cardiometabolic Research Collaborator', logo: `${BASE}logos/Harvard.png`, link: 'https://hms.harvard.edu/' },
+  { org: 'Stanford Department of Medicine', role: 'Molecular Imaging Fellow', logo: `${BASE}logos/stanford.png`, link: 'https://med.stanford.edu/radiology.html' },
+  { org: 'McMaster University — Dept. of Medicine', role: 'Research Student', logo: `${BASE}logos/mcmaster-med.png`, link: 'https://medicine.healthsci.mcmaster.ca/' },
+  { org: 'CAMH', role: 'Public-health / policy advisory', logo: `${BASE}logos/camh.png`, link: 'https://www.camh.ca/' },
+  { org: 'McMaster SHIELD', role: 'Founder & Director', logo: `${BASE}logos/shield.png`, link: 'https://www.instagram.com/mac.shield/' },
+  { org: 'HHS — Juravinski Cancer Centre', role: 'Oncology Department Staff', logo: `${BASE}logos/hhs.png`, link: 'https://www.hamiltonhealthsciences.ca/about-us/our-organization/our-locations/juravinski-cancer-centre/' },
+  { org: 'University of Manitoba — INGAUGE Lab', role: 'Summer Research Student', logo: `${BASE}logos/umanitoba.png`, link: 'https://www.ingauge.ca/' },
+  { org: 'McMaster DB Sports Med & Rehab', role: 'Rehab Assistant (Intern)', logo: `${BASE}logos/mcmaster-sportsmed.png`, link: 'https://sportmed.mcmaster.ca/' },
+  { org: 'LMC Healthcare', role: 'MOA (Intern)', logo: `${BASE}logos/lmc.png`, link: 'https://www.lmc.ca/' }
 ].map((i) => ({ ...i, safeLogo: i.logo }))
 
-/* ---------- infinite photo strip (hero collage) ---------- */
 const journeyFiles = [
   'IMG_2962.png',
   'IMG_3664.png',
@@ -124,7 +68,6 @@ const journeyFiles = [
 ]
 const journeySrcs = journeyFiles.map((f) => `${BASE}images/journey-images/${f}`)
 
-/* ---------- marquee helpers ---------- */
 const MarqueeRow = ({ items, direction = 'left', speedSeconds = 28 }) => {
   const anim = direction === 'left' ? 'animate-marquee' : 'animate-marquee-reverse'
   return (
@@ -143,20 +86,11 @@ const MarqueeRow = ({ items, direction = 'left', speedSeconds = 28 }) => {
           >
             <div className="relative">
               <div className="absolute -inset-1 rounded-lg bg-gradient-to-tr from-indigo-500/40 via-sky-400/30 to-emerald-400/40 opacity-0 group-hover:opacity-100 blur-md transition" />
-              {/* full-colour logos */}
-              <img
-                src={it.safeLogo}
-                alt={it.org}
-                className="relative h-8 w-auto object-contain transition"
-              />
+              <img src={it.safeLogo} alt={it.org} className="relative h-8 w-auto object-contain transition" />
             </div>
             <div className="leading-tight">
-              <div className="text-sm font-semibold text-slate-950 dark:text-slate-50">
-                {it.org}
-              </div>
-              <div className="text-[11px] text-slate-900/80 dark:text-slate-100/80">
-                {it.role}
-              </div>
+              <div className="text-sm font-semibold text-slate-950 dark:text-slate-50">{it.org}</div>
+              <div className="text-[11px] text-slate-900/80 dark:text-slate-100/80">{it.role}</div>
             </div>
           </a>
         ))}
@@ -175,36 +109,25 @@ const TwoLineCarousel = ({ items }) => {
   )
 }
 
-/* ---------- small collage section used on Home ---------- */
 function JourneyTeaser() {
   return (
     <section id="journey" className="max-w-6xl mx-auto px-6 md:px-8 py-14">
       <div className="grid md:grid-cols-2 gap-10 items-center">
         <div>
-          <h2 className="text-3xl md:text-4xl font-semibold text-slate-950 dark:text-slate-50">
-            My Journey
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-semibold text-slate-950 dark:text-slate-50">My Journey</h2>
           <p className="mt-3 text-slate-900 dark:text-slate-100/90">
-            Medicine became more than a destination for me—it’s been a series of questions,
-            mentors, and moments that reshaped how I think about care.
+            Medicine became more than a destination for me—it’s been a series of questions, mentors, and moments that reshaped how I think about care.
           </p>
           <a
             href="#/journey"
             className="mt-6 inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-slate-900 text-slate-50 dark:bg-slate-50 dark:text-slate-900 hover:scale-[1.02] active:scale-[0.98] transition"
           >
             Explore Featured Stories
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-4 h-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path strokeWidth="2" d="M9 5l7 7-7 7" />
             </svg>
           </a>
         </div>
-
         <div className="relative">
           <Card className="p-4 overflow-hidden bg-white/80 dark:bg-slate-900/90 border border-black/5 dark:border-white/10 shadow-xl">
             <div
@@ -225,9 +148,7 @@ function JourneyTeaser() {
               ))}
             </div>
           </Card>
-          <div className="mt-2 text-xs text-slate-900/80 dark:text-slate-100/75">
-            Moments with teams and projects.
-          </div>
+          <div className="mt-2 text-xs text-slate-900/80 dark:text-slate-100/75">Moments with teams and projects.</div>
         </div>
       </div>
     </section>
@@ -251,24 +172,18 @@ export default function App() {
 
   return (
     <div className={`${brand.bg} min-h-screen relative overflow-hidden`}>
-      {/* soft background blobs */}
       <div className="pointer-events-none fixed inset-0 -z-10">
         <div className="absolute -top-40 -left-32 h-72 w-72 rounded-full bg-indigo-500/25 blur-3xl" />
         <div className="absolute -bottom-40 -right-24 h-80 w-80 rounded-full bg-sky-400/20 blur-3xl" />
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 h-72 w-72 rounded-full bg-emerald-400/16 blur-3xl" />
       </div>
 
-      {/* Header */}
       <header className="sticky top-0 z-40 backdrop-blur-lg bg-white/75 dark:bg-slate-900/75 border-b border-black/5 dark:border-white/10">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-6 md:px-8 h-16">
           <a href="#/" className="group inline-flex items-center gap-2">
             <div className="relative">
               <div className="absolute -inset-1 rounded-xl bg-gradient-to-tr from-indigo-500 via-sky-400 to-emerald-400 opacity-70 blur" />
-              <div
-                className={`${brand.accentBg} relative text-white w-9 h-9 rounded-xl grid place-items-center font-semibold`}
-              >
-                ii
-              </div>
+              <div className={`${brand.accentBg} relative text-white w-9 h-9 rounded-xl grid place-items-center font-semibold`}>ii</div>
             </div>
             <div className="font-medium tracking-tight text-slate-900 dark:text-slate-50 group-hover:opacity-80 transition">
               Imeth Illamperuma
@@ -303,33 +218,31 @@ export default function App() {
         </div>
       </header>
 
-      {/* Routes */}
       {route === 'home' && (
         <section id="home" className="relative overflow-hidden">
           <div className="max-w-6xl mx-auto px-6 md:px-8 py-16 md:py-20 flex flex-col gap-10">
-            {/* HERO: photo left, text right */}
+            {/* HERO */}
             <div className="grid md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.2fr)] gap-10 items-center">
-              {/* LEFT: PHOTO */}
+              {/* LEFT: bigger rectangular headshot */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="flex-shrink-0 relative flex justify-center md:justify-start"
+                className="relative flex justify-center md:justify-start"
               >
-                <div className="absolute -inset-4 rounded-full bg-gradient-to-tr from-indigo-500 via-sky-400 to-emerald-400 opacity-60 blur-2xl" />
-                <div className="relative rounded-full ring-4 ring-white dark:ring-slate-900 shadow-xl bg-slate-950/80 p-[4px]">
+                <div className="absolute -inset-6 rounded-[2.25rem] bg-gradient-to-tr from-indigo-500 via-sky-400 to-emerald-400 opacity-60 blur-3xl" />
+                <div className="relative rounded-[2rem] overflow-hidden ring-4 ring-white dark:ring-slate-900 shadow-2xl bg-slate-950/80">
                   <img
                     src={HEADSHOT_PATH}
                     onError={handleImgError}
                     alt="Imeth Illamperuma"
-                    className="w-40 h-40 md:w-56 md:h-56 rounded-full object-cover"
+                    className="w-64 md:w-80 h-auto object-cover"
                   />
                 </div>
               </motion.div>
 
-              {/* RIGHT: TEXT */}
+              {/* RIGHT: text */}
               <div className="md:pl-2">
-                {/* chip */}
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -340,7 +253,6 @@ export default function App() {
                   preventive medicine × research × equity × innovation
                 </motion.div>
 
-                {/* HEADER */}
                 <motion.h1
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -350,7 +262,6 @@ export default function App() {
                   I work at the intersection of medicine, research, equity, and innovation.
                 </motion.h1>
 
-                {/* sub-heading */}
                 <motion.p
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -360,7 +271,6 @@ export default function App() {
                   Student, mentor, and systems-builder-in-training.
                 </motion.p>
 
-                {/* typewriter line */}
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -382,19 +292,15 @@ export default function App() {
                   />
                 </motion.div>
 
-                {/* paragraph */}
                 <motion.p
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
                   className="mt-4 max-w-3xl text-slate-900 dark:text-slate-100/90"
                 >
-                  I like taking messy health problems—overdoses on campus, quiet imaging findings,
-                  underrepresented data—and turning them into systems that move earlier, fairer, and
-                  more human.
+                  I like taking messy health problems—overdoses on campus, quiet imaging findings, underrepresented data—and turning them into systems that move earlier, fairer, and more human.
                 </motion.p>
 
-                {/* pills */}
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -406,7 +312,6 @@ export default function App() {
                   <Pill>Founder — SHIELD & The Naloxone Project</Pill>
                 </motion.div>
 
-                {/* buttons */}
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -429,43 +334,32 @@ export default function App() {
               </div>
             </div>
 
-            {/* Places I work (logo marquee) */}
             <div className="pt-6">
               <TwoLineCarousel items={affiliations} />
             </div>
           </div>
 
-          {/* Infinite photo strip teaser */}
           <JourneyTeaser />
 
-          {/* Offerings */}
           <section id="offerings" className="max-w-6xl mx-auto px-6 md:px-8 py-14">
             <div className="mb-6">
-              <h2 className="text-2xl md:text-3xl font-semibold text-slate-950 dark:text-slate-50">
-                What I Offer
-              </h2>
+              <h2 className="text-2xl md:text-3xl font-semibold text-slate-950 dark:text-slate-50">What I Offer</h2>
             </div>
             <div className="grid md:grid-cols-3 gap-6">
               <Card className="bg-white/80 dark:bg-slate-900/90 border border-black/5 dark:border-slate-700/80 hover:-translate-y-1 hover:shadow-xl transition">
-                <h3 className="font-semibold text-slate-950 dark:text-slate-50">
-                  Research Collaboration
-                </h3>
+                <h3 className="font-semibold text-slate-950 dark:text-slate-50">Research Collaboration</h3>
                 <p className="mt-2 text-slate-900 dark:text-slate-100/90">
                   Imaging + multi-omics for early detection along the brain–gut axis.
                 </p>
               </Card>
               <Card className="bg-white/80 dark:bg-slate-900/90 border border-black/5 dark:border-slate-700/80 hover:-translate-y-1 hover:shadow-xl transition">
-                <h3 className="font-semibold text-slate-950 dark:text-slate-50">
-                  Policy & Advocacy
-                </h3>
+                <h3 className="font-semibold text-slate-950 dark:text-slate-50">Policy & Advocacy</h3>
                 <p className="mt-2 text-slate-900 dark:text-slate-100/90">
                   Translating findings into practical guidance for equitable systems.
                 </p>
               </Card>
               <Card className="bg-white/80 dark:bg-slate-900/90 border border-black/5 dark:border-slate-700/80 hover:-translate-y-1 hover:shadow-xl transition">
-                <h3 className="font-semibold text-slate-950 dark:text-slate-50">
-                  Talks & Workshops
-                </h3>
+                <h3 className="font-semibold text-slate-950 dark:text-slate-50">Talks & Workshops</h3>
                 <p className="mt-2 text-slate-900 dark:text-slate-100/90">
                   Prevention-first medicine, harm reduction on campus, digital health equity.
                 </p>
@@ -492,7 +386,7 @@ export default function App() {
             Reach out for collaborations in imaging, prevention, and public health.
           </p>
           <form
-            action={`https://formspree.io/f/your_form_id_here`}
+            action="https://formspree.io/f/your_form_id_here"
             method="POST"
             className="mt-8 grid gap-4"
           >
